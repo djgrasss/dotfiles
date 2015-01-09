@@ -27,7 +27,7 @@ while read line; do
     name:lan) ;;
     name:date) ;;
     name:time) ;;
-    name:mail) exo-open "https://gmail.com" ;;
+    name:mail) exec exo-open "https://gmail.com" &>/dev/null & ;;
     *) logger "i3: ${nb%%;*}" ;;
   esac
 done
