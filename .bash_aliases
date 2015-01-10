@@ -14,13 +14,14 @@ alias less='less -r'                          # raw control characters
 alias grep='grep --color'                     # show differences in colour
 
 # Some shortcuts for different directory listings
-alias ls='ls -X -hF --color=tty'                 # classify files in colour
+alias ls='ls -X -hF --color=tty'              # classify files in colour
 alias dir='ls --color=auto --format=vertical'
 alias vdir='ls --color=auto --format=long'
-alias ll='ls -lA'                              # long list
+alias ll='ls -lA'                             # long list
 alias la='ls -A'                              # all but . and ..
 alias l='ls -CF'                              #
 alias ps='ps -A'                              #
+alias rm='trash-put'                          # safe rm
 
 # my shortcuts
 alias cs='cygstart'
@@ -40,6 +41,7 @@ alias ga='git add'
 alias gs='git status'
 alias gl='git log'
 alias gb='git branch'
+alias gd='git diff'
 
 
 # setting the temp directory for vim
