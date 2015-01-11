@@ -7,6 +7,7 @@ export HISTIGNORE="[   ]*:&:bg:fg:exit:ls:la:ll:l:ps:df:vim:vi:man*:info*:exit:d
 export HISTSIZE=-1     # unlimited
 export HISTFILESIZE=-1 # unlimited
 export HISTFILE=~/.bash_eternal_history
+export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
 
 # aliases
