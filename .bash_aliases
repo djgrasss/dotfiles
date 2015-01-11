@@ -3,7 +3,7 @@ set -o notify
 shopt -s dotglob
 
 # Ignore some controlling instructions
-export HISTIGNORE="[   ]*:&:bg:fg:exit:ls:la:ll:l:ps:df:vim:vi:man*:info*:exit:dmesg"
+export HISTIGNORE="[   ]*:&:bg:fg:exit:ls:la:ll:l:ps:df:vim:vi:man*:info*:exit:dmesg:ifconfig:route:"
 export HISTSIZE=-1     # unlimited
 export HISTFILESIZE=-1 # unlimited
 export HISTFILE=~/.bash_eternal_history
