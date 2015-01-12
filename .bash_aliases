@@ -22,6 +22,7 @@ alias ll='ls -lA'                             # long list
 alias la='ls -A'                              # all but . and ..
 alias l='ls -CF'                              #
 alias ps='ps -A'                              #
+alias gr='grep -HEnri'                        #
 alias rm='trash-put'                          # safe rm
 
 # my shortcuts
@@ -52,7 +53,7 @@ function lso()
 {
   # interactive
   if [ -t 0 ]; then
-    ls -alG $1 | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
+    ls -alG "$@" | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
   else
     cat - | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
   fi
