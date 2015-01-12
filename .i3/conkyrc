@@ -17,7 +17,7 @@ TEXT
 { "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
 { "full_text" : " ${fs_free /}", "color" : ${if_match ${memperc}<90}"\#ffffff"${else}"\#ff0000"${endif}, "name" : "disk" },
 { "full_text" : " ${cpu}%", "color" : ${if_match ${acpitemp}<65}"\#ffffff"${else}"\#ff0000"${endif}, "name" : "cpu" },
-#{ "full_text" : " ${memperc}%", "color" : ${if_match ${memperc}<90}"\#ffffff"${else}"\#ff0000"${endif} },
+{ "full_text" : " ${memperc}%", "color" : ${if_match ${memperc}<90}"\#ffffff"${else}"\#ff0000"${endif} },
 { "full_text" : " ${battery_percent BAT0}%","color" : ${if_match ${battery_percent}>50}"\#ffffff"${else}${if_match ${battery_percent}>20}"\#ffff00"${else}"\#ff0000"${endif}${endif}, "name" : "battery" },
 #{ "full_text" : ${if_up wlan0}" ${exec /home/alex/.i3/apstatus.sh} ↓${downspeed wlan0}/s ↑${upspeed wlan0}/s" },
 { "full_text" : "${if_up wlan0} ${exec /home/alex/.i3/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},
