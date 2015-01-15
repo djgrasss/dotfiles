@@ -13,8 +13,7 @@ use_spacer left
 cpu_avg_samples 2
 
 TEXT
-[
-{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
+[{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
 { "full_text" : " ${fs_free /}", "color" : ${if_match ${memperc}<90}"\#ffffff"${else}"\#ff0000"${endif}, "name" : "disk" },
 { "full_text" : " ${cpu}%", "color" : ${if_match ${acpitemp}<65}"\#ffffff"${else}"\#ff0000"${endif}, "name" : "cpu" },
 { "full_text" : " ${memperc}%", "color" : ${if_match ${memperc}<90}"\#ffffff"${else}"\#ff0000"${endif} },
@@ -24,7 +23,4 @@ TEXT
 { "full_text" : "${if_up eth0} ${exec ethtool eth0 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}${endif}", "color" : "\#ffffff", "name" : "lan" },
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },
 { "full_text" : " ${time %k:%M}", "color" : "\#ffff00", "name" : "time" },
-{ "full_text" : "  ", "color" : ${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}"\#ffffff"${else}"\#ff0000"${endif}${else}"\#ffffff"${endif}, "name" : "mail" }
-],
-# eth link speed
-#ethtool p3p1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'
+{ "full_text" : "  ", "color" : ${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}"\#ffffff"${else}"\#ff0000"${endif}${else}"\#ffffff"${endif}, "name" : "mail" } ],
