@@ -76,10 +76,6 @@ class MyWin (Gtk.Window):
 
       lh = builder.get_object("label_head")
       lh.set_text("Logout: " + getpass.getuser())
-      self.screen = self.get_screen()
-      self.visual = self.screen.get_rgba_visual()
-      if self.visual != None and self.screen.is_composited():
-         self.set_visual(self.visual)
       self.fullscreen()
       self.show_all()
 
