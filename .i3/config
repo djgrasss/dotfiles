@@ -173,12 +173,15 @@ new_window pixel 2
 for_window [class="^Psi-plus$"] floating enable, move container to workspace 2
 for_window [title="^TerminalHtop$"] floating enable
 for_window [class="^ThunarHome$"] floating enable
+for_window [class="^xfce4-appfinder$"] floating enable
 
 # dpmsoff
-exec --no-startup-id /home/alex/bin/dpmsoff
+exec --no-startup-id ~/bin/dpmsoff
 
 # desktop applets
-exec --no-startup-id compton &
+# compton is started by a pm script because it should
+# not be running on a battery
+#exec --no-startup-id compton &
 exec --no-startup-id xfsettingsd &
 exec --no-startup-id xfce4-volumed &
 exec --no-startup-id xfce4-power-manager &

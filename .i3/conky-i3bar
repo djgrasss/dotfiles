@@ -19,15 +19,16 @@ while read line; do
   nb=$(echo "$line"|sed -nr 's/^.//p'|sed -nr 's/[\{\}\"]//gp'|awk -F',' '{print $1";"$2}')
   # button - ${nb#*;}
   case "${nb%%;*}" in
-    name:keyboard) exec /usr/bin/xfce4-keyboard-settings & ;;
+    name:keyboard) exec xfce4-keyboard-settings & ;;
     name:disk) exec thunar --class="ThunarHome" & ;;
-    name:cpu) exec /usr/bin/xfce4-terminal -e htop -T "TerminalHtop" & ;;
+    name:cpu) exec xfce4-terminal -e htop -T "TerminalHtop" & ;;
     name:battery) exec xfce4-power-information & ;;
     name:wlan) ;;
     name:lan) ;;
-    name:date) ;;
+    name:date) exec zenity --calendar &>/dev/null &;;
     name:time) ;;
     name:mail) exec exo-open "https://gmail.com" &>/dev/null & ;;
+    name:logout) exec $HOME/.i3/logout.py &>/dev/null & ;;
     *) logger "i3: ${nb%%;*}" ;;
   esac
 done
