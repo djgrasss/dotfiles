@@ -26,7 +26,6 @@ alias gr='grep -HEnri'                        #
 alias rm='trash-put'                          # safe rm
 
 # my shortcuts
-alias cs='cygstart'
 alias c='printf "\33[2J"'
 alias ss='bc64=( {a..z} {A..Z} {0..9} + / = );c;while true; do echo -ne "\033[$((1+RANDOM%LINES));$((1+RANDOM%COLUMNS))H\033[$((RANDOM%2));3$((RANDOM%8))m${bc64[$((RANDOM%${#bc64[@]}))]}"; sleep 0.1 ; done'
 alias p4='unset PWD; p4 '
@@ -124,6 +123,7 @@ function decrypt {
 # some cygwin related patches
 # Terminal capabilities
 if [ "$OSTYPE" = "cygwin" ]; then
+  alias cs='cygstart'
   if [ -f ${HOME}/.termcap ]; then
     TERMCAP=$(< ${HOME}/.termcap)
     export TERMCAP
