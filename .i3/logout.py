@@ -23,7 +23,6 @@ class EventHandler (object):
       lm = dbus.Interface(proxy,"org.freedesktop.login1.Manager")
       lm.PowerOff(True)
     def suspend_clicked(self, button):
-      print("suspend")
       proxy = self._bus.get_object("org.freedesktop.login1","/org/freedesktop/login1")
       lm = dbus.Interface(proxy,"org.freedesktop.login1.Manager")
       lm.Suspend(True)
@@ -35,21 +34,16 @@ class EventHandler (object):
     def cancel_clicked(self, button):
       Gtk.main_quit()
     def lock_clicked(self, button):
-      print("lock")
       self.lock()
     def lock(self):
-      subprocess.Popen(['/usr/bin/slock'])
+      #subprocess.Popen(['/usr/bin/slock'])
+      subprocess.Popen(['xflock4'])
       Gtk.main_quit()
     def key_pressed(self, widget, event):
       #print("key: ", event.keyval, "; state: ", int(event.state))
-      if event.keyval == 65307:
+      if event.keyval == 65307: # Esc
         Gtk.main_quit()
       return False
-    def window_state_changed(self, widget, event):
-      if (int(event.new_window_state) & Gdk.WindowState.FULLSCREEN) == 0:
-        widget.fullscreen()
-      elif (int(event.new_window_state) & Gdk.WindowState.ICONIFIED) != 0:
-        widget.deiconify()
 
 class MyWin (Gtk.Window):
     _handler = EventHandler()
@@ -74,7 +68,6 @@ class MyWin (Gtk.Window):
       self.connect("draw", self.area_draw)
       self.connect("delete-event", Gtk.main_quit)
       self.connect("key-press-event", self._handler.key_pressed)
-      self.connect("window-state-event", self._handler.window_state_changed)
       builder.connect_signals(handlers)
 
       eb = builder.get_object("eventbox")
@@ -82,6 +75,9 @@ class MyWin (Gtk.Window):
       lh = builder.get_object("label_head")
       lh.set_text("Logout: " + getpass.getuser())
 
+      self.set_keep_above(True)
+      self.set_skip_taskbar_hint(True)
+      self.stick()
       self.fullscreen()
       self.show_all()
 

@@ -23,7 +23,7 @@ alias la='ls -A'                              # all but . and ..
 alias l='ls -CF'                              #
 alias ps='ps -A'                              #
 alias gr='grep -HEnri'                        #
-alias rm='trash-put'                          # safe rm
+alias rm='gvfs-trash'                         # safe rm
 
 # my shortcuts
 alias c='printf "\33[2J"'
