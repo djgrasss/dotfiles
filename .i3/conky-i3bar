@@ -29,6 +29,7 @@ while read line; do
     name:time) ;;
     name:mail) exec exo-open "https://gmail.com" &>/dev/null & ;;
     name:logout) exec $HOME/.i3/logout.py &>/dev/null & ;;
+    name:display) exec xfce4-display-settings & ;;
     *) logger "i3: ${nb%%;*}" ;;
   esac
 done

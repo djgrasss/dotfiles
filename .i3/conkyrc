@@ -24,5 +24,6 @@ TEXT
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },
 { "full_text" : " ${time %k:%M}", "color" : "\#ffff00", "name" : "time" },
 { "full_text" : "", "color" : ${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}"\#ffffff"${else}"\#ff0000"${endif}${else}"\#ffffff"${endif}, "name" : "mail" },
+{ "full_text" : "", "color" : "\#ffffff", "name" : "display" },
 { "full_text" : "   ", "color" : "\#ffffff", "name" : "logout" } ],
   
