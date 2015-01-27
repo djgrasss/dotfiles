@@ -11,8 +11,8 @@ use_spacer left
 #pad_percents 2
 #override_utf8_locale no
 cpu_avg_samples 2
-template0 ${exec ethtool \1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}
-template1 ${if_up \1} ${template0 \1}${else}${if_up \2} ${template0 \2}${endif}${endif}
+template0 ${if_up \1} \1:${exec ethtool \1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}${endif} 
+template1 ${template0 \1}${template0 \2}
 
 TEXT
 [{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
