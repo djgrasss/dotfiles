@@ -11,8 +11,10 @@ use_spacer left
 #pad_percents 2
 #override_utf8_locale no
 cpu_avg_samples 2
-template0 ${if_up \1} \1:${exec ethtool \1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}${endif} 
-template1 ${template0 \1}${template0 \2}
+template1 ${if_up \1} \1:${exec ethtool \1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}${endif} 
+template2 ${template1 \1}${template1 \2}
+template3 ${template1 \1}${template2 \2 \3}
+template4 ${template2 \1 \2}${template2 \3 \4}
 
 TEXT
 [{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
@@ -22,7 +24,7 @@ TEXT
 { "full_text" : " ${battery_percent BAT0}%","color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },
 #{ "full_text" : ${if_up wlan0}" ${exec ~/.i3/apstatus.sh} ↓${downspeed wlan0}/s ↑${upspeed wlan0}/s" },
 { "full_text" : "${if_up wlan0} ${exec ~/.i3/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},
-{ "full_text" : "${template1 eth0 p3p1}", "color" : "\#ffffff", "name" : "lan" },
+{ "full_text" : "${template4 eth0 eth1 eth2 p3p1}", "color" : "\#ffffff", "name" : "lan" },
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },
 { "full_text" : " ${time %k:%M}", "color" : "\#ffff00", "name" : "time" },
 { "full_text" : "", "color" : "${if_existing /tmp/newMail 0}\#ffffff${else}\#ff0000${endif}", "name" : "mail" },
