@@ -11,16 +11,18 @@ use_spacer left
 #pad_percents 2
 #override_utf8_locale no
 cpu_avg_samples 2
+template0 ${exec ethtool \1 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}
+template1 ${if_up \1} ${template0 \1}${else}${if_up \2} ${template0 \2}${endif}${endif}
 
 TEXT
 [{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },
 { "full_text" : " ${fs_free /}", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "disk" },
-{ "full_text" : " ${cpu}%", "color" : "${if_match ${acpitemp}>70}\#ff0000${else}${if_match ${acpitemp}>60}\#ff6000${else}\#ffffff${endif}${endif}", "name" : "cpu" },
+{ "full_text" : " ${cpu}%", "color" : "${if_match ${acpitemp}>70}\#ff0000${else}${if_match ${acpitemp}>65}\#ff6000${else}${if_match ${acpitemp}>60}\#ffff00${else}\#ffffff${endif}${endif}", "name" : "cpu" },
 { "full_text" : " ${memperc}%", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "memory" },
 { "full_text" : " ${battery_percent BAT0}%","color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },
 #{ "full_text" : ${if_up wlan0}" ${exec ~/.i3/apstatus.sh} ↓${downspeed wlan0}/s ↑${upspeed wlan0}/s" },
 { "full_text" : "${if_up wlan0} ${exec ~/.i3/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},
-{ "full_text" : "${if_up eth0} ${exec ethtool eth0 2>/dev/null|awk -F'Speed: ' '/Speed:/{print $2}'}${endif}", "color" : "\#ffffff", "name" : "lan" },
+{ "full_text" : "${template1 eth0 p3p1}", "color" : "\#ffffff", "name" : "lan" },
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },
 { "full_text" : " ${time %k:%M}", "color" : "\#ffff00", "name" : "time" },
 { "full_text" : "", "color" : "${if_existing /tmp/newMail 0}\#ffffff${else}\#ff0000${endif}", "name" : "mail" },
