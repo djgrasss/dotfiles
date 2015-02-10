@@ -10,7 +10,7 @@ r=$(iwconfig $iface|awk '/ESSID:/{split($0,a,/\"/);print a[2]};\
 IFS=$'\n'
 res=($r)
 
-# to avoid status line jumping is multiplied with 99 below
+# to avoid status line jumping quality is multiplied with 99 below
 
 if [[ "$1" == "-n" ]]; then
 {
