@@ -1,10 +1,29 @@
 #!/usr/bin/python3
 
-import sys,os
+import sys,os,tempfile
 import cairo
 import getpass
 from gi.repository import Gtk, Gdk
 import dbus,subprocess
+
+class SingleInstance:
+    """
+    If you want to prevent your script from running in parallel just instantiate
+    SingleInstance() class. If is there another instance already running it will
+    exist the application with the message "Another instance is already running,
+    quitting.", returning -1 error code.
+
+    >>> me = SingleInstance()
+    """
+    def __init__(self):
+        self.lockfile = os.path.normpath(tempfile.gettempdir() + '/' +
+          os.path.splitext(os.path.abspath(__file__))[0].replace("/","-").replace(":","").replace("\\","-")  + '.lock')
+        import fcntl, sys
+        self.fp = open(self.lockfile, 'w')
+        try:
+          fcntl.lockf(self.fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except IOError:
+          sys.exit(-1)
 
 class EventHandler (object):
     _bus = dbus.SystemBus()
@@ -71,7 +90,8 @@ class MyWin (Gtk.Window):
       builder.connect_signals(handlers)
 
       eb = builder.get_object("eventbox")
-      eb.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 0.5))
+      eb.connect("draw", self.ebox_draw)
+      eb.override_background_color(Gtk.StateFlags.NORMAL, Gdk.RGBA(1.0, 1.0, 1.0, 0.0))
       lh = builder.get_object("label_head")
       lh.set_text("Logout: " + getpass.getuser())
 
@@ -95,12 +115,34 @@ class MyWin (Gtk.Window):
       cr.paint()
 
     def area_draw(self, widget, cr):
-      cr.set_source_surface(self.ims)
+      (x,y) = self.get_window().get_position()
+      cr.set_source_surface(self.ims, -x, -y)
       cr.paint()
       cr.set_operator(cairo.OPERATOR_OVER)
       return False
 
+    def ebox_draw(self, widget, cr):
+      from math import pi
+      radius = 15
+      x = 0; y = 0
+      w = widget.get_window().get_width()
+      h = widget.get_window().get_height()
+
+      cr.arc(x + w - radius, y + radius, radius, -pi/2, 0);
+      cr.arc(x + w - radius, y + h - radius, radius, 0, pi/2);
+      cr.arc(x + radius, y + h - radius, radius, pi/2, pi);
+      cr.arc(x + radius, y + radius, radius, pi, 3/2*pi);
+      cr.close_path();
+
+      cr.set_line_width(1.0)
+      cr.set_source_rgba(1.0, 1.0, 1.0, 0.5)
+      cr.stroke_preserve()
+      cr.fill()
+
+      return False
+
 def main(argv):
+  me = SingleInstance()
   MyWin(os.path.abspath(os.path.dirname(sys.argv[0]))+"/logout.ui");
   Gtk.main()
 
