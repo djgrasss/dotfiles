@@ -53,6 +53,7 @@ class MyWin (Gtk.Window):
     _digColWidth = 0        # score digits column width
     _goalanimation = False  # animate the ball
     _manual = False         # if man vs computer
+    _showDebug = False      # shows debug info
     _digits = [ [0xf9,0x99,0xf0],[0x11,0x11,0x10],[0xf1,0xf8,0xf0],[0xf1,0xf1,0xf0],[0x99,0xf1,0x10],
                 [0xf8,0xf1,0xf0],[0xf8,0xf9,0xf0],[0xf1,0x11,0x10],[0xf9,0xf9,0xf0],[0xf9,0xf1,0xf0] ]
 
@@ -70,12 +71,19 @@ class MyWin (Gtk.Window):
         widget.queue_draw()
       elif event.keyval == 109:   # M is pressed
         self._manual = not self._manual
+      elif event.keyval == 100:   # D is pressed
+        self._showDebug = not self._showDebug
       return False
 
     def motion_notify_event(self, widget, event):
       if not self._manual:
         return True
-      self._batr = event.y
+      self._batr = int(event.y)
+      if self._batr < self._batlenhalve:
+        self._batr = self._batlenhalve
+      elif self._batr > self._winHeight - self._batlenhalve:
+        self._batr = self._winHeight - self._batlenhalve
+      return True
 
     def configure(self, widget, event):
       if self._winHeight!=event.width and self._winWidth!=event.width:
@@ -291,6 +299,8 @@ class MyWin (Gtk.Window):
       cr.fill()
 
     def draw_debug(self, cr):
+      if not self._showDebug:
+        return
       cr.set_source_rgb(1.0, 1.0, 1.0)
       cr.set_font_size(8)
       cr.move_to(10,10)
