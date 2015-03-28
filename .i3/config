@@ -88,6 +88,12 @@ bindsym $mod+a focus parent
 # focus the child container
 bindsym $mod+c focus child
 
+# Make the currently focused window a scratchpad
+bindsym $mod+Shift+minus move scratchpad
+#
+# # Show the first scratchpad window
+bindsym $mod+minus scratchpad show
+
 # switch to workspace
 bindsym $mod+1 workspace 1
 bindsym $mod+2 workspace 2
@@ -177,6 +183,7 @@ for_window [title="^TerminalHtop$"] floating enable
 for_window [class="^ThunarHome$"] floating enable
 for_window [class="^xfce4-appfinder$"] floating enable
 for_window [class="^cameraclient$"] floating enable
+for_window [class="^blueman-manager$"] floating enable
 
 # dpmsoff
 exec --no-startup-id ~/bin/dpmsoff
