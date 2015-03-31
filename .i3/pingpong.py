@@ -43,7 +43,10 @@ class MyWin (Gtk.Window):
     _ballvec = 0.0          # ball vector
     _ballveloc = 0.0        # ball current velocity
     _ballvelocdef = 10.0    # ball default velocity 
-    _startGame = False      #
+    _startGame = False      # start new game flag
+    _overallGameTime = 0.0  # time of the program start
+    _maxGameTime = 0.0      # longest game time
+    _minGameTime = 0.0      # fasest game time
     _startGameTime = 0.0    # game start time
     _prevFrameTime = 0.0    # previous frame time
     _fps = 0.0              # fps
@@ -54,25 +57,24 @@ class MyWin (Gtk.Window):
     _goalanimation = False  # animate the ball
     _manual = False         # if man vs computer
     _showDebug = False      # shows debug info
+    _dopredict = True       # predict ball position and adjust bats accordingly
+    _ypredict = 0           # predicted y ball position
     _digits = [ [0xf9,0x99,0xf0],[0x11,0x11,0x10],[0xf1,0xf8,0xf0],[0xf1,0xf1,0xf0],[0x99,0xf1,0x10],
                 [0xf8,0xf1,0xf0],[0xf8,0xf9,0xf0],[0xf1,0x11,0x10],[0xf9,0xf9,0xf0],[0xf9,0xf1,0xf0] ]
 
     def key_pressed(self, widget, event):
-      print("key: ", event.keyval, "; state: ", int(event.state))
+      #print("key: ", event.keyval, "; state: ", int(event.state))
       # Ctrl-C or Esc - Exit
       if event.keyval == 65307 or \
          (event.keyval == 99 and event.state == 4):
         Gtk.main_quit()
-      elif event.keyval == 65362: # up arrow
-        #widget.Up()
-        widget.queue_draw()
-      elif event.keyval == 65364: # down arrow
-        #widget.Down()
-        widget.queue_draw()
       elif event.keyval == 109:   # M is pressed
         self._manual = not self._manual
       elif event.keyval == 100:   # D is pressed
         self._showDebug = not self._showDebug
+      elif event.keyval == 112:   # P is pressed
+        self._dopredict = not self._dopredict
+        self.recalculate_predict_y()
       return False
 
     def motion_notify_event(self, widget, event):
@@ -109,6 +111,7 @@ class MyWin (Gtk.Window):
 
     def __init__(self):
       super(MyWin, self).__init__()
+      self._overallGameTime = time.perf_counter()
       # seems like full screen app canno't be transparent
       #self.transp_setup()
       self.connect("draw", self.area_draw)
@@ -124,8 +127,35 @@ class MyWin (Gtk.Window):
       self.fullscreen()
       self.show_all()
 
+    def start_game(self):
+      self._startGame = True
+      self._startGameTime = time.perf_counter()
+      self.queue_draw()
+      return False
+
+    def init_game(self):
+      self._startGame = False
+      self._goalanimation = False
+      self._ballx = self._ballside if Bat.Left == self._batlead else self._winWidth-2*self._ballside
+      self._bally = self._winHeight/2 - self._ballside/2
+      if Bat.Left == self._batlead:
+        self._ballvec=self.add_random_angle(math.pi/2)
+        self._ypredict = self.predict_y(self._winWidth-int(self._ballx),int(self._bally),self._ballvec)
+      else:
+        self._ballvec=self.add_random_angle(1.5*math.pi)
+        self._ypredict = self.predict_y(int(-self._ballx),int(self._bally),self._ballvec)
+      self._ballveloc = self._ballvelocdef
+      self._batr = int(self._winHeight/2)
+      self._batl = int(self._batr)
+      self._batveloc = self._batvelocdef
+      self._batact = Bat.Right if Bat.Left == self._batlead else Bat.Left
+      GLib.timeout_add(1000, self.start_game)
+      self.queue_draw()
+
     def move_bat(self, batpos, ballpos, veloc, active):
       diff = ballpos - batpos
+      if self._dopredict:
+        diff = self._ypredict - batpos
       if diff>0 and diff>=veloc:
         diff = veloc
       elif diff<0 and diff<=-veloc:
@@ -149,6 +179,56 @@ class MyWin (Gtk.Window):
       rangle*=math.pi/180.0
       return angle+rangle
 
+    def recalculate_predict_y(self):
+      if not self._dopredict:
+        return
+      if Bat.Left == self._batact:
+        self._ypredict = self.predict_y(-int(self._ballx),int(self._bally),self._ballvec)
+      else:
+        self._ypredict = self.predict_y(int(self._winWidth-self._ballx),int(self._bally),self._ballvec)
+
+    def predict_y(self, x,y,vec):
+      yp = int(x/math.tan(vec)+y)
+      ypsav = yp
+      bounce = 0
+      while yp>2*self._winHeight:
+        yp-=self._winHeight
+        bounce+=1
+      while yp < -self._winHeight:
+        yp+=self._winHeight
+        bounce+=1
+
+      if yp > self._winHeight:
+        if bounce>0:
+          yp-= self._winHeight
+        else:
+          yp = 2*self._winHeight-yp
+      elif yp < 0:
+        if bounce>0:
+          yp+=self._winHeight
+        else:
+          yp = -yp
+      return yp
+
+    def game_won(self, bat):
+      print("ballx:",int(self._ballx),"bally=",int(self._bally)," batup=",self._batl-self._batlenhalve," batdwn=",self._batl+self._batlenhalve," prdct: ",self._ypredict)
+      self._goalanimation = True
+      ctime = time.perf_counter()- self._startGameTime
+      if ctime > self._maxGameTime:
+        self._maxGameTime=ctime
+      if int(self._minGameTime)!=0:
+        if ctime < self._minGameTime:
+          self._minGameTime=ctime
+      else:
+        self._minGameTime = ctime
+
+      if Bat.Left == bat:
+        self._sl+=1
+        self._batlead = Bat.Left
+      else:
+        self._sr+=1
+        self._batlead = Bat.Right
+
     def timer_tick(self):
       if self._startGame == False:
         return;
@@ -165,13 +245,14 @@ class MyWin (Gtk.Window):
       # local integer ball position
       x = int(self._ballx)
       if  self._goalanimation:
-        if x<=0 or x>=self._winWidth - self._ballside:
+        if x<=0 or x>=(self._winWidth - self._ballside):
           self.init_game()
         return
  
       # ball should not be off the table bacase bats can't be
       if self._bally<0:self._bally=0
-      elif self._bally>(self._winHeight-self._ballside):self._bally=self._winHeight-self._ballside
+      elif self._bally>(self._winHeight-self._ballside):
+        self._bally=self._winHeight-self._ballside
       y = int(self._bally)
 
       if Bat.Left == self._batact: # left bat receives the ball
@@ -184,62 +265,33 @@ class MyWin (Gtk.Window):
           self._batr = self.move_bat(self._batr, y, self._batveloc, True)
 
       # bouncing from right side
-      if x >= (self._winWidth - (self._ballside+self._batwidth)): 
+      if x >= (self._winWidth - (self._ballside+self._batwidth)) and \
+        self._batact == Bat.Right:
         if (y <= self._batr + self._batlenhalve) and \
            (y >= self._batr - self._batlenhalve):
-           if self._batact == Bat.Right:
-             self._ballvec = self.add_random_angle(1.5*math.pi)
-             self._batact = Bat.Left
-        else:
-          print("ballx:",self._ballx,"bally=",self._bally," batup=",self._batr-self._batlenhalve," batdwn=",self._batr+self._batlenhalve)
-          self._sl+=1
-          self._batlead = Bat.Left
-          self._goalanimation = True
+          self._ballvec = self.add_random_angle(1.5*math.pi)
+          self._batact = Bat.Left
+          if self._dopredict:
+            self._ypredict = self.predict_y(-x,y,self._ballvec)
           return
-          #self.init_game() 
+        else:
+          self.game_won(Bat.Left)
+          return
       # bouncing from the left side 
-      elif x <= self._batwidth: 
+      elif x <= self._batwidth and self._batact == Bat.Left:
         if (y <= self._batl + self._batlenhalve) and \
            (y >= self._batl - self._batlenhalve):
-          if self._batact == Bat.Left:
-            self._ballvec = self.add_random_angle(math.pi/2)
-            self._batact = Bat.Right
-        else:
-          print("ballx:",self._ballx,"bally=",self._bally," batup=",self._batl-self._batlenhalve," batdwn=",self._batl+self._batlenhalve)
-          self._sr+=1
-          self._batlead = Bat.Right
-          self._goalanimation = True
+          self._ballvec = self.add_random_angle(math.pi/2)
+          self._batact = Bat.Right
+          if self._dopredict:
+            self._ypredict = self.predict_y(self._winWidth-x,y,self._ballvec)
           return
-          #self.init_game()
+        else:
+          self.game_won(Bat.Right)
+          return
       # bouncing top or bottom  
-      if y + self._ballside >= self._winHeight:
+      if y + self._ballside >= self._winHeight or y<=0:
         self._ballvec = math.pi - self._ballvec
-      elif y <= 0:
-        self._ballvec = math.pi - self._ballvec
-
-    def start_game(self):
-      self._startGame = True
-      self._startGameTime = time.perf_counter()
-      self.queue_draw()
-      return False
-
-    def init_game(self):
-      self._startGame = False
-      self._goalanimation = False
-      self._ballx = self._ballside if Bat.Left == self._batlead else self._winWidth-2*self._ballside
-      self._bally = self._winHeight/2 - self._ballside/2
-      self._ballvec = self.add_random_angle(0)
-      if Bat.Left == self._batlead:
-        self._ballvec+=math.pi/2
-      else:
-        self._ballvec+=1.5*math.pi
-      self._ballveloc = self._ballvelocdef 
-      self._batr = int(self._winHeight/2)
-      self._batl = int(self._batr)
-      self._batveloc = self._batvelocdef
-      self._batact = Bat.Right if Bat.Left == self._batlead else Bat.Left 
-      GLib.timeout_add(1000, self.start_game)
-      self.queue_draw()
 
     def draw_digit_raw(self, cr, nibble, x, y):
       nibble%= 0x10
@@ -310,6 +362,12 @@ class MyWin (Gtk.Window):
       cr.move_to(10,30)
       cr.show_text("game time: "+ '%.2f' % (self._prevFrameTime-self._startGameTime))
       cr.move_to(10,40)
+      cr.show_text("min game time: "+ '%.2f' % (self._minGameTime))
+      cr.move_to(10,50)
+      cr.show_text("max game time: "+ '%.2f' % (self._maxGameTime))
+      cr.move_to(10,60)
+      cr.show_text("overall time: "+ '%.2f' % (self._prevFrameTime-self._overallGameTime))
+      cr.move_to(10,70)
       cr.show_text("fps: "+ '%.1f' %  self._fps)
 
     def area_draw(self, widget, cr):
