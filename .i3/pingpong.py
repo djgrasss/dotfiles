@@ -31,11 +31,12 @@ class Bat:
 class MyWin (Gtk.Window):
     _sr = 0; _sl = 0        # score left and right
     _batvelocdef = 10       # default bat velocity
-    _batveloc = 0           # current but velocity
+    _batveloc = 0           # current bat velocity
     _batlen = 0             # bat length
     _batwidth = 0           # bat width
     _batlenhalve = 0        # bat length halved
-    _batact = Bat.Left      # bat receiving the ball
+    _batlead = Bat.Left     # bat starting new game
+    _batact = not _batlead  # bat receiving the ball
     _batl = 0               # left bat y position
     _batr = 0               # rigth bat y position
     _ballx = 0; _bally = 0  # ball position x,y
@@ -46,7 +47,7 @@ class MyWin (Gtk.Window):
     _startGame = False      # start new game flag
     _overallGameTime = 0.0  # time of the program start
     _maxGameTime = 0.0      # longest game time
-    _minGameTime = 0.0      # fasest game time
+    _minGameTime = 0.0      # fastest game time
     _startGameTime = 0.0    # game start time
     _prevFrameTime = 0.0    # previous frame time
     _fps = 0.0              # fps
@@ -130,7 +131,6 @@ class MyWin (Gtk.Window):
     def start_game(self):
       self._startGame = True
       self._startGameTime = time.perf_counter()
-      self.queue_draw()
       return False
 
     def init_game(self):
@@ -146,7 +146,7 @@ class MyWin (Gtk.Window):
         self._ypredict = self.predict_y(int(-self._ballx),int(self._bally),self._ballvec)
       self._ballveloc = self._ballvelocdef
       self._batr = int(self._winHeight/2)
-      self._batl = int(self._batr)
+      self._batl = self._batr
       self._batveloc = self._batvelocdef
       self._batact = Bat.Right if Bat.Left == self._batlead else Bat.Left
       GLib.timeout_add(1000, self.start_game)
@@ -211,8 +211,6 @@ class MyWin (Gtk.Window):
       return yp
 
     def game_won(self, bat):
-      print("ballx:",int(self._ballx),"bally=",int(self._bally)," batup=",self._batl-self._batlenhalve," batdwn=",self._batl+self._batlenhalve," prdct: ",self._ypredict)
-      self._goalanimation = True
       ctime = time.perf_counter()- self._startGameTime
       if ctime > self._maxGameTime:
         self._maxGameTime=ctime
@@ -222,6 +220,12 @@ class MyWin (Gtk.Window):
       else:
         self._minGameTime = ctime
 
+      if self._showDebug:
+        print("ballx:",int(self._ballx),"bally:",int(self._bally),
+              "batup:",self._batl-self._batlenhalve,"batdwn:",self._batl+self._batlenhalve,
+              "predct:",self._ypredict,"time:",int(ctime))
+
+      self._goalanimation = True
       if Bat.Left == bat:
         self._sl+=1
         self._batlead = Bat.Left
@@ -315,12 +319,12 @@ class MyWin (Gtk.Window):
 
     def draw_score(self, cr):
       cr.set_source_rgb(1.0, 1.0, 1.0)
-      self._sr%=100;self._sl%=100 # only 2 digits are allowed
+      sr=self._sr%100;sl=self._sl%100 # only 2 digits are allowed
       digWidth = self._digColWidth * 5
-      self.draw_digit(cr, int(self._sl/10), self._winWidth/2 - (digWidth*2) - self._digColWidth, self._digRowHeight)  
-      self.draw_digit(cr, self._sl-10*int(self._sl/10), self._winWidth/2 - (digWidth) - self._digColWidth, self._digRowHeight)  
-      self.draw_digit(cr, int(self._sr/10), self._winWidth/2 + (2*self._digColWidth), self._digRowHeight)  
-      self.draw_digit(cr, self._sr-10*int(self._sr/10), self._winWidth/2 + (digWidth+2*self._digColWidth), self._digRowHeight)  
+      self.draw_digit(cr, int(sl/10), self._winWidth/2 - (digWidth*2) - self._digColWidth, self._digRowHeight)  
+      self.draw_digit(cr, sl-10*int(sl/10), self._winWidth/2 - (digWidth) - self._digColWidth, self._digRowHeight)  
+      self.draw_digit(cr, int(sr/10), self._winWidth/2 + (2*self._digColWidth), self._digRowHeight)  
+      self.draw_digit(cr, sr-10*int(sr/10), self._winWidth/2 + (digWidth+2*self._digColWidth), self._digRowHeight)  
       cr.fill() 
 
     def draw_net(self, cr):
@@ -379,8 +383,8 @@ class MyWin (Gtk.Window):
       self.draw_score(cr)
       self.draw_net(cr)
       self.draw_ball(cr)
-      self.draw_bat(cr,False)
-      self.draw_bat(cr,True)
+      self.draw_bat(cr,Bat.Left)
+      self.draw_bat(cr,Bat.Right)
       self.draw_debug(cr)
       self.timer_tick()
       self.queue_draw()
