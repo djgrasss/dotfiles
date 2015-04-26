@@ -72,6 +72,7 @@ class MyWin (Gtk.Window):
       self.create_screenshot()
       self.set_app_paintable(True)
       builder = Gtk.Builder()
+      builder.set_translation_domain('xfce4-session')
       builder.add_from_file(ui_file)
       widget = builder.get_object("main_widget")
       self.add(widget)

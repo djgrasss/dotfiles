@@ -23,9 +23,9 @@ while read line; do
     name:disk) exec thunar --class="ThunarHome" & ;;
     name:cpu) exec xfce4-terminal -e htop -T "TerminalHtop" & ;;
     name:battery) exec xfce4-power-information & ;;
-    name:wlan) ;;
+    name:wlan) exec $HOME/.i3/wifi_connect ;;
     name:lan) ;;
-    name:date) exec zenity --calendar &>/dev/null &;;
+    name:date) exec zenity --calendar &>/dev/null & ;;
     name:time) ;;
     name:mail) exec exo-open "https://gmail.com" &>/dev/null & ;;
     name:logout) exec $HOME/.i3/logout.py &>/dev/null & ;;
