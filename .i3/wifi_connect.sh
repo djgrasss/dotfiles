@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #ap=$(nmcli dev wifi | tail -n +2| awk -F"'" '{print $2}' | dmenu -i)
-aps=$(/usr/bin/nmcli dev wifi | tail -n +2| /usr/bin/awk -F"'" '{print $2}')
+aps=$(/usr/bin/nmcli dev wifi | tail -n +2| /usr/bin/awk -F"'" '{print $2}'|sort|uniq)
 i=1
 IFS=$'\n'
 for n in $aps; do
