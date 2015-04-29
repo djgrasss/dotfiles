@@ -184,6 +184,7 @@ for_window [class="^ThunarHome$"] floating enable
 for_window [class="^xfce4-appfinder$"] floating enable
 for_window [class="^cameraclient$"] floating enable
 for_window [class="^blueman-manager$"] floating enable
+for_window [class="^galculator$"] floating enable
 
 # dpmsoff
 exec --no-startup-id ~/bin/dpmsoff
@@ -199,4 +200,4 @@ exec --no-startup-id nm-applet &
 exec --no-startup-id blueman-applet &
 exec --no-startup-id volumeicon &
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
-
+exec --no-startup-id feh --bg-scale /usr/share/backgrounds/xfce/xfce-blue.jpg &
