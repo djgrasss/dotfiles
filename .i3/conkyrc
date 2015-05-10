@@ -27,7 +27,7 @@ TEXT
 { "full_text" : " ${memperc}%", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "memory" },\
 { "full_text" : "${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}% ${battery_time}",\
       "color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },\
-{ "full_text" : "${if_up wlan0} ${exec ~/.i3/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},\
+{ "full_text" : "${if_up wlan0} ${exec ~/bin/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},\
 { "full_text" : "${template4 eth0 eth1 eth2 p3p1}", "color" : "\#ffffff", "name" : "lan" },\
 { "full_text" : "${if_up tap0}${endif}", "color" : "\#0000ff", "name" : "vpn"},\
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },\
