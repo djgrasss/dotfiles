@@ -59,13 +59,14 @@ class MyWin (Gtk.Window):
     _manual = False         # if man vs computer
     _showDebug = False      # shows debug info
     _showTime = True        # shows time instead of score
+    _showHelp = False        # shows short help
     _dopredict = True       # predict ball position and adjust bats accordingly
     _ypredict = 0           # predicted y ball position
     _digits = [ [0xf9,0x99,0xf0],[0x11,0x11,0x10],[0xf1,0xf8,0xf0],[0xf1,0xf1,0xf0],[0x99,0xf1,0x10],
                 [0xf8,0xf1,0xf0],[0xf8,0xf9,0xf0],[0xf1,0x11,0x10],[0xf9,0xf9,0xf0],[0xf9,0xf1,0xf0] ]
 
     def key_pressed(self, widget, event):
-      print("key: ", event.keyval, "; state: ", int(event.state))
+      #print("key: ", event.keyval, "; state: ", int(event.state))
       # Ctrl-C or Esc - Exit
       if event.keyval == 65307 or \
          (event.keyval == 99 and event.state == 4):
@@ -81,6 +82,8 @@ class MyWin (Gtk.Window):
         self._showTime = not self._showTime
       elif event.keyval == 114:   # R is pressed
         self._sl = 0; self._sr = 0
+      elif event.keyval == 104:   # H is pressed
+        self._showHelp = not self._showHelp
       return False
 
     def motion_notify_event(self, widget, event):
@@ -382,6 +385,34 @@ class MyWin (Gtk.Window):
       cr.move_to(10,70)
       cr.show_text("fps: "+ '%.1f' %  self._fps)
 
+    def draw_help(self, cr):
+      if not self._showHelp:
+        return
+      fSize = 12
+      xpos = 120
+      ypos = 200
+      cr.set_source_rgb(1.0, 1.0, 1.0)
+      cr.set_font_size(fSize)
+      cr.select_font_face ("monospace");
+
+      cr.move_to(xpos,ypos)
+      cr.show_text("Esc,Ctrl-c : Exit")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         m : Switch on/off manual mode. Left bat is controlled with the mouse")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         p : Switch on/off ball position prediction")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         t : Switch on/off time/score display")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         r : Reset score")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         d : Switch on/off debug information")
+
     def area_draw(self, widget, cr):
       cTime = time.perf_counter()
       self._fps = 1/(cTime - self._prevFrameTime)
@@ -394,6 +425,7 @@ class MyWin (Gtk.Window):
       self.draw_bat(cr,Bat.Left)
       self.draw_bat(cr,Bat.Right)
       self.draw_debug(cr)
+      self.draw_help(cr)
       self.timer_tick()
       self.queue_draw()
       return True
