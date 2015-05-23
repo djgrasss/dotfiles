@@ -399,7 +399,7 @@ class MyWin (Gtk.Window):
       cr.show_text("Esc,Ctrl-c : Exit")
       ypos+=fSize
       cr.move_to(xpos,ypos)
-      cr.show_text("         m : Switch on/off manual mode. Left bat is controlled with the mouse")
+      cr.show_text("         m : Switch on/off manual mode. Right bat is controlled with the mouse")
       ypos+=fSize
       cr.move_to(xpos,ypos)
       cr.show_text("         p : Switch on/off ball position prediction")
@@ -412,6 +412,9 @@ class MyWin (Gtk.Window):
       ypos+=fSize
       cr.move_to(xpos,ypos)
       cr.show_text("         d : Switch on/off debug information")
+      ypos+=fSize
+      cr.move_to(xpos,ypos)
+      cr.show_text("         h : Switch on/off this help")
 
     def area_draw(self, widget, cr):
       cTime = time.perf_counter()
