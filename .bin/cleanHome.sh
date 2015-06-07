@@ -19,10 +19,10 @@ vacuumFirefox()
   [ -z "$hDir" ] && hDir=~/
 
   for i in "$hDir"/.mozilla/firefox/*/*.sqlite; do
-    fileSizeBefore=$(du -b $i|awk '{ print $1 }')
+    fileSizeBefore=$(wc -c < $i)
     counterBefore=$((counterBefore + fileSizeBefore))
     sqlite3 "$i" vacuum
-    fileSizeAfter=$(du -b $i|awk '{ print $1 }')
+    fileSizeAfter=$(wc -c < $i)
     counterAfter=$((counterAfter + fileSizeAfter))
     echo "$fileSizeBefore $fileSizeAfter - $(basename $i)"
   done

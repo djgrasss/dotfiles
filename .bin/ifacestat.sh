@@ -9,8 +9,11 @@ while [ -w /proc/self/fd/1 ]; do
   c=$((tx+rx))
   s="$(((c-${oc:-c})))"
   [ $s -ge 0 ] && {
-    [ -t 1 ] && ($ec -n "\033[s$s ${2+$((tx-${otx:-tx}))} ${2+$((rx-${orx:-rx}))}\033[K\033[u")
-    [ ! -t 1 ] && echo "$s ${2+$((tx-${otx:-tx}))} ${2+$((rx-${orx:-rx}))}" 
+    if [ -t 1 ]; then
+      ($ec -n "\033[s$s ${2+$((tx-${otx:-tx}))} ${2+$((rx-${orx:-rx}))}\033[K\033[u")
+    else
+      echo "$s ${2+$((tx-${otx:-tx}))} ${2+$((rx-${orx:-rx}))}"
+    fi
   }
   oc=$c
   otx=$tx
