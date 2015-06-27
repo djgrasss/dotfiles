@@ -36,6 +36,7 @@ alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search
 alias readpass='echo -n $(read -s passwd_;echo -n $passwd_)'
 alias cdh='cd ~'
 alias timer='export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch -n 1 -t banner $p;eval "echo $p"'
+alias top10='ps aux --sort -rss | head'
 alias gc='git checkout'
 alias gcb='git checkout -branch'
 alias ga='git add'
