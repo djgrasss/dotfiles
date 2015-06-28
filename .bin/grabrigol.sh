@@ -2,6 +2,7 @@
 
 print_usage_examples()
 {
+  {
   echo "Examples:"
   echo 
   echo "Save screenshot as a png:" 
@@ -24,29 +25,32 @@ print_usage_examples()
   echo "     $0 192.168.1.123 | convert bmp:- jpeg:-;\\"
   echo "     echo -ne \"\\r\\n--myboundary\\r\\n\";\\"
   echo "   done) | nc -l 12345"
-
+  } >&2
   exit 0
 } 
 
 print_usage_exit()
 {
+  {
+  [ -n "$1" ] && echo -e "ERROR: $1\n"
   echo "Usage: $0 [-ec] riogl_scope_ip_address [output_file_name]"
   echo "       -e shows usage examples"
   echo "       -c will try to convert a bmp stream into a png"
   echo "          If ImageMagic is missing the bmp stream is output and a warning"
   echo "       If output file name is missing the stdout will be used"
+  } >&2
   exit 1
 }
 
 while getopts ":c:e" opt; do
   case $opt in
-      e) print_usage_examples;;
-      c) doPng=1;shift $((OPTIND-1));;
-     \?) print_usage_exit;;
+      e) print_usage_examples ;;
+      c) doPng=1 ;;
+     \?) print_usage_exit "Invalid option: $OPTARG" ;;
   esac
 done
-
-[ -z "$1" ] && print_usage_exit
+shift $((OPTIND-1))
+[ -z "$1" ] && print_usage_exit "Scope ip address is not specified"
 outfile="$2"
 
 [ -z "$outfile" ] && outfile="/proc/self/fd/1"
