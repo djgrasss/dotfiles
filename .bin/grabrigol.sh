@@ -6,8 +6,25 @@ print_usage_examples()
   echo 
   echo "Save screenshot as a png:" 
   echo "  $0 -c 192.168.1.123 \"\$(date +"rigol.screenshot.%Y.%m.%d.%H.%M.%S.png")\""
-  echo "Create an HTTP server on the port 12345 serving scope's screenshots:" 
-  echo "  while :;do (echo -ne \"HTTP/1.1 200 OK\\r\\n\$(date +'Date: %c')\\r\\nContent-Type: image/bmp\\r\\n\\r\\n\";$0 192.168.1.123)|nc -l 12345; done"
+  echo 
+  echo "Create an HTTP server on port 12345 serving scope's screenshots:" 
+  echo "while :;do \\"
+  echo "  (echo -ne \"HTTP/1.1 200 OK\\r\\n\";\\"
+  echo "   echo -ne \"\$(date +'Date: %c')\\r\\n\";\\"
+  echo "   echo -ne \"Content-Type: image/bmp\\r\\n\\r\\n\";\\"
+  echo "   $0 192.168.1.123)|nc -l 12345; done"
+  echo 
+  echo "Create an HTTP server on port 12345 serving scope's screenshots as"
+  echo "a  MJPG stream with 1 screenshot in 5 seconds:" 
+  echo "(while :;do echo;sleep 5;done) | \\"
+  echo "  (echo -ne \"HTTP/1.1 200 OK\\r\\nContent-Type: multipart/x-mixed-replace;\";\\"
+  echo "   echo -ne \"boundary=myboundary\\r\\n\\r\\n--myboundary\\r\\n\";\\"
+  echo "   while read; do\\"
+  echo "     echo -ne \"Content-Type: image/jpeg\\r\\n\\r\\n\";\\"
+  echo "     $0 192.168.1.123 | convert bmp:- jpeg:-;\\"
+  echo "     echo -ne \"\\r\\n--myboundary\\r\\n\";\\"
+  echo "   done) | nc -l 12345"
+
   exit 0
 } 
 
@@ -16,9 +33,9 @@ print_usage_exit()
   echo "Usage: $0 [-ec] riogl_scope_ip_address [output_file_name]"
   echo "       -e shows usage examples"
   echo "       -c will try to convert a bmp stream into a png"
-  echo "          If ImageMagic is missing will output the bmp stream and a warning"
+  echo "          If ImageMagic is missing the bmp stream is output and a warning"
   echo "       If output file name is missing the stdout will be used"
- exit 1
+  exit 1
 }
 
 while getopts ":c:e" opt; do
