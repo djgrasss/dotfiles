@@ -1,0 +1,8 @@
+[dotfiles]
+repository = /home/alex/dotfiles
+prefix = .
+ignore = [
+    '.git',
+    '.gitignore',
+    '*.swp']
+
