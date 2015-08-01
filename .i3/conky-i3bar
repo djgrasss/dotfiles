@@ -16,7 +16,7 @@ pid=$!
 trap "kill $pid; exit 0" INT TERM EXIT
 
 while read line; do
-  nb=$(echo $line|awk -F, '{gsub(/[\{\}\"\[]/, "", $0);print $1";"$2}')
+  nb=$(echo $line|awk -F, '{gsub(/^./,"", $0);gsub(/[\{\}\"\[]/, "", $0);print $1";"$2}')
   # if button is needed - ${nb#*;}
   case "${nb%%;*}" in
     name:keyboard) exec xfce4-keyboard-settings & ;;
