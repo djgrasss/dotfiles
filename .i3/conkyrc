@@ -16,7 +16,7 @@ template2 ${template1 \1}${template1 \2}
 template3 ${template1 \1}${template2 \2 \3}
 template4 ${template2 \1 \2}${template2 \3 \4}
 
-#{ "full_text" : ${if_up wlan0}" ${exec ~/.i3/apstatus.sh} ↓${downspeed wlan0}/s ↑${upspeed wlan0}/s" },
+#{ "full_text" : "${if_up wlan0}↓${downspeed wlan0} ↑${upspeed wlan0}${endif}", "color" : "\#ffffff", "name" : "wlan_speed"},\
 #      
 #  
 TEXT
@@ -24,7 +24,7 @@ TEXT
 { "full_text" : " ${fs_free /}", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "disk" },\
 { "full_text" : " ${cpu}%", "color" : "${if_match ${acpitemp}>70}\#ff0000${else}${if_match ${acpitemp}>65}\#ff6000${else}${if_match ${acpitemp}>60}\#ffff00${else}\#ffffff${endif}${endif}${endif}", "name" : "cpu" },\
 { "full_text" : " ${memperc}%", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "memory" },\
-{ "full_text" : "${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}% ${battery_time}",\
+{ "full_text" : "${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}%${if_empty ${battery_time}}${else} ${battery_time}${endif}",\
       "color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },\
 { "full_text" : "${if_up wlan0} ${exec ~/bin/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},\
 { "full_text" : "${template4 eth0 eth1 eth2 p3p1}", "color" : "\#ffffff", "name" : "lan" },\
