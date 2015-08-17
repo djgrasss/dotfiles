@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#profile_id=nat_forwarder
-profile_id=static
+profile_id=nat_forwarder
+#profile_id=static
 dhcp_min=100
 dhcp_max=150
 out_iface=wlan0
