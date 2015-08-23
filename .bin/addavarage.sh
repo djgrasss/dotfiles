@@ -11,7 +11,11 @@ while read newLine; do
     }
     a=("${a[@]}" "$newLine") # add to the end
     sum=$((sum + newLine))
-    echo "$newLine $((sum/avs))"
+    if [ -t 1 ]; then
+      echo -ne "\033[s$newLine $((sum/avs))\033[K\033[u"
+    else
+      echo "$newLine $((sum/avs))"
+    fi
   }
 done
 
