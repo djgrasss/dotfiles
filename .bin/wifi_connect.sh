@@ -10,7 +10,7 @@ aps=$(echo "$nmout" | awk 'BEGIN{cnt=0}\
                             if(/^SECURITY/){sec=gensub(/^SECURITY:(.*)/,"\\1","g");if(length(sec)==0){sec="--"}};\
                             cnt++;if(cnt>4){cnt=0;print ssid" ["bssid"] ["freq"] ["sec"] ["signal"]"}}'|sort -nr -t[ -k5|uniq)
 i=1
-ifacecon=$(nmcli dev status | awk '$2 ~ "wireless" && $3 ~ "connected" {printf("disconnect [%s]\n",$1)}')
+ifacecon=$(nmcli dev status | awk '$2 ~ "wireless" && $3 == "connected" {printf("disconnect [%s]\n",$1)}')
 for n in $ifacecon; do
   apv[i]=$n
   i=$((i+1))
