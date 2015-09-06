@@ -182,6 +182,7 @@ new_window pixel 2
 for_window [class="^Psi-plus$"] floating enable, move container to workspace 2
 for_window [title="^TerminalHtop$"] floating enable
 for_window [class="^ThunarHome$"] floating enable
+for_window [title="^File Operation Progress$"] floating enable
 for_window [class="^xfce4-appfinder$"] floating enable
 for_window [class="^cameraclient$"] floating enable
 for_window [class="^blueman-manager$"] floating enable
