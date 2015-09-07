@@ -20,6 +20,11 @@ class SingleInstance:
 
 class MyStatusIcon:
     def __init__(self):
+        self.iface = 'wlan0'
+        self.refresh_time = 1000 # ms
+        self.max_tput = 100 * 1024 # 100k
+        self.rx_fill_color = 0xff0000ff
+        self.tx_fill_color = 0x0000ffff
         self.statusicon = Gtk.StatusIcon()
         has_alpha = True
         bits_per_sample = 8
@@ -28,27 +33,40 @@ class MyStatusIcon:
         self.pixBuf.fill(0x00000000)
         self.statusicon.set_from_pixbuf(self.pixBuf)
         self.statusicon.connect("popup-menu", self.right_click_event)
+        #self.statusicon.connect("query-tooltip", self.query_tooltip)
         self.statusicon.set_has_tooltip(True)
         res = self.get_net_bytes('wlan0')
         self.rx = res['rx']
         self.tx = res['tx']
-        GObject.timeout_add(1000, self.redraw_icon)
+        self.tooltip = None
+        GObject.timeout_add(self.refresh_time, self.update_icon)
         #window = Gtk.Window()
         #window.connect("destroy", lambda w: Gtk.main_quit())
         #window.show_all()
 
-    def redraw_icon(self):
+    """
+    this doesn't help to dynamically update the tooltip
+    it will only update if a mouse moves over it
+    def query_tooltip(self, widget, x, y, keyboard_tip, tooltip):
+        self.tooltip = tooltip
+        self.tooltip.set_markup("RX: %d\nTX: %d"% (self.rxdiff,self.txdiff))
+        return True
+    """
+
+    def update_icon(self):
         result = self.get_net_bytes('wlan0')
         rxdiff = result['rx'] - self.rx
         txdiff = result['tx'] - self.tx
         self.statusicon.set_tooltip_markup("RX: %d\nTX: %d"% (rxdiff,txdiff))
         #print "%d %d"% (rxdiff,txdiff)
         self.pixBuf.fill(0x00000000)
-        self.fill_left(rxdiff/102400.0)
-        self.fill_right(txdiff/102400.0)
+        self.fill_left (rxdiff/self.max_tput)#*self.refresh_time/1000)
+        self.fill_right(txdiff/self.max_tput)#*self.refresh_time/1000)
         self.rx = result['rx']
         self.tx = result['tx']
         self.statusicon.set_from_pixbuf(self.pixBuf)
+        if self.tooltip:
+          self.tooltip.trigger_tooltip_query(self.statusicon.get_screen().get_display()) 
         return True
 
     def fill_left(self, percent):
@@ -60,7 +78,7 @@ class MyStatusIcon:
         if y == 50:
             return
         subbuf = self.pixBuf.new_subpixbuf(0,y,24,50-y)
-        subbuf.fill(0xff0000ff)
+        subbuf.fill(self.rx_fill_color)
 
     def fill_right(self, percent):
         if percent > 1.0:
@@ -71,7 +89,7 @@ class MyStatusIcon:
         if y == 50:
             return
         subbuf = self.pixBuf.new_subpixbuf(27,y,23,50-y)
-        subbuf.fill(0x0000ffff)
+        subbuf.fill(self.tx_fill_color)
     
     def get_net_bytes(self, dev='eth0'):
         """Read network interface traffic counters"""
