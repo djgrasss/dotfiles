@@ -18,7 +18,7 @@ trap "kill $pid; exit 0" INT TERM EXIT
 while read line; do
   nb=$(echo $line|awk -F, '{gsub(/^./,"", $0);gsub(/[\{\}\"\[]/, "", $0);print $1";"$2}')
   # if button is needed - ${nb#*;}
-  # left button -button:1, right - button:2
+  # left button -button:1, right - button:3
   case "${nb%%;*}" in
     name:keyboard) exec xfce4-keyboard-settings & ;;
     name:disk) exec thunar --class="ThunarHome" & ;;
