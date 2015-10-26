@@ -4,6 +4,12 @@ winsize=${1:-60} # number of samples to store
 maxval=${2:-100} # maximum value of displayed range
 legend1=${3:-Current} #
 
+# this function is just for debugging gnuplot input
+gnuplott () {
+  echo "$2"
+}
+
+terminal="wxt"   # terminal type (x11,wxt,qt)
 samples=0        # samples counter
 IFS='\n'
 while read newLine; do
@@ -24,13 +30,13 @@ while read newLine; do
     done
   }
 done | gnuplot -e "set yrange [0:$maxval]; \
-                   set term wxt noraise; \
-                   set xtics 0,1 rotate nomirror scale 0.0 font 'default,6'; \
+                   set term $(echo $terminal) noraise; \
+                   set xtics 1 rotate nomirror scale 0.0 font 'default,6'; \
                    set style fill transparent solid 0.5; \
                    plot '-' u 1:2 t '$legend1' w filledcurves x1 fc rgb 'red'\
-$([ -n "$4" ] && echo  ','\''-'\'' u 1:3 t '\'$4\'' w filledcurves x1 fc rgb '\''blue'\')\
-$([ -n "$5" ] && echo  ','\''-'\'' u 1:4 t '\'$5\'' w filledcurves x1 fc rgb '\''green'\')\
-$([ -n "$6" ] && echo  ','\''-'\'' u 1:5 t '\'$6\'' w filledcurves x1 fc rgb '\''yellow'\')\
+$([ -n "$4" ] && echo  ",'-' u 1:3 t '$4' w filledcurves x1 fc rgb 'blue'")\
+$([ -n "$5" ] && echo  ",'-' u 1:4 t '$5' w filledcurves x1 fc rgb 'green'")\
+$([ -n "$6" ] && echo  ",'-' u 1:5 t '$6' w filledcurves x1 fc rgb 'yellow'")\
                    ;
                    do for [i=0:100000000]{replot}" 2>/dev/null
 
