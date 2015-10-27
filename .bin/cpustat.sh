@@ -1,9 +1,10 @@
 #!/bin/sh
 
 ec='echo -e';[ -n "$($ec)" ] && ec='echo'
+cpu="cpu$1 "
 
 while [ -w /proc/self/fd/1 ]; do
-  res=$(awk '$0~/^cpu /{for(i=2;i<=NF;++i){s+=$i}printf "%.0f;%.0f\n",s,$5+$6}' /proc/stat)
+  res=$(awk -v cpu="$cpu" '{if(match($0,cpu)) {for(i=2;i<=NF;++i){s+=$i}printf "%.0f;%.0f\n",s,$5+$6}}' /proc/stat)
   total=${res%%;*}
   idle=${res#*;}
   [ -n "$prevtotal" ] && {
