@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Usage example: 
+# ((cpustat.sh 0 | (while read line; do echo "0:$line";done)) & \
+#  (cpustat.sh 1 | (while read line; do echo "1:$line";done)) & \
+#  (cpustat.sh 2 | (while read line; do echo "2:$line";done)) & \
+#  (cpustat.sh 3 | (while read line; do echo "3:$line";done))) | \
+#  bin/combinepipes.sh 4
 # by default 2 pipes are combined
 pipes=${1:-2}
 
