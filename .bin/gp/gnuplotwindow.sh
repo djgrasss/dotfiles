@@ -23,7 +23,7 @@ while read newLine; do
     echo "set xrange [${samples}:$((samples+${#a[@]}-1))]"
     echo "set style fill transparent solid 0.5"
     echo -n "plot "
-    for ((j=0;j<=$nf;++j)); do
+    for ((j=0;j<$nf;++j)); do
       echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' w filledcurves x1 "
       [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
       echo -n ","
