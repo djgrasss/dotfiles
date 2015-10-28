@@ -1,14 +1,15 @@
 #!/bin/bash
 
-winsize=${1:-60} # number of samples to store
-maxval=${2:-100} # maximum value of displayed range
+winsize=${1:-60} # number of samples to show
+maxval=${2:-100} # maximum value of displayed y range. " " for infinity
+shift;shift      # the rest is the titles
 
 terminal="wxt"   # terminal type (x11,wxt,qt)
 
 samples=0        # samples counter
 IFS='\n'
-colors=( "red" "blue" "green" "yellow" )
-titles=( "$3" "$4" "$5" "$6" )
+titles=( "$@" )
+colors=( "red" "blue" "green" "yellow" "cyan" "magenta")
 while read newLine; do
   [ -n "$newLine" ] && {
     nf=$(echo "$newLine"|awk '{print NF}')
@@ -22,8 +23,10 @@ while read newLine; do
     echo "set xrange [${samples}:$((samples+${#a[@]}-1))]"
     echo "set style fill transparent solid 0.5"
     echo -n "plot "
-    for ((j=0;j<$nf;++j)); do
-      echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' w filledcurves x1 fc rgb '${colors[$j]}',"
+    for ((j=0;j<=$nf;++j)); do
+      echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' w filledcurves x1 "
+      [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
+      echo -n ","
     done
     echo
     for ((j=0;j<$nf;++j)); do
