@@ -15,10 +15,8 @@ vacuumFirefox()
   local counterBefore=0
   local counterAfter=0
   local fileSizeBefore fileSizeAfter
-  local hDir=$homeDir
-  [ -z "$hDir" ] && hDir=~/
 
-  for i in "$hDir"/.mozilla/firefox/*/*.sqlite; do
+  for i in "$HOME"/.mozilla/firefox/*/*.sqlite; do
     fileSizeBefore=$(wc -c < $i)
     counterBefore=$((counterBefore + fileSizeBefore))
     sqlite3 "$i" vacuum
@@ -31,7 +29,6 @@ vacuumFirefox()
 }
 
 homeSizeBefore=$(du -sb $HOME 2>/dev/null|awk '{ print $1 }')
-
 # cleaning phase
 vacuumFirefox || exit 1
 cd "$HOME"
@@ -41,6 +38,7 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';rm -rf $HOME/{}" <<EOLIST
 .local/share/Trash/*
 .adobe/Flash_Player/AssetCache/*
 .mozilla/firefox/*/Cache/*
+.mozilla/firefox/Crash\ Reports/
 .davfs2/cache/*
 .config/sublime-text-3/Cache/*
 EOLIST
