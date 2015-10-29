@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage example: 
-# ((cpustat.sh 0 | (while read line; do echo "0:$line";done)) & \
+# ((cpustat.sh 0 | awk '{print "0:"$0;fflush()}') & \
 #  (cpustat.sh 1 | (while read line; do echo "1:$line";done)) & \
 #  (cpustat.sh 2 | (while read line; do echo "2:$line";done)) & \
 #  (cpustat.sh 3 | (while read line; do echo "3:$line";done))) | \
