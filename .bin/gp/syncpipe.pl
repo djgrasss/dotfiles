@@ -8,7 +8,7 @@ use IO::File;
 STDOUT->autoflush(1);
 STDERR->autoflush(1);
 
-die "Usage: $0 timeout_in_sec\n" if @ARGV < 1;
+die "Usage: $0 timeout_in_sec [default value]\n" if @ARGV < 1;
 
 my $lastStr = "$ARGV[1]\n";
 
