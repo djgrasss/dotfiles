@@ -10,7 +10,7 @@ STDERR->autoflush(1);
 
 die "Usage: $0 timeout_in_sec\n" if @ARGV < 1;
 
-my $lastStr = "";
+my $lastStr = "$ARGV[1]\n";
 
 $SIG{ALRM} = sub {
   print $lastStr;
