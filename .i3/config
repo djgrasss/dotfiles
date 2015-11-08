@@ -128,6 +128,8 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec ~/bin/logout.py
 bindsym XF86PowerOff exec ~/bin/logout.py
 bindsym $mod+Shift+w exec ~/bin/wifi_connect.sh
+# toggle normal and pixel border width
+bindsym $mod+Ctrl+space exec ~/.i3/toggle_border.sh
 
 # volume control
 #bindsym XF86AudioLowerVolume exec /home/alex/bin/volume_notify.sh down
@@ -188,6 +190,7 @@ for_window [class="^xfce4-appfinder$"] floating enable
 for_window [class="^cameraclient$"] floating enable
 for_window [class="^blueman-manager$"] floating enable
 for_window [class="^galculator$"] floating enable
+for_window [class="^Yad$"] floating enable border normal
 
 # dpmsoff
 exec --no-startup-id ~/bin/dpmsoff
