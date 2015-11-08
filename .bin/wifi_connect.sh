@@ -19,7 +19,7 @@ for n in $aps; do
   apv[i]=$n
   i=$((i+1))
 done
-ap=$(/usr/bin/zenity --entry --title "Available AP" --text "Choose AP to join" --entry-text "${apv[@]}")
+ap=$(/usr/bin/yad --entry --title "Available AP" --text "Choose AP to join" --entry-text "${apv[@]}")
 [ -z "$ap" ] && exit 1
 # is that a disconnection request?
 for n in $ifacecon; do
@@ -42,7 +42,7 @@ if [ -n "$found" ]; then
 else
   secur=$(nmcli dev wifi | grep "$ap_bssid" | awk -F'MB/s' '{print $2}' | awk '{print $2}')
   if [ "$secur" != "--" ]; then
-    pass=$(/usr/bin/zenity --password --title "AP password:" --text "Enter AP password:")
+    pass=$(/usr/bin/yad --image='dialog-password' --image='dialog-password' --entry --title "AP password:" --text "Enter AP password:" --hide-text)
     [ -n "$pass" ] && {
       /usr/bin/nmcli dev wifi connect "$ap_bssid" password "$pass" --private
     }
