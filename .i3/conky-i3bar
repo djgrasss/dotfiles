@@ -30,7 +30,7 @@ while read line; do
       esac;;
     name:wlan) exec $HOME/bin/wifi_connect.sh &>/dev/null &  ;;
     name:lan) ;;
-    name:date) exec zenity --calendar &>/dev/null & ;;
+    name:date) exec yad --calendar --title='Calendar selection' &>/dev/null & ;;
     name:time) ;;
     name:mail) exec exo-open "https://gmail.com" &>/dev/null & ;;
     name:logout) exec $HOME/bin/logout.py &>/dev/null & ;;
