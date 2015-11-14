@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# workaroud for the dash not handling -e correctly
 ec='echo -e';[ -n "$($ec)" ] && ec='echo'
 
 f="/sys/class/net/${1:-wlan0}/statistics"
@@ -14,7 +15,7 @@ while [ -w /proc/self/fd/1 ]; do
   [ $txd -lt 0 ] && txd=$((txd+4294967296))
   [ $rxd -lt 0 ] && rxd=$((rxd+4294967296))
   if [ -t 1 ]; then
-    ($ec -n "\033[s$((txd+rxd)) ${2+$txd} ${2+$rxd}\033[K\033[u")
+    $ec -n "\033[s$((txd+rxd)) ${2+$txd} ${2+$rxd}\033[K\033[u"
   else
     echo "$((txd+rxd)) ${2+$txd} ${2+$rxd}"
   fi
