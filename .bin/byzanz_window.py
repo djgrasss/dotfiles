@@ -28,7 +28,10 @@ def byzanz_window(filename, duration=10, delay=1, is_cursor=False,
     
     xprop = check_output(['xprop', '-id', winid])
     match = re.search(r'_NET_FRAME_EXTENTS\(CARDINAL\) = (\d+), (\d+), (\d+), (\d+)', xprop)
-    left, right, top, bottom = map(int, match.groups())
+    if match != None:
+      left, right, top, bottom = map(int, match.groups())
+    else:
+      left, right, top, bottom = (0,0,0,0)
     
     print("Press enter when you are ready to capture.")
     raw_input()
