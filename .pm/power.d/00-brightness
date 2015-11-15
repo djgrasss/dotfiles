@@ -1,0 +1,12 @@
+#!/bin/bash
+#logger "*** brighness script started***"
+case $1 in
+  true)
+    logger "Enable screen power saving"
+    echo 600 > /sys/class/backlight/intel_backlight/brightness
+    ;;
+  false)
+    logger "Disable screen power saving"
+    echo 937 > /sys/class/backlight/intel_backlight/brightness
+    ;;
+esac

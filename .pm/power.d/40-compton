@@ -1,0 +1,18 @@
+#!/bin/bash
+
+case $1 in
+  true)
+    logger "Compton is disabled if run on a battery"
+    killall compton
+    ;;
+  false)
+    logger "Compton is enabled"
+    /usr/bin/pgrep '^compton' &>/dev/null && exit 0 # pm-util doesn't like bad exit statuses
+#    export $(/usr/bin/awk 'BEGIN{RS="\x00"}/(DISPLAY|XAUTHORITY)/{print $0}' "/proc/$(/usr/bin/pgrep 'xfsettingsd')/environ")
+    export $(/usr/bin/awk 'BEGIN{RS="\x00"}/(DISPLAY|HOME)/{print $0}' "/proc/$(/usr/bin/pgrep 'xfsettingsd')/environ")
+    /usr/bin/compton -b
+    ;;
+esac
+
+exit 0
+
