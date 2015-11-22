@@ -25,10 +25,21 @@ ssmtp
 .pulse*
 .smbcredentials
 .thumbnails
+.vimrc
+.Xauthority
+.xchm
+.xsession-errors
 Books
 Downloads
 games
+Music
+Videos
+Pictures
 VirtualBox*
+bin
+.bin
+dotfiles
+
 EOEXCL
 }
 
