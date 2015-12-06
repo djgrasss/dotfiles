@@ -26,11 +26,11 @@ template8 ${template6 \1 \2}${template6 \3 \4}
 #  
 #{ "full_text" : "", "color" : "${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}\#ffffff${else}\#ff0000${endif}${else}\#ffffff${endif}", "name" : "mail" },\
 TEXT
-[{ "full_text" : " ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },\
+[{ "full_text" : "${if_existing /sys/class/power_supply/AC/online 1} ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}${endif}", "color" : ${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}"\#ff0000"${else}"\#ffffff"${endif}, "name" : "keyboard" },\
 { "full_text" : " ${fs_free /}", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "disk" },\
 { "full_text" : " ${cpu}%", "color" : "${if_match ${acpitemp}>70}\#ff0000${else}${if_match ${acpitemp}>65}\#ff6000${else}${if_match ${acpitemp}>60}\#ffff00${else}\#ffffff${endif}${endif}${endif}", "name" : "cpu" },\
 { "full_text" : " ${memperc}%", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "memory" },\
-{ "full_text" : "${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}%${if_empty ${battery_time}}${else} ${battery_time}${endif}",\
+{ "full_text" : "${battery_short}${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}%${if_empty ${battery_time}}${else} ${battery_time}${endif}",\
       "color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },\
 { "full_text" : "${template7 wlan0 wlan1 wlp1s0}", "color" : "\#ffffff", "name" : "wlan"},\
 { "full_text" : "${template4 eth0 eth1 eth2 p3p1}", "color" : "\#ffffff", "name" : "lan" },\
