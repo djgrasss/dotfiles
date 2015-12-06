@@ -16,6 +16,11 @@ template2 ${template1 \1}${template1 \2}
 template3 ${template1 \1}${template2 \2 \3}
 template4 ${template2 \1 \2}${template2 \3 \4}
 
+template5 ${if_up \1} ${exec ~/bin/apstatus.sh \1}${endif} 
+template6 ${template5 \1}${template5 \2}
+template7 ${template5 \1}${template6 \2 \3}
+template8 ${template6 \1 \2}${template6 \3 \4}
+
 #{ "full_text" : "${if_up wlan0}↓${downspeed wlan0} ↑${upspeed wlan0}${endif}", "color" : "\#ffffff", "name" : "wlan_speed"},\
 #      
 #  
@@ -27,7 +32,7 @@ TEXT
 { "full_text" : " ${memperc}%", "color" : "${if_match ${memperc}<90}\#ffffff${else}\#ff0000${endif}", "name" : "memory" },\
 { "full_text" : "${if_match ${battery_percent}>80}${else}${if_match ${battery_percent}>50}${else}${if_match ${battery_percent}>20}${else}${endif}${endif}${endif} ${battery_percent}%${if_empty ${battery_time}}${else} ${battery_time}${endif}",\
       "color" : "${if_match ${battery_percent}>50}\#ffffff${else}${if_match ${battery_percent}>20}\#ffff00${else}\#ff0000${endif}${endif}", "name" : "battery" },\
-{ "full_text" : "${if_up wlan0} ${exec ~/bin/apstatus.sh}${endif}", "color" : "\#ffffff", "name" : "wlan"},\
+{ "full_text" : "${template7 wlan0 wlan1 wlp1s0}", "color" : "\#ffffff", "name" : "wlan"},\
 { "full_text" : "${template4 eth0 eth1 eth2 p3p1}", "color" : "\#ffffff", "name" : "lan" },\
 { "full_text" : "${if_up tap0}${endif}", "color" : "\#0000ff", "name" : "vpn"},\
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },\
