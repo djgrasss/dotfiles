@@ -3,14 +3,14 @@
 IFS=$'\n'
 nmout=$(nmcli -m multiline -t -f ssid,bssid,freq,signal,security dev wifi)
 aps=$(echo "$nmout" | awk 'BEGIN{cnt=0}\
-                           {if(/^SSID/){ssid=gensub(/^SSID:.(.*)./,"\\1","g")};\
+                           {if(/^SSID/){ssid=gensub(/^SSID:\s*(.*)/,"\\1","g")};\
                             if(/^BSSID/){bssid=gensub(/^BSSID:(.*)/,"\\1","g")};\
                             if(/^FREQ/){freq=gensub(/^FREQ:(.*)/,"\\1","g")};\
                             if(/^SIGNAL/){signal=gensub(/^SIGNAL:(.*)/,"\\1","g")};\
                             if(/^SECURITY/){sec=gensub(/^SECURITY:(.*)/,"\\1","g");if(length(sec)==0){sec="--"}};\
                             cnt++;if(cnt>4){cnt=0;print ssid" ["bssid"] ["freq"] ["sec"] ["signal"]"}}'|sort -nr -t[ -k5|uniq)
 i=1
-ifacecon=$(nmcli dev status | awk '$2 ~ "wireless" && $3 == "connected" {printf("disconnect [%s]\n",$1)}')
+ifacecon=$(nmcli dev status | awk '($2 ~ "wireless" || $2 ~ "wifi") && $3 == "connected" {printf("disconnect [%s]\n",$1)}')
 for n in $ifacecon; do
   apv[i]=$n
   i=$((i+1))
@@ -33,21 +33,24 @@ done
 # because ap name could contain that char so I use awk again
 ap_tuple=$(echo "$nmout"|awk -v ap="$ap" '{bssid=gensub(/^BSSID:(.*)/,"\\1","g");\
                                           if(flag==1){printf("%s\n%s\n",ssid,bssid);exit}\
-                                          else{ssid=gensub(/^SSID:.(.*)./,"\\1","g");if(ap ~ ssid){flag=1}}}')
+                                          else{ssid=gensub(/^SSID:\s*(.*)/,"\\1","g");if(ap ~ ssid){flag=1}}}')
 ap_name=${ap_tuple%$'\n'*}
-ap_bssid=${ap_tuple#*$'\n'}
-found=$(nmcli con list id "$ap_name" 2>/dev/null|awk -v bssid="$ap_bssid" '$0 ~ /seen-bssids/{if (1==index($2,bssid)){print "found"}}')
-if [ -n "$found" ]; then
-  /usr/bin/nmcli con up id "$ap_name"
+ap_bssid=${ap_tuple#*$'\n'} # is not used any longer
+
+# make it compatible with the older nm versions
+cmdpar='list'
+nmcli con $cmdpar 2>/dev/null || cmdpar='show'
+if nmcli con $cmdpar id "$ap_name" &>/dev/null; then
+  nmcli con up id "$ap_name"
 else
   secur=$(nmcli dev wifi | grep "$ap_bssid" | awk -F'MB/s' '{print $2}' | awk '{print $2}')
   if [ "$secur" != "--" ]; then
     pass=$(/usr/bin/yad --image='dialog-password' --image='dialog-password' --entry --title "AP password:" --text "Enter AP password:" --hide-text)
     [ -n "$pass" ] && {
-      /usr/bin/nmcli dev wifi connect "$ap_bssid" password "$pass" --private
+      nmcli dev wifi connect "$ap_bssid" password "$pass" --private
     }
   else
-    /usr/bin/nmcli dev wifi connect "$ap_bssid" --private
+    nmcli dev wifi connect "$ap_bssid" --private
   fi
 fi
 
