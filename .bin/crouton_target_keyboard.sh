@@ -20,6 +20,28 @@
 # sent when the Search key is released (this is a little strange,
 # and I'm not sure why this happens).
 
+# "search"+F1 = XF86Back
+# "search"+F2 = XF86Forward
+# "search"+F3 = XF86Reload
+# "search"+F4 = XF86Display
+# "search"+F5 = XF86ApplicationRight
+# "search"+F6 = XF86MonBrightnessDown
+# "search"+F7 = XF86MonBrightnessUp
+# "search"+F8 = XF86AudioMute
+# "search"+F9 = XF86AudioLowerVolume
+# "search"+F10 = XF86AudioRaiseVolume
+# "search"+1,2,3,4,5,6,7,8,9,0 = F1,F2,F3,F4,F5,F6,F7,F8,F9,F10 ( this is additional F keys, native F keys working as usual)
+# "search"+minus = F11
+# "search"+equal = F12
+# "search"+backspace = Del
+# "search"+period = Ins (second key from the right shift)
+# "search"+left = Home
+# "search"+right = End
+# "search"+up = PgUP
+# "search"+down = PgDown
+# "search"+Alt = Capslock
+
+
 REQUIRES='x11'
 DESCRIPTION='Adds support for Chromebook keyboard special keys.'
 echo $DESCRIPTION
