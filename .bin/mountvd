@@ -1,7 +1,7 @@
 #!/bin/sh
 
 service=$1
-userdir=/media
+userdir=$HOME/media
 enc_config=".encfs6.$1.xml"
 
 [ -z "$service" ] && {
