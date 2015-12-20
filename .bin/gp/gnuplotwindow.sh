@@ -1,19 +1,31 @@
 #!/bin/bash
 
+terminal="wxt"     # terminal type (x11,wxt,qt)
 winsize=${1:-60}   # number of samples to show
 yrange=${2:-0:100} # min:max values of displayed y range.
                    # ":" for +/- infinity. Default "0:100"
 shift;shift        # the rest are the titles
 
-terminal="wxt"     # terminal type (x11,wxt,qt)
-style="w filledcurves x1"
-#style="w boxes"
-#style="w lines"
+styles_def=( "filledcurves x1" "boxes" "lines" )
+# remove the color adjustment line below to get
+# default gnuplot colors for the first six plots
+colors_def=("red" "blue" "green" "yellow" "cyan" "magenta")
+colors=( "${colors_def[@]}" )
 
+# parsing input plots descriptions
+i=0
+IFS=$';'
+while [ -n "$1" ]; do
+  tmparr=( $1 )
+  titles[$i]=${tmparr[0]}
+  styles[$i]=${styles_def[${tmparr[1]}]-${styles_def[0]}}
+  colors[$i]=${tmparr[2]-${colors_def[$i]}}
+  i=$((i+1))
+  shift
+done
+
+IFS=$'\n'
 samples=0          # samples counter
-IFS='\n'
-titles=( "$@" )
-colors=( "red" "blue" "green" "yellow" "cyan" "magenta")
 while read newLine; do
   [ -n "$newLine" ] && {
     nf=$(echo "$newLine"|awk '{print NF}')
@@ -29,7 +41,7 @@ while read newLine; do
     echo -n "plot "
     for ((j=0;j<$nf;++j)); do
       echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' "
-      echo -n "$style "
+      echo -n "w ${styles[$j]-${styles[0]}} "
       [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
       echo -n ","
     done
