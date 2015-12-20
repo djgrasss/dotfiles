@@ -193,18 +193,18 @@ for_window [class="^galculator$"] floating enable
 for_window [class="^Yad$"] floating enable border normal
 
 # dpmsoff
-exec --no-startup-id ~/bin/dpmsoff
+exec --no-startup-id ~/bin/dpmsoff &
 
 # desktop applets
 # compton is started by a pm script because it should
 # not be running on a battery
-#exec --no-startup-id compton &
+exec --no-startup-id compton &
 exec --no-startup-id xfsettingsd --sm-client-disable &
 exec --no-startup-id xfce4-volumed &
 exec --no-startup-id xfce4-power-manager &
 exec --no-startup-id nm-applet &
 exec --no-startup-id blueman-applet &
-exec --no-startup-id volumeicon &
-exec --no-startup-id ~/bin/nticon.py
+exec --no-startup-id ~/bin/nticon.py &
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 exec --no-startup-id feh --bg-scale /usr/share/backgrounds/xfce/xfce-blue.jpg &
+exec --no-startup-id volumeicon &
