@@ -10,10 +10,13 @@ STDERR->autoflush(1);
 
 die "Usage: $0 timeout_in_sec [default value]\n" if @ARGV < 1;
 
-my $lastStr = "$ARGV[1]\n";
+my $lastStr;
+if (defined $ARGV[1]) {$lastStr = "$ARGV[1]\n";}
 
 $SIG{ALRM} = sub {
-  print $lastStr;
+  if (defined $lastStr) {
+    print "$lastStr";
+  }
 };
 
 setitimer(ITIMER_REAL, $ARGV[0], $ARGV[0]);
