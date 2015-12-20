@@ -14,9 +14,7 @@ my $lastStr;
 if (defined $ARGV[1]) {$lastStr = "$ARGV[1]\n";}
 
 $SIG{ALRM} = sub {
-  if (defined $lastStr) {
-    print "$lastStr";
-  }
+  if (defined $lastStr) {print "$lastStr";}
 };
 
 setitimer(ITIMER_REAL, $ARGV[0], $ARGV[0]);
