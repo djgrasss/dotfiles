@@ -8,7 +8,6 @@ for iface in /sys/class/net/*; do
   [ "$(basename $iface)" = "lo" ] && continue
   [ "$(cat $iface/carrier)" = "1" ] && online=yes
 done
-echo "$online"
 [ -z "$online" ] && exit 1
 
 mail=$(/usr/bin/fetchmail -c -f ~/fetchmail/.fetchmailrc 2>/tmp/fetchmail.err) 
