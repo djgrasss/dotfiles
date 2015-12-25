@@ -38,6 +38,10 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';/bin/rm -rf $HOME/{}" <<EOL
 .local/share/Trash/*
 .adobe/Flash_Player/AssetCache/*
 .mozilla/firefox/*/Cache/*
+.mozilla/firefox/*/minidumps/*
+.mozilla/firefox/*/datareporting/*
+.mozilla/firefox/*/saved-telemetry-pings
+.mozilla/firefox/*/healthreport.sqlite
 .mozilla/firefox/Crash\ Reports/
 .davfs2/cache/*
 .config/sublime-text-3/Cache/*
