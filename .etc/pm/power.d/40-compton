@@ -7,10 +7,12 @@ case $1 in
     ;;
   false)
     logger "Compton is enabled"
-    /usr/bin/pgrep '^compton' &>/dev/null && exit 0 # pm-util doesn't like bad exit statuses
-#    export $(/usr/bin/awk 'BEGIN{RS="\x00"}/(DISPLAY|XAUTHORITY)/{print $0}' "/proc/$(/usr/bin/pgrep 'xfsettingsd')/environ")
-    export $(/usr/bin/awk 'BEGIN{RS="\x00"}/(DISPLAY|HOME)/{print $0}' "/proc/$(/usr/bin/pgrep 'xfsettingsd')/environ")
-    /usr/bin/compton -b
+    /usr/bin/pgrep '^compton' &>/dev/null || {
+      pid=$(/usr/bin/pgrep 'xfsettingsd') # pid of some process that is always started
+      user=$(/usr/bin/awk 'BEGIN{RS="\x00";FS="="}/(USER)/{print $2}' "/proc/$pid/environ")
+      export $(/usr/bin/awk 'BEGIN{RS="\x00"}/(DISPLAY|HOME)/{print $0}' "/proc/$pid/environ")
+      su $user -c '/usr/bin/compton -b'
+    }
     ;;
 esac
 
