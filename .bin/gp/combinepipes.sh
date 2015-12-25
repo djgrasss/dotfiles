@@ -10,18 +10,19 @@
 # by default 2 pipes are combined
 pipes=${1:-2}
 
-awk -F: -v pipes=$pipes '{
-                           a[$1]=$2;
-                           cnt=0;
-                           for (i in a) cnt++;
-                           if(cnt==pipes) {
-                             i=0;
-                             while(i<cnt) {
-                               printf("%s ", a[i])
-                               delete a[i++]
-                             }
-                             printf("\n")
-                             fflush()
-                           }
-                         }' -
+awk -F: -v pipes=$pipes '
+{
+  a[$1]=$2;
+  cnt=0;
+  for (i in a) cnt++;
+  if(cnt==pipes) {
+    i=0;
+    while(i<cnt) {
+      printf("%s ", a[i])
+      delete a[i++]
+    }
+    printf("\n")
+    fflush()
+  }
+}' -
 
