@@ -43,7 +43,7 @@ samples=0          # samples counter
     echo -n "plot "
     for ((j=0;j<$nf;++j)); do
       echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' "
-      echo -n "w ${styles[$j]-${styles[0]}} "
+      echo -n "w ${styles[$j]-${styles_def[0]}} "
       [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
       echo -n ","
     done
