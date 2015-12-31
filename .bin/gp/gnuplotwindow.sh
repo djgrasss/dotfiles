@@ -28,6 +28,7 @@ IFS=$'\n'
 samples=0          # samples counter
 (while read newLine; do
   [ -n "$newLine" ] && {
+    #nf=$(echo "$newLine"|awk '{print NF}')
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
       for j in $newLine;do nf=$((nf+1));done
     IFS=$TMPIFS
