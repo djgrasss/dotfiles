@@ -41,6 +41,6 @@ TEXT
 { "full_text" : "${if_up tap0}${endif}", "color" : "\#0000ff", "name" : "vpn"},\
 { "full_text" : " ${time %a %d %b}", "color" : "\#ffffff", "name" : "date" },\
 { "full_text" : "${time %k:%M}", "color" : "\#ffff00", "name" : "time" },\
-{ "full_text" : "${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}${else}${endif}${endif}", "color" : "\#ff0000", "name" : "mail" },\
+{ "full_text" : "${if_existing /tmp/newMail}${if_existing /tmp/newMail 0}${else}${if_existing /tmp/newMail 1}${else}${exec cat /tmp/newMail}${endif}${endif}${endif}", "color" : "\#ff0000", "name" : "mail" },\
 { "full_text" : "", "color" : "\#ffffff", "name" : "display" },\
 { "full_text" : "   ", "color" : "\#ffffff", "name" : "logout" }],
