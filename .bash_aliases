@@ -42,6 +42,7 @@ alias traf='netstat -np | grep -v ^unix'
 alias gc='git checkout'
 alias gcb='git checkout -branch'
 alias ga='git add'
+alias gap='git add -p'
 alias gs='git status'
 alias gl='git log'
 alias gb='git branch'
@@ -53,12 +54,8 @@ alias gd='git diff'
 
 function lso()
 {
-  # interactive
-  if [ -t 0 ]; then
-    ls -alG "$@" | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
-  else
-    cat - | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
-  fi
+  if [ -t 0 ];then ls -alG "$@";else cat -;fi | \
+    awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
 }
 
 function showbanner()
