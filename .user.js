@@ -14,9 +14,10 @@ user_pref("toolkit.telemetry.reportingpolicy.firstRun", false);
 user_pref("font.name.serif.x-western", "Droid Serif");
 
 // omtc settings
-user_pref("webgl.force-enabled", true);
-user_pref("layers.acceleration.force-enabled", true)
-user_pref("layers.offmainthreadcomposition.enabled", true)
+// hangs ?
+//user_pref("webgl.force-enabled", true);
+//user_pref("layers.acceleration.force-enabled", true)
+//user_pref("layers.offmainthreadcomposition.enabled", true)
 
 // network http pipelining
 user_pref("network.http.proxy.pipelining, true)
