@@ -35,7 +35,7 @@ class MyStatusIcon:
         self.statusicon.connect("popup-menu", self.right_click_event)
         #self.statusicon.connect("query-tooltip", self.query_tooltip)
         self.statusicon.set_has_tooltip(True)
-        res = self.get_net_bytes('wlan0')
+        res = self.get_net_bytes(self.iface)
         self.rx = res['rx']
         self.tx = res['tx']
         self.tooltip = None
@@ -54,7 +54,7 @@ class MyStatusIcon:
     """
 
     def update_icon(self):
-        result = self.get_net_bytes('wlan0')
+        result = self.get_net_bytes(self.iface)
         rxdiff = result['rx'] - self.rx
         txdiff = result['tx'] - self.tx
         self.statusicon.set_tooltip_markup("RX: %d\nTX: %d"% (rxdiff,txdiff))
