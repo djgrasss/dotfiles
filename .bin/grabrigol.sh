@@ -60,6 +60,18 @@ outfile="$2"
 }
 
 #echo "*idn?" | nc "$1" 5555 > /dev/null
+status=$(echo ":trigger:status?" | nc "$1" 5555)
+[ "$status" != "STOP" ] && {
+  echo ":system:key:press rstop" | nc "$1" 5555 &>/dev/null
+  while [ "STOP" != "$(echo ':trigger:status?' | nc "$1" 5555)" ]; do
+    sleep 0.1
+  done
+}
+
 echo "display:data?" | nc "$1" 5555 | dd bs=1 skip=11 2>/dev/null | \
   if [ -z "$doPng" ]; then cat >"$outfile";else convert bmp:- "${outfile}";fi
+
+[ "$status" != "STOP" ] && {
+  echo ":system:key:press rstop" | nc "$1" 5555 &>/dev/null
+}
 
