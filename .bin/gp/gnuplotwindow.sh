@@ -1,6 +1,6 @@
 #!/bin/bash
 
-terminal="wxt"     # terminal type (x11,wxt,qt)
+terminal="qt"     # terminal type (x11,wxt,qt)
 winsize=${1:-60}   # number of samples to show
 yrange=${2:-0:100} # min:max values of displayed y range.
                    # ":" for +/- infinity. Default "0:100"
