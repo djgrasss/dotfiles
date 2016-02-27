@@ -13,6 +13,7 @@ BEGIN {
     end++;
     if (end>start+avs) {
       sum-=a[start];
+      delete a[start];
       start++;
     } 
     sum+=$col;
