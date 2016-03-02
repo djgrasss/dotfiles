@@ -35,7 +35,7 @@ samples=0          # samples counter
     IFS=$TMPIFS
     echo "set term $(echo $terminal) noraise"
     echo "set yrange [$yrange]"
-    echo "set xrange [${samples}:$((samples+${#a[@]}-1))]"
+    echo "set xrange [-0.5:$((${#a[@]}-1)).5]"
     echo "set style fill transparent solid 0.5"
     echo -n "plot "
     for ((j=0;j<$nf;++j)); do
