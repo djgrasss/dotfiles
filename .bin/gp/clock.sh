@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage example: 
-# ./clock.sh|bin/gp/gnuplotblock.sh "5:11;9:47" ";points pointtype 5 pointsize 10;blue;xy"
+# bin/gp/clock.sh|bin/gp/gnuplotblock.sh ":;5:11" ";points pointtype 5 pointsize 5;blue;xy"
 
 dx=1
 dy=1
