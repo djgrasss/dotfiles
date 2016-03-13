@@ -23,12 +23,14 @@ IFS=$';'
 while [ -n "$1" ]; do
   tmparr=( $1 )
   titles[$i]=${tmparr[0]}
+  [ -n "${tmparr[1]}" ] || tmparr[1]=0
   styles[$i]=${styles_def[${tmparr[1]}]-${tmparr[1]}}
   [ -n "${styles[$i]}" ] || {styles=${styles_def[0]}}
   colors[$i]=${tmparr[2]-${colors_def[$i]}}
   dtype[$i]=${tmparr[3]}
   dtype_arg[$i]=${tmparr[4]}
   dtype_arg2[$i]=${tmparr[5]}
+  [ "${dtype[$i]}" = "xy" ] && i=$((i+1))
   i=$((i+1))
   shift
 done
