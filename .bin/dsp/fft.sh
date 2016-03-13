@@ -34,7 +34,7 @@ function init_hanning_window(N,a,b,     i)
   }
 }
 
-function init_window(N,win_desc,    i,wa,a,b)
+function init_window(N,win_desc,    i,wa,a,b,win_type)
 {
   split(win_desc, wa, ";");
   switch(wa[1]) {
@@ -49,14 +49,13 @@ function init_window(N,win_desc,    i,wa,a,b)
     win_type = 0;
     break;
   }
+  return win_type;
 }
 
 function apply_window(N,    i)
 {
-  if (win_type!=0) {
-    for(i=0;i<N;++i) {
-      c[i]*=w[i];
-    }
+  for(i=0;i<N;++i) {
+    c[i]*=w[i];
   }
 }
 
@@ -130,8 +129,9 @@ BEGIN {
   expN = cos(2*PI/N) " " (-sin(2*PI/N));
   N2 = N/2;
   pow = calc_pow2(N);
-  win_type = 0; # rectangular window by default
-  init_window(N, win_desc);
+  #  win_type = 0; # rectangular window by default
+  #  win_type = 1; # hanning window
+  win_type = init_window(N, win_desc);
 }
 {
   if (match($0,/^.+$/)) {
@@ -144,7 +144,9 @@ BEGIN {
     for (i=start;i<N+start;++i) {
       (i<end)?c[i-start] = a[i]:c[i-start] = 0;
     }
-    apply_window(N);
+    if (win_type!=0) {
+      apply_window(N);
+    }
     fft(0,N,expN); 
     binary_inversion(N,pow); # N = 2^pow;
     print_fft(N);
