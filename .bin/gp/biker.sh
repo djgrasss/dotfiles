@@ -3,10 +3,10 @@
 # Usage example:
 #
 # dd if=/dev/urandom | hexdump -v -e '/1 "%u\n"' | \
-# bin/gp/syncpipe.pl 0.05 | bin/dsp/fir.sh | \
-# bin/gp/removecolumns.sh 1 | awk '{print $1/8;fflush()}'|.\
+# (while read line; do echo "$line"; sleep 0.05; done)|bin/dsp/fir.sh | \
+# bin/gp/removecolumns.sh 1 | awk '{print $1/8;fflush()}'| \
 # bin/gp/biker.sh 80 '20;40'| \
-# bin/gp/gnuplotblock.sh "0:79;0:80" "Filtered Noise;0;#008000" "biker;2;red;xy"
+# bin/gp/gnuplotblock.sh "0:79;0:80" "Filtered Noise;0;#008000" "biker;l lw 3;red;xy"
 #
 # generation of the biker array:
 # awk -F: 'BEGIN{cnt=0;idx=0}

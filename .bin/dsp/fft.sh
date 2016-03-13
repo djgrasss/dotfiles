@@ -4,9 +4,9 @@
 # PLot the chirp signal and its frequency domain presentation:
 # (while true; do echo line; sleep 0.01; done)| \
 #  awk 'BEGIN{PI=atan2(0,-1);t=0;f0=1;f1=32;T=256;k=(f1-f0)/T;}{print sin(2*PI*(t*f0+k/2*t*t));t+=0.1;fflush()}'| \
-#  tee >(bin/dsp/fft.sh 64 "w1;0.5;0.5"|bin/dsp/fftabs.sh 64|bin/gp/gnuplotblock.sh '0:0.5' 'spectrum;1')| \
-#  bin/gp/gnuplotwindow.sh 128 "-1:1" "Sin wave;2"
-
+#  tee >(bin/dsp/fft.sh 64 "w1;0.5;0.5"|bin/dsp/fftabs.sh 64| \
+#        bin/gp/gnuplotblock.sh '-0.5:31.5;0:0.5' 'Chirp signal spectrum;1')| \
+#  bin/gp/gnuplotwindow.sh 128 "-1:1" "Chirp signal;2"
 
 N=${1:-64}   # number of samples, default 64
 wd=${2:-w0}  # window function description, w0-rectangular window (default), w1-hanning window
