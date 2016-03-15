@@ -123,7 +123,7 @@ function init_biker()
   b[94]=" 229.65326000  -261.56693000"
 }
 
-function get_length(arr,    len,i)
+function get_array_length(arr,    len,i)
 {
   len = 0;
   for (i in arr) ++len;
@@ -156,10 +156,24 @@ function rotate_array(arr,len,dx,dy,    i,p,alpha,cos_a,sin_a)
     arr[i] = p[1]*cos_a + p[2]*sin_a " " (p[2]*cos_a-p[1]*sin_a);
   }
 }
-function calc_bbox(arr,len,bbox,     x1,y1,x2,y2,val,p)
+
+function rotate_translate_array(arr,len,rdx,rdy,dx,dy,    i,p,alpha,cos_a,sin_a)
 {
-  x2 = y2 = 0;
-  x1 = y1 = 100000000000;
+  alpha=atan2(rdy,rdx);
+  cos_a = cos(alpha);
+  sin_a = sin(alpha);
+  for(i=0;i<len;++i) {
+    split(arr[i], p);
+    arr[i] = p[1]*cos_a + p[2]*sin_a + dx" " p[2]*cos_a-p[1]*sin_a+dy;
+  }
+}
+
+function calc_array_bbox(arr,len,bbox,     x1,y1,x2,y2,val,p)
+{
+  split(arr[0], p);
+  x1 = x2 = p[1];
+  y1 = y2 = p[2];
+
   for(val in arr) {
     split(arr[val], p);
     if (x1 > p[1]) x1=p[1];
@@ -180,10 +194,10 @@ BEGIN {
 #  b[0] = "0 0";b[1] = "1 0";b[2] = "1 0.6";
 #  b[3] = "0 0.6";b[4] = "0 0";
   init_biker()
-  len = get_length(b);
+  len = get_array_length(b);
   print len
   scale_array(b, len, 1, -1);
-  calc_bbox(b, len, bbox);
+  calc_array_bbox(b, len, bbox);
 #  print bbox[0]";"bbox[1]";"bbox[2]";"bbox[3];
 
   # scale to unity square
@@ -211,9 +225,9 @@ BEGIN {
     } 
 
     for(i=0;i<len;++i) { c[i] = b[i]; }
-    rotate_array(c, len, biker_end_x-biker_start_x,
-                         a[biker_start_x+start]-a[biker_end_x+start]);
-    translate_array(c, len, biker_start_x, a[biker_start_x+start]);
+    rotate_translate_array(c, len, biker_end_x-biker_start_x,
+                         a[biker_start_x+start]-a[biker_end_x+start],
+                         biker_start_x, a[biker_start_x+start]);
 
     for (i=start;i<N+start;++i) {
       (i<end)?atmp=a[i]:atmp=0;
