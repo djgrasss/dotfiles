@@ -48,8 +48,8 @@ samples=0          # samples counter
  echo "set xrange [$xrange]"
  echo "set yrange [$yrange]"
  echo "set zrange [$zrange]"
-# echo "set hidden3d"
-# echo "set dgrid3d 64,64"
+ echo "set hidden3d"
+ echo "set dgrid3d 32,32 gauss 0.25"
 
  while read newLine; do
   if [ -n "$newLine" ]; then
@@ -84,10 +84,10 @@ samples=0          # samples counter
       [ ${#a[@]} -gt $((dtype_arg[0]*dtype_arg2[0])) ] && {
         a=( "${a[@]:dtype_arg[0]}" )
       }
-      for ((j=0;j<dtype_arg2[0];++j)); do
-        [ -n "${a[j*${dtype_arg[0]}]}" ] || break;
+      for ((j=1;j<=dtype_arg2[0];++j)); do
+        [ -n "${a[(dtype_arg2[0]-j)*${dtype_arg[0]}]}" ] || continue;
         for ((i=0;i<dtype_arg[0];++i)); do
-          echo  "$i $j ${a[j*${dtype_arg[0]}+i]}"
+          echo  "$i $j ${a[(dtype_arg2[0]-j)*${dtype_arg[0]}+i]}"
         done
       done
       echo e # gnuplot's end of dataset marker
