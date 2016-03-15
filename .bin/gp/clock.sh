@@ -48,7 +48,6 @@ function plot_digit
   done
 }
 
-i=0
 IFS=$':'
 while true; do
   date=$(date "+%H:%M:%S")
@@ -64,7 +63,6 @@ while true; do
   plot_digit $((${date_arr[2]#0}%10)) 41 10
  
   echo
-  i=$(((i+1)%10))
   sleep 1
 done
 

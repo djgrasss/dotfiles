@@ -191,14 +191,11 @@ BEGIN {
   split(scale, scale_arr, ";");
   scale_x = scale_arr[1];
   scale_y = scale_arr[2];
-#  b[0] = "0 0";b[1] = "1 0";b[2] = "1 0.6";
-#  b[3] = "0 0.6";b[4] = "0 0";
   init_biker()
   len = get_array_length(b);
-  print len
   scale_array(b, len, 1, -1);
   calc_array_bbox(b, len, bbox);
-#  print bbox[0]";"bbox[1]";"bbox[2]";"bbox[3];
+#  print bbox[0]";"bbox[1]";"bbox[2]";"bbox[3] > "/dev/stderr";
 
   # scale to unity square
   translate_array(b, len, -bbox[0], -bbox[1]);
