@@ -1,12 +1,17 @@
 #/bin/bash
 
-# Usage example:
+# Usage examples:
 #
 # dd if=/dev/urandom | hexdump -v -e '/1 "%u\n"' | \
 # (while read line; do echo "$line"; sleep 0.05; done)|bin/dsp/fir.sh | \
 # bin/gp/removecolumns.sh 1 | awk '{print $1/8;fflush()}'| \
 # bin/gp/biker.sh 80 '20;40'| \
 # bin/gp/gnuplotblock.sh "0:79;0:80" "Filtered Noise;0;#008000" "biker;l lw 3;red;xy"
+#
+# (while true; do echo line; sleep 0.03; done)| \
+#  awk 'BEGIN{PI=atan2(0,-1);t=0;f0=0.1;}{print sin(2*PI*t*f0)+2.0;t+=0.1;fflush()}'| \
+#  bin/gp/biker.sh 64 "10;4"| \
+#  bin/gp/gnuplotblock.sh "0:63;0:8" "Sine wave;0;#008000" "gnuplot biker;l lw 3;red;xy"
 #
 # generation of the biker array:
 # awk -F: 'BEGIN{cnt=0;idx=0}

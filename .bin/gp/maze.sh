@@ -2,8 +2,8 @@
 
 # Usage example: 
 # bin/gp/maze.sh 12 12|bin/gp/gnuplotblock.sh "-1.5:23.5;-1.5:23.5" \
-                       ";points pointtype 5 pointsize 3;blue;xy" \
-                       ";points pointtype 5 pointsize 3;red;xy"
+#                       ";points pointtype 5 pointsize 3;blue;xy" \
+#                       ";points pointtype 5 pointsize 3;red;xy"
 
 rows=${1:-16}
 cols=${2:-16}
