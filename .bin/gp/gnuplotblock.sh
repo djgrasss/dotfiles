@@ -40,7 +40,7 @@ xrange=${tmparr[0]}
 yrange=${tmparr[1]}
 zrange=${tmparr[2]}
 IFS=$'\n'
-samples=0          # samples counter
+blocks=0          # blocks counter
 (
  echo "set term $(echo $terminal) noraise"
  echo "set style fill transparent solid 0.5"
@@ -55,16 +55,19 @@ samples=0          # samples counter
   if [ -n "$newLine" ]; then
     a=("${a[@]}" "$newLine") # add to the end
   else
+    blocks=$((blocks+1))
     #nf=$(echo "$newLine"|awk '{print NF}')
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
       for j in ${a[0]};do nf=$((nf+1));done
     IFS=$TMPIFS
-    if [ "${dtype[0]}" = "3d" ]; then
-      echo -n "splot "
-      echo -n "'-' u 1:2:3 t '${titles[0]}' "
-      echo -n "w ${styles[0]-${styles_def[0]}} "
-      [ -n "${colors[0]}" ] && echo -n "fc rgb '${colors[0]}'"
-      echo -n ","
+    if [[ "${dtype[0]}" =~ ^3d.* ]]; then
+      if [ "${dtype[0]}" = "3d" ] || [ $((blocks%dtype_arg2[0])) -eq 1 ]; then 
+        echo -n "splot "
+        echo -n "'-' u 1:2:3 t '${titles[0]}' "
+        echo -n "w ${styles[0]-${styles_def[0]}} "
+        [ -n "${colors[0]}" ] && echo -n "fc rgb '${colors[0]}'"
+        echo -n ","
+      fi
     else
       echo -n "plot "
       for ((j=0;j<$nf;++j)); do
@@ -91,6 +94,14 @@ samples=0          # samples counter
         done
       done
       echo e # gnuplot's end of dataset marker
+    elif [ "${dtype[0]}" = "3db" ]; then
+      for ((i=0;i<dtype_arg[0];++i)); do
+        echo  "$i $((blocks%dtype_arg2[0])) ${a[i]}"
+      done
+      unset a
+      [ $((blocks%dtype_arg2[0])) -eq 0 ] && {
+        echo e # gnuplot's end of dataset marker
+      }
     else
       for ((j=0;j<$nf;++j)); do
         tc=0 # temp counter
