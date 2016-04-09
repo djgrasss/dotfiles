@@ -48,8 +48,11 @@ blocks=0          # blocks counter
  echo "set xrange [$xrange]"
  echo "set yrange [$yrange]"
  echo "set zrange [$zrange]"
+ echo "set ticslevel 0"
  echo "set hidden3d"
- echo "set dgrid3d 32,32 gauss 0.25"
+ [ "${dtype[0]}" != "xyz" ] && {
+   echo "set dgrid3d 32,32 gauss 0.25"
+ }
 
  while read newLine; do
   if [ -n "$newLine" ]; then
@@ -60,8 +63,9 @@ blocks=0          # blocks counter
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
       for j in ${a[0]};do nf=$((nf+1));done
     IFS=$TMPIFS
-    if [[ "${dtype[0]}" =~ ^3d.* ]]; then
-      if [ "${dtype[0]}" = "3d" ] || [ $((blocks%dtype_arg2[0])) -eq 1 ]; then 
+    if [ "${dtype[0]}" = "xyz" ] || [[ "${dtype[0]}" =~ ^3d.* ]]; then
+      # only one splot command is used for all blocks for 3db type plots
+      if [ "${dtype[0]}" != "3db" ] || [ $((blocks%dtype_arg2[0])) -eq 1 ]; then
         echo -n "splot "
         echo -n "'-' u 1:2:3 t '${titles[0]}' "
         echo -n "w ${styles[0]-${styles_def[0]}} "
@@ -102,6 +106,10 @@ blocks=0          # blocks counter
       [ $((blocks%dtype_arg2[0])) -eq 0 ] && {
         echo e # gnuplot's end of dataset marker
       }
+    elif [ "${dtype[0]}" = "xyz" ]; then
+      for i in ${a[@]}; do echo  "$i"; done
+      unset a
+      echo e # gnuplot's end of dataset marker
     else
       for ((j=0;j<$nf;++j)); do
         tc=0 # temp counter
