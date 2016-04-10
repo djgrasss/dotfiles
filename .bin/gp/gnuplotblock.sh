@@ -1,8 +1,8 @@
 #!/bin/bash
 
 terminal="qt"      # terminal type (x11,wxt,qt)
-range=${1:-0:100}  # min:max values of displayed y range.
-                   # ":" for +/- infinity. Default "0:100"
+range=${1:-:;:;:}  # min:max values of displayed ranges.
+                   # ":" for +/- infinity. Default ":;:;:"
 shift              # the rest are the titles
 
 # titles definitions examples:
@@ -50,13 +50,15 @@ blocks=0          # blocks counter
  echo "set zrange [$zrange]"
  echo "set ticslevel 0"
  echo "set hidden3d"
+# uncomment to remove axis, border and ticks
+# echo "set tics scale 0;set border 0;set format x '';set format y '';set format z ''"
  [ "${dtype[0]}" != "xyz" ] && {
    echo "set dgrid3d ${dtype_arg[0]},${dtype_arg[0]} gauss 0.25"
  }
 
  while read newLine; do
   if [ -n "$newLine" ]; then
-    a=("${a[@]}" "$newLine") # add to the end
+    a+=("$newLine") # add to the end
   else
     #nf=$(echo "$newLine"|awk '{print NF}')
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
