@@ -2,11 +2,11 @@
 
 N=${1:-50}      # number of columns
 M=${2:-50}      # number of rows
-fill=${3:-60}   # initial array fill factor in percent
+fill=${3:-60}   # initial array fill factor in percent or 's1' for ship
 iter=${4:-1e20} # default is endless. Use 'keyboard' to step with Enter
 
 awk -v N=$N -v M=$M -v maxiter=$iter -v fill=$fill '
-function init(a,N,M,probperc,     NM,i)
+function init_rnd(a,N,M,probperc,     NM,i)
 {
   NM=N*M;
   srand();
@@ -16,13 +16,45 @@ function init(a,N,M,probperc,     NM,i)
   }
 }
 
+function init_ship1(a,N,M,     NM,i)
+{
+  NM=N*M;
+  for(i=0;i<NM;++i) {a[i]=0;}
+  row=N*int(M/3-6);
+  a[row+1]=1;
+  a[row+N]=1;
+  a[row+2*N]=1;a[row+2*N+4]=1;
+  a[row+3*N]=1;a[row+3*N+1]=1;a[row+3*N+2]=1;a[row+3*N+3]=1;
+  a[row+4*N+7]=1;
+  a[row+5*N+5]=1;a[row+5*N+6]=1;
+  a[row+6*N+7]=1;
+  a[row+7*N]=1;a[row+7*N+1]=1;a[row+7*N+2]=1;a[row+7*N+3]=1;
+  a[row+8*N]=1;a[row+8*N+4]=1;
+  a[row+9*N]=1;
+  a[row+10*N+1]=1;
+  
+  row=N*int(2*M/3-6);
+  a[row+6]=1;
+  a[row+N+7]=1;
+  a[row+2*N+3]=1;a[row+2*N+7]=1;
+  a[row+3*N+4]=1;a[row+3*N+5]=1;a[row+3*N+6]=1;a[row+3*N+7]=1;
+  a[row+4*N]=1;
+  a[row+5*N+1]=1;a[row+5*N+2]=1;
+  a[row+6*N]=1;
+  a[row+7*N+4]=1;a[row+7*N+5]=1;a[row+7*N+6]=1;a[row+7*N+7]=1;
+  a[row+8*N+3]=1;a[row+8*N+7]=1;
+  a[row+9*N+7]=1;
+  a[row+10*N+6]=1;
+}
+
 BEGIN {
   NM=N*M;
   NM_1=N*(M-1);
   iter=0;
   if (maxiter=="keyboard") {keyboard=1;maxiter=1e20;}
   else {maxiter+=0;} # to turn string into number
-  init(a,N,M,fill);
+  if (fill=="s1") {init_ship1(a,N,M);}
+  else {init_rnd(a,N,M,fill);}
   while (iter<maxiter) {
 #for(j=0;j<NM;++j) {printf("%d",a[j]);if(0==((j+1)%N)){print "";}}
     for(row=0;row<M;++row) {
