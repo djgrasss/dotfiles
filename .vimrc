@@ -169,24 +169,24 @@ endif
 
 
 " colorscheme
-colorscheme shine
+" colorscheme shine
 "colorscheme summerfruit256
+colorscheme eclipse
 
-hi clear Normal
+"hi clear Normal
 hi clear Special
-hi clear StatusLine
+"hi clear StatusLine
 hi clear Comment 
 hi clear Statement
 hi clear Number 
 hi clear CursorLine
 hi clear StorageClass
  
-hi Normal        cterm=NONE ctermfg=16 ctermbg=254 guifg=Black guibg=LightGray
-hi StatusLine    cterm=bold ctermbg=darkblue ctermfg=yellow guibg=blue guifg=Yellow gui=bold
-hi Cursor        guibg=Brown
-hi LineNr        ctermfg=Black cterm=reverse guifg=Blue guibg=Gray 
-hi LineNr        ctermfg=Black cterm=reverse guifg=Blue guibg=Gray 
-hi CursorLine    term=underline ctermbg=gray guibg=gray
+"hi Normal        cterm=NONE ctermfg=16 ctermbg=254 guifg=Black guibg=LightGray
+"hi StatusLine    cterm=bold ctermbg=darkblue ctermfg=yellow guibg=blue guifg=Yellow gui=bold
+"hi Cursor        cterm=reverse guibg=Brown
+hi LineNr        ctermfg=DarkGray cterm=reverse guifg=Blue guibg=Gray 
+hi CursorLine    term=underline ctermbg=black guibg=gray
 hi Comment       ctermfg=DarkGreen cterm=none guifg=DarkGreen gui=none
 hi Type          term=underline ctermfg=Blue guifg=Blue gui=none
 hi Question      term=standout ctermfg=Blue gui=bold guifg=Blue
@@ -201,7 +201,7 @@ hi Directory     ctermfg=DarkBlue
 
 " change statusline color depending on the mode
 autocmd InsertEnter * hi StatusLine ctermbg=52
-autocmd InsertLeave * hi StatusLine ctermbg=darkblue
+autocmd InsertLeave * hi StatusLine ctermbg=blue
 
 
 " Functions
