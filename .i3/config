@@ -130,6 +130,9 @@ bindsym XF86PowerOff exec ~/bin/logout.py
 bindsym $mod+Shift+w exec ~/bin/wifi_connect.sh
 # toggle normal and pixel border width
 bindsym $mod+Ctrl+space exec ~/.i3/toggle_border.sh
+# adjust xfce4 terminal transpacency
+bindsym Ctrl+F6 exec ~/bin/setterminaltransparency.sh down
+bindsym Ctrl+F7 exec ~/bin/setterminaltransparency.sh up
 
 # volume control
 #bindsym XF86AudioLowerVolume exec /home/alex/bin/volume_notify.sh down
