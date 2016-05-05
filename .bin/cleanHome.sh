@@ -43,6 +43,7 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';/bin/rm -rf $HOME/{}" <<EOL
 .mozilla/firefox/*/saved-telemetry-pings
 .mozilla/firefox/*/healthreport.sqlite
 .mozilla/firefox/Crash\ Reports/
+.mozilla/firefox/*/crashes/*
 .davfs2/cache/*
 .config/sublime-text-3/Cache/*
 EOLIST
