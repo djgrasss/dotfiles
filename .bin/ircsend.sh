@@ -9,7 +9,7 @@ user=$(echo "$1"|sed -nr 's/[^_]*_(.*)_.*/\1/p')
 
 while read -e -p "$channel> " message; do
   [ -n "$message" ] && {
-    printf "PRIVMSG $channel,$user :$message\n" >> $1
+    echo "PRIVMSG $channel,$user :$message" >> "$1"
   }
 done
 

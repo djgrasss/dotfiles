@@ -11,7 +11,7 @@ iface=$(ifconfig | grep -i "$mac_addr" | cut -d\  -f 1)
 ifaceip=$(nmcli con list id "$profile_id" | sed -nr 's/^ipv4[^=]*= ([^\/]*).*/\1/p')
 
 [ -z "$ifaceip" -o -z "$mac_addr" ] && {
-  echo -e "Error getting data from Profile $prifile_id\nmac: $mac_addr\niface: $iface\nifaceip: $ifaceip"
+  echo -e "Error getting data from Profile $profile_id\nmac: $mac_addr\niface: $iface\nifaceip: $ifaceip"
   exit 1
 }
 

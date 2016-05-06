@@ -33,25 +33,25 @@ samples=0          # samples counter
       for j in $newLine;do nf=$((nf+1));done
     IFS=$TMPIFS
     a=("${a[@]}" "$newLine") # add to the end
-    [ "${#a[@]}" -gt $winsize ] && {
+    [ "${#a[@]}" -gt "$winsize" ] && {
       a=("${a[@]:1}") # pop from the front
       samples=$((samples + 1))
     }
-    echo "set term $(echo $terminal) noraise"
+    echo "set term $terminal noraise"
     echo "set yrange [$yrange]"
     echo "set xrange [${samples}:$((samples+${#a[@]}-1))]"
     echo "set style fill transparent solid 0.5"
     echo -n "plot "
-    for ((j=0;j<$nf;++j)); do
+    for ((j=0;j<nf;++j)); do
       echo -n " '-' u 1:$((j+2)) t '${titles[$j]}' "
       echo -n "w ${styles[$j]-${styles_def[0]}} "
       [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
       echo -n ","
     done
     echo
-    for ((j=0;j<$nf;++j)); do
+    for ((j=0;j<nf;++j)); do
       tc=0 # temp counter
-      for i in ${a[@]}; do
+      for i in "${a[@]}"; do
         echo "$((samples+tc)) $i"
         tc=$((tc+1))
       done

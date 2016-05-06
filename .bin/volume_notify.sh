@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# $0 - icon_name, $2 - volume, $3 - id
+# $1 - icon_name, $2 - volume, $3 - id
 print_cmd()
 {
 cat <<HEREDOC
@@ -58,7 +58,7 @@ if [[ $muted == "off" ]]; then
 fi
 id=$(cat $id_file 2>/dev/null);id=${id:-0}
 #echo $id
-idn=$(python -c "$(print_cmd $icon $volume $id)")
-(($idn != $id)) && echo "$idn" > "$id_file"
+idn=$(python -c "$(print_cmd "$icon" "$volume" "$id")")
+(("$idn" != "$id")) && echo "$idn" > "$id_file"
 exit 0
 

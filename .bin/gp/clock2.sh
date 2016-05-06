@@ -31,7 +31,7 @@ function plot_digit_line
   [[ $nibble == 0 ]] && return;
  
   while [[ $i != 0 ]]; do 
-    (( ($nibble & $i) > 0 )) && {
+    (( (nibble & i) > 0 )) && {
       echo "$x $y"
     }
     x=$((x+dx))
@@ -48,7 +48,7 @@ function plot_digit
   local i
 
   for((i=0;i<lpd;++i)); do 
-    plot_digit_line $((digits[index+i])) $x $y
+    plot_digit_line $((digits[index+i])) "$x" "$y"
     y=$((y-dy))
   done
 }

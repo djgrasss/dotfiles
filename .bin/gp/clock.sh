@@ -24,7 +24,7 @@ function plot_digit_nibble
   [[ $nibble == 0 ]] && return;
  
   while [[ $i != 0 ]]; do 
-    (( ($nibble & $i) > 0 )) && {
+    (( (nibble & i) > 0 )) && {
       echo "$x $y"
     }
     x=$((x+dx))
@@ -41,9 +41,9 @@ function plot_digit
   local i
 
   for((i=0;i<3;++i)); do 
-    plot_digit_nibble $((digits[index+i] >> 4)) $x $y
+    plot_digit_nibble $((digits[index+i] >> 4)) "$x" "$y"
     y=$((y-dy))
-    plot_digit_nibble $((digits[index+i] & 15)) $x $y
+    plot_digit_nibble $((digits[index+i] & 15)) "$x" "$y"
     y=$((y-dy))
   done
 }

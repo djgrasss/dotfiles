@@ -28,7 +28,7 @@ scale=${2:-5;5} # biker size in percent
 col=${3:-1}  # input stream column to work with
 
 
-awk -v N=$N -v col=$col -v scale=$scale '
+awk -v N="$N" -v col="$col" -v scale="$scale" '
 function init_biker()
 {
   b[0]=" 229.65326000  -261.56693000"

@@ -13,7 +13,7 @@ wd=${2:-w0}  # window function description, w0-rectangular window (default), w1-
 col=${3:-1}  # input stream column to calculate fft for
 
 
-awk -v N=$N -v col=$col -v win_desc="$wd" '
+awk -v N="$N" -v col="$col" -v win_desc="$wd" '
 function compl_add(a, b,   ara,arb) {
   split(a, ara);split(b, arb);
   return ara[1]+arb[1]" "ara[2]+arb[2];

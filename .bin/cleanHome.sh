@@ -17,18 +17,18 @@ vacuumFirefox()
   local fileSizeBefore fileSizeAfter
 
   for i in "$HOME"/.mozilla/firefox/*/*.sqlite; do
-    fileSizeBefore=$(wc -c < $i)
+    fileSizeBefore=$(wc -c < "$i")
     counterBefore=$((counterBefore + fileSizeBefore))
     sqlite3 "$i" vacuum
-    fileSizeAfter=$(wc -c < $i)
+    fileSizeAfter=$(wc -c < "$i")
     counterAfter=$((counterAfter + fileSizeAfter))
-    echo "$fileSizeBefore $fileSizeAfter - $(basename $i)"
+    echo "$fileSizeBefore $fileSizeAfter - $(basename "$i")"
   done
   echo "Firefox Bytes saved: $(( counterBefore - counterAfter ))"
   return 0
 }
 
-homeSizeBefore=$(du -sb $HOME 2>/dev/null|awk '{ print $1 }')
+homeSizeBefore=$(du -sb "$HOME" 2>/dev/null|awk '{ print $1 }')
 # cleaning phase
 vacuumFirefox || exit 1
 cd "$HOME"
@@ -48,7 +48,7 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';/bin/rm -rf $HOME/{}" <<EOL
 .config/sublime-text-3/Cache/*
 EOLIST
 
-homeSizeAfter=$(du -sb $HOME 2>/dev/null|awk '{ print $1 }')
+homeSizeAfter=$(du -sb "$HOME" 2>/dev/null|awk '{ print $1 }')
 
 echo "Home total bytes saved: $(( homeSizeBefore - homeSizeAfter ))"
 

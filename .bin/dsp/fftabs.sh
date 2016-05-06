@@ -2,7 +2,7 @@
 
 N=${1:-64}
 
-awk -v N=$N '
+awk -v N="$N" '
 {
   if(match($0,/^.+$/)) {
     print sqrt($1*$1+$2*$2)/N;

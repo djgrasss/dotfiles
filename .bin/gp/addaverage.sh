@@ -3,7 +3,7 @@
 avs=${1:-10}     # average over so many last samples, default is 10 
 column=${2:-1}   # read new value from this column
 
-awk -v avs=$avs -v col=$column '
+awk -v avs="$avs" -v col="$column" '
 BEGIN {
   sum=0;start=0;end=0
 }

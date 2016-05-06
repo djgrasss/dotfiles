@@ -1,8 +1,8 @@
 #!/bin/sh 
 
 for iface in /sys/class/net/*; do
-  [ "$(basename $iface)" = "lo" ] && continue
-  [ "$(cat $iface/carrier)" = "1" ] && online=yes
+  [ "$(basename "$iface")" = "lo" ] && continue
+  [ "$(cat "$iface/carrier")" = "1" ] && online=yes
 done
 [ -z "$online" ] && exit 1
 

@@ -5,7 +5,7 @@ M=${2:-50}      # number of rows
 fill=${3:-60}   # initial array fill factor in percent or 's1' for ship
 iter=${4:-1e20} # default is endless. Use 'keyboard' to step with Enter
 
-awk -v N=$N -v M=$M -v maxiter=$iter -v fill=$fill '
+awk -v N="$N" -v M="$M" -v maxiter="$iter" -v fill="$fill" '
 function init_rnd(a,N,M,probperc,     NM,i)
 {
   NM=N*M;

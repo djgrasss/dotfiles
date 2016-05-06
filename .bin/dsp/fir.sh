@@ -8,7 +8,7 @@
 
 column=${1:-1}   # read new value from this column
 
-awk -v col=$column '
+awk -v col="$column" '
 BEGIN {
 
 # low pass filter

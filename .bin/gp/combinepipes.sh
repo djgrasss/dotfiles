@@ -10,7 +10,7 @@
 # by default 2 pipes are combined
 pipes=${1:-2}
 
-awk -F: -v pipes=$pipes '
+awk -F: -v pipes="$pipes" '
 {
   a[$1]=$2;
   cnt=0;

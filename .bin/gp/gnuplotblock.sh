@@ -25,7 +25,7 @@ while [ -n "$1" ]; do
   titles[$i]=${tmparr[0]}
   [ -n "${tmparr[1]}" ] || tmparr[1]=0
   styles[$i]=${styles_def[${tmparr[1]}]-${tmparr[1]}}
-  [ -n "${styles[$i]}" ] || {styles=${styles_def[0]}}
+  [ -n "${styles[$i]}" ] || styles=${styles_def[0]}
   colors[$i]=${tmparr[2]-${colors_def[$i]}}
   dtype[$i]=${tmparr[3]}
   dtype_arg[$i]=${tmparr[4]}
@@ -42,7 +42,7 @@ zrange=${tmparr[2]}
 IFS=$'\n'
 blocks=0          # blocks counter
 (
- echo "set term $(echo $terminal) noraise"
+ echo "set term $terminal noraise"
  echo "set style fill transparent solid 0.5"
 
  echo "set xrange [$xrange]"
@@ -75,7 +75,7 @@ blocks=0          # blocks counter
       fi
     else
       echo -n "plot "
-      for ((j=0;j<$nf;++j)); do
+      for ((j=0;j<nf;++j)); do
         c1=1; c2=$((j+2));
         [ "${dtype[j]}" = "xy" ] && {
           c1=$((j+2)); c2=$((j+3));
@@ -108,13 +108,13 @@ blocks=0          # blocks counter
         echo e # gnuplot's end of dataset marker
       }
     elif [ "${dtype[0]}" = "xyz" ]; then
-      for i in ${a[@]}; do echo  "$i"; done
+      for i in "${a[@]}"; do echo  "$i"; done
       unset a
       echo e # gnuplot's end of dataset marker
     else
-      for ((j=0;j<$nf;++j)); do
+      for ((j=0;j<nf;++j)); do
         tc=0 # temp counter
-        for i in ${a[@]}; do
+        for i in "${a[@]}"; do
           echo "$tc $i"
           tc=$((tc+1))
         done
@@ -123,6 +123,6 @@ blocks=0          # blocks counter
       unset a
     fi
     blocks=$((blocks+1))
-  fi 
+  fi
 done) | gnuplot 2>/dev/null
 

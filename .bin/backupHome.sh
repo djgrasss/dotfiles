@@ -1,7 +1,7 @@
 #!/bin/bash
 
 homeDir=$HOME
-destDir=/media/nas/Alex/backup
+destDir=~/media/nas/Alex/backup
 archName="$(whoami).$(hostname)"
 
 # files or directories to exclude
@@ -22,6 +22,7 @@ ssmtp
 .gnome
 .java
 .cache
+.links2
 .pulse*
 .smbcredentials
 .thumbnails
@@ -39,7 +40,13 @@ VirtualBox*
 bin
 .bin
 dotfiles
-
+media
+projects/drm_nightly
+projects/linux_insiders
+projects/.git
+projects/fres*
+projects/electro*
+projects/openw*
 EOEXCL
 }
 
@@ -47,7 +54,7 @@ EOEXCL
 
 # creating an archive
 if [ -d "$destDir" ]; then
-  exe=$(echo "tar -czf \"${destDir}/${archName}.$(date +%Y-%m-%d).tgz\" $(printExcludes) -C $homeDir ./")
+  exe="tar -czf "${destDir}/${archName}.$(date +%Y-%m-%d).tgz" $(printExcludes) -C $homeDir ./"
   echo "$exe" 
   eval "$exe" 
 else
