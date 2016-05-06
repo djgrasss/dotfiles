@@ -209,7 +209,7 @@ hi Visual        ctermfg=0 ctermbg=7
 autocmd InsertEnter * hi StatusLine ctermbg=52
 autocmd InsertLeave * hi StatusLine ctermbg=blue
 
-" airline settings 
+" airline settings
 let g:airline_theme='kalisi'
 let g:airline_section_z='%3p%% %#__accent_bold#%{g:airline_symbols.linenr}%#__accent_bold#%4l%#__restore__#%#__restore__#%#__accent_bold#%#__accent_bold#%{g:airline_symbols.maxlinenr}%#__restore__#%#__restore__# :%3v'
 let g:airline#extensions#whitespace#enabled=0
