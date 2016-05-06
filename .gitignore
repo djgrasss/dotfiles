@@ -1,2 +1,4 @@
 .bin/dotfiles
 .vim/.netrwhist
+.vim/bundle
+.vim/doc

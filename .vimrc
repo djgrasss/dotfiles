@@ -4,6 +4,9 @@
 " Compiler
 "set mp=./bm_main.bat\ .\ VC71\ GPDB\ NO\ DEBUG\ YES\ DLL
 
+" load package manager
+execute pathogen#infect()
+
 set t_Co=256
 
 " Use vim settings
@@ -44,6 +47,8 @@ set showcmd      " display incomplete commands
 set incsearch    " do incremental searching
 set wildmenu     " Set wildmenu
 set nowrap       " Set nowrapping for text
+set updatetime=250
+set timeoutlen=50
 " Tabstop and shiftwidth
 set expandtab
 set tabstop=2
@@ -58,7 +63,7 @@ if exists("+cursorline")
 endif
 " Set current window height
 set winheight=100
-" Indent 
+" Indent
 set cin
 " Show numbers
 set number
@@ -153,7 +158,7 @@ augroup Binary
 augroup END
 
 " keep quickfix window 11 lines always
-au WinEnter  *  call s:SetQFixHeight() 
+au WinEnter  *  call s:SetQFixHeight()
 function! s:SetQFixHeight()
   if winheight(0) < 2
     resize +6
@@ -176,16 +181,16 @@ colorscheme eclipse
 "hi clear Normal
 hi clear Special
 "hi clear StatusLine
-hi clear Comment 
+hi clear Comment
 hi clear Statement
-hi clear Number 
+hi clear Number
 hi clear CursorLine
 hi clear StorageClass
- 
+
 "hi Normal        cterm=NONE ctermfg=16 ctermbg=254 guifg=Black guibg=LightGray
 "hi StatusLine    cterm=bold ctermbg=darkblue ctermfg=yellow guibg=blue guifg=Yellow gui=bold
 "hi Cursor        cterm=reverse guibg=Brown
-hi LineNr        ctermfg=DarkGray cterm=reverse guifg=Blue guibg=Gray 
+hi LineNr        ctermfg=DarkGray cterm=reverse guifg=Blue guibg=Gray
 hi CursorLine    term=underline ctermbg=black guibg=gray
 hi Comment       ctermfg=DarkGreen cterm=none guifg=DarkGreen gui=none
 hi Type          term=underline ctermfg=Blue guifg=Blue gui=none
@@ -196,12 +201,32 @@ hi Number        ctermfg=DarkRed guifg=DarkRed
 hi Constant      ctermfg=64
 hi StorageClass  ctermfg=Red guifg=Red gui=bold
 hi Search        term=reverse ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
-hi MoreThen80    ctermbg=lightcyan guibg=lightcyan
-hi Directory     ctermfg=DarkBlue 
+hi MoreThen80    ctermbg=236 guibg=lightcyan
+hi Directory     ctermfg=DarkBlue
+hi Visual        ctermfg=0 ctermbg=7
 
 " change statusline color depending on the mode
 autocmd InsertEnter * hi StatusLine ctermbg=52
 autocmd InsertLeave * hi StatusLine ctermbg=blue
+
+" airline settings 
+let g:airline_theme='kalisi'
+let g:airline_section_z='%3p%% %#__accent_bold#%{g:airline_symbols.linenr}%#__accent_bold#%4l%#__restore__#%#__restore__#%#__accent_bold#%#__accent_bold#%{g:airline_symbols.maxlinenr}%#__restore__#%#__restore__# :%3v'
+let g:airline#extensions#whitespace#enabled=0
+
+if !exists('g:airline_symbols')
+    let g:airline_symbols = {}
+      endif
+"let g:airline_left_sep = '▶'
+"let g:airline_right_sep = '◀'
+"let g:airline_symbols.linenr = '␤'
+"let g:airline_symbols.maxlinenr = '☰'
+let g:airline_symbols.branch = '⎇'
+let g:airline_symbols.paste = 'ρ'
+let g:airline_symbols.spell = 'Ꞩ'
+let g:airline_symbols.notexists = '∄'
+let g:airline_symbols.whitespace = 'Ξ'
+
 
 
 " Functions
@@ -213,7 +238,7 @@ function! s:DiffWithSaved()
   diffthis
   setlocal bt=nofile bh=wipe nobl noswf ro
 endfunction
-com! Diff call s:DiffWithSaved() 
+com! Diff call s:DiffWithSaved()
 
 " Create a global dir for all swap files
 function! s:CreateSwapDir()
@@ -245,7 +270,7 @@ if s:CreateSwapDir() == 1
   set   directory=$TEMP/vim
 endif
 
-" Toggle fold state between closed and opened. 
+" Toggle fold state between closed and opened.
 "
 " If there is no fold at current line, just moves forward.
 " If it is present, reverse it's state.
