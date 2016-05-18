@@ -15,7 +15,7 @@ alias less='less -r'                          # raw control characters
 alias grep='grep --color'                     # show differences in colour
 
 # Some shortcuts for different directory listings
-alias ls='ls -X -hF --color=tty'              # classify files in colour
+alias ls='ls -X -hF --color=tty --group-directories-first' # classify files in colour
 alias dir='ls --color=auto --format=vertical'
 alias vdir='ls --color=auto --format=long'
 alias ll='ls -lA'                             # long list
