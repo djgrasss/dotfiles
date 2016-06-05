@@ -40,7 +40,7 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';eval '/bin/rm -rf $HOME/{}'
 .mozilla/firefox/*/minidumps
 .mozilla/firefox/*/datareporting
 .mozilla/firefox/*/saved-telemetry-pings
-.mozilla/firefox/*/healthreport
+.mozilla/firefox/*/healthreport*
 .mozilla/firefox/Crash\ Reports/
 .mozilla/firefox/*/crashes
 .mozilla/firefox/*/storage/*
