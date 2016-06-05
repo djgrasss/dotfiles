@@ -1,5 +1,6 @@
 #!/bin/bash
 
 wpath=${1:-~/wallpapers}
+[[ -d "$wpath" ]] || wpath=/usr/share/xfce4/backdrops/
 feh --bg-scale "$(find "${wpath}" -iname '*'|shuf|head -n1)"
 
