@@ -10,18 +10,26 @@ export HISTFILE=~/.bash_eternal_history
 export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
 
+# grc as a function
+function grc() {
+  if [[ -n "$(which grc)" ]]; then
+    #grc --colour=auto
+    $(which grc) $@
+  else
+    $@
+  fi
+}
+
 # aliases
 alias less='less -r'                          # raw control characters
 alias grep='grep --color'                     # show differences in colour
 
 # Some shortcuts for different directory listings
-alias ls='ls -X -hF --color=tty --group-directories-first' # classify files in colour
 alias dir='ls --color=auto --format=vertical'
 alias vdir='ls --color=auto --format=long'
 alias ll='ls -lA'                             # long list
 alias la='ls -A'                              # all but . and ..
 alias l='ls -CF'                              #
-alias ps='ps -A'                              #
 alias gr='grep -HEnri'                        #
 alias rm='gvfs-trash'                         # safe rm
 
@@ -49,6 +57,19 @@ alias gl='git log'
 alias gb='git branch'
 alias gd='git diff'
 
+#coloring some programs using grc (check /usr/share/grc)
+alias hexdump='grc hexdump'
+alias ps='grc ps -A'
+alias ping='grc ping'
+alias ifconfig='grc ifconfig'
+alias mount='grc mount'
+alias df='grc df'
+alias netstat='grc netstat'
+alias gcc='grc gcc'
+alias nmap='grc nmap'
+alias cat='grc --colour=auto cat'
+alias diff='grc --colour=auto diff'
+alias ls='grc ls -X -hF --color=yes --group-directories-first'
 
 # setting the temp directory for vim
 [ -z $TEMP ] && export TEMP=/tmp
