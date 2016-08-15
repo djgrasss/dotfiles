@@ -14,8 +14,9 @@ declare -A styles_def
 styles_def=( [0]="filledcurves x1" [1]="boxes" [2]="lines" [3]="points" )
 # remove the color adjustment line below to get
 # default gnuplot colors for the first six plots
-colors_def=("red" "blue" "green" "yellow" "cyan" "magenta")
-colors=( "${colors_def[@]}" )
+#colors_def=("red" "blue" "green" "yellow" "cyan" "magenta")
+#colors=( "${colors_def[@]}" )
+colors=(  )
 
 # parsing input plots descriptions
 i=0
@@ -26,7 +27,7 @@ while [ -n "$1" ]; do
   [ -n "${tmparr[1]}" ] || tmparr[1]=0
   styles[$i]=${styles_def[${tmparr[1]}]-${tmparr[1]}}
   [ -n "${styles[$i]}" ] || styles=${styles_def[0]}
-  colors[$i]=${tmparr[2]-${colors_def[$i]}}
+  colors[$i]=${tmparr[2]}
   dtype[$i]=${tmparr[3]}
   dtype_arg[$i]=${tmparr[4]}
   dtype_arg2[$i]=${tmparr[5]}
