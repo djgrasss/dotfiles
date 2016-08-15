@@ -14,7 +14,7 @@ export EDITOR=vi
 function grc() {
   if [[ -n "$(which grc)" ]]; then
     #grc --colour=auto
-    $(which grc) "$@"
+    $(which grc) --colour=auto "$@"
   else
     "$@"
   fi
