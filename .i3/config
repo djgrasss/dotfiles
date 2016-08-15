@@ -196,6 +196,8 @@ for_window [class="^blueman-manager$"] floating enable
 for_window [class="^galculator$"] floating enable
 for_window [class="^vlc$"] floating enable
 for_window [class="^Yad$"] floating enable border normal
+for_window [class="^gnuplot"] floating enable
+for_window [class="^xpad"] floating enable
 
 # dpmsoff
 exec --no-startup-id ~/bin/dpmsoff &
@@ -214,3 +216,5 @@ exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agen
 #exec --no-startup-id feh --bg-scale /usr/share/backgrounds/xfce/xfce-blue.jpg &
 exec --no-startup-id ~/bin/randomwallpaper.sh
 exec --no-startup-id volumeicon &
+exec --no-startup-id xpad &
+exec --no-startup-id xxkb &
