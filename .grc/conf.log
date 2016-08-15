@@ -42,7 +42,7 @@ colours=bold green
 count=more
 ======
 # this is probably a url
-regexp=(http|https|ftp)://[\w/\.\-#:\?]+
+regexp=(http|https|ftp|smb)://[\w/\.\-#:\?]+
 colours=bold green
 count=more
 ======

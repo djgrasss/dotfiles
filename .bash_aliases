@@ -14,9 +14,9 @@ export EDITOR=vi
 function grc() {
   if [[ -n "$(which grc)" ]]; then
     #grc --colour=auto
-    $(which grc) $@
+    $(which grc) "$@"
   else
-    $@
+    "$@"
   fi
 }
 
@@ -70,14 +70,15 @@ alias nmap='grc nmap'
 alias cat='grc --colour=auto cat'
 alias diff='grc --colour=auto diff'
 alias ls='grc ls -X -hF --color=yes --group-directories-first'
+alias tail='grc tail'
 
 # setting the temp directory for vim
 [ -z $TEMP ] && export TEMP=/tmp
 
 function lso()
 {
-  if [ -t 0 ];then ls -alG "$@";else cat -;fi | \
-    awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print}'
+  if [ -t 0 ];then ls -alG "$@";else cat -;fi |
+    awk '{t=$0;gsub(/\x1B\[[0-9;]*[mK]/,"");k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print t}'
 }
 
 function showbanner()
