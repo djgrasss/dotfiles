@@ -31,8 +31,8 @@ while [ -n "$1" ]; do
   dtype[$i]=${tmparr[3]}
   dtype_arg[$i]=${tmparr[4]}
   dtype_arg2[$i]=${tmparr[5]}
-  [ "${dtype[$i]}" = "xy" ] && i=$((i+1))
-  i=$((i+1))
+  [ "${dtype[$i]}" = "xy" ] && ((i++))
+  ((i++))
   shift
 done
 
@@ -53,62 +53,70 @@ blocks=0          # blocks counter
  echo "set hidden3d"
 # uncomment to remove axis, border and ticks
 # echo "set tics scale 0;set border 0;set format x '';set format y '';set format z ''"
- [ "${dtype[0]}" != "xyz" ] && {
+ [[ "${dtype[0]}" != "xyz" ]] && [[ "${dtype[0]}" != "map" ]] && {
    echo "set dgrid3d ${dtype_arg[0]},${dtype_arg[0]} gauss 0.25"
  }
 
+ [[ "${dtype[0]}" = "map" ]] && {
+   echo "set view map"
+ }
+
  while read newLine; do
-  if [ -n "$newLine" ]; then
+  if [[ -n "$newLine" ]]; then
     a+=("$newLine") # add to the end
   else
     #nf=$(echo "$newLine"|awk '{print NF}')
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
-      for j in ${a[0]};do nf=$((nf+1));done
+      for j in ${a[0]};do ((nf++));done
     IFS=$TMPIFS
-    if [ "${dtype[0]}" = "xyz" ] || [[ "${dtype[0]}" =~ ^3d.* ]]; then
+    if [[ "${dtype[0]}" = "map" ]] || [[ "${dtype[0]}" = "xyz" ]] || [[ "${dtype[0]}" =~ ^3d.* ]]; then
       # only one splot command is used for all blocks for 3db type plots
-      if [ "${dtype[0]}" != "3db" ] || [ $((blocks%dtype_arg2[0])) -eq 0 ]; then
-        echo -n "splot "
-        echo -n "'-' u 1:2:3 t '${titles[0]}' "
-        echo -n "w ${styles[0]-${styles_def[0]}} "
-        [ -n "${colors[0]}" ] && echo -n "fc rgb '${colors[0]}'"
+      if [[ "${dtype[0]}" != "3db" ]] || [[ $((blocks%dtype_arg2[0])) -eq 0 ]]; then
+        if [[ "${dtype[0]}" = "map" ]]; then
+          echo -n "plot "
+        else
+          echo -n "splot "
+        fi
+        echo -n "'-' u 1:2:3 t '${titles[0]}'"
+        echo -n " w ${styles[0]-${styles_def[0]}}"
+        [[ -n "${colors[0]}" ]] && echo -n " fc rgb '${colors[0]}'"
         echo -n ","
       fi
     else
       echo -n "plot "
       for ((j=0;j<nf;++j)); do
         c1=1; c2=$((j+2));
-        [ "${dtype[j]}" = "xy" ] && {
+        [[ "${dtype[j]}" = "xy" ]] && {
           c1=$((j+2)); c2=$((j+3));
         }
         echo -n " '-' u $c1:$c2 t '${titles[$j]}' "
         echo -n "w ${styles[$j]-${styles_def[0]}} "
-        [ -n "${colors[$j]}" ] && echo -n "fc rgb '${colors[$j]}'"
+        [[ -n "${colors[$j]}" ]] && echo -n "fc rgb '${colors[$j]}'"
         echo -n ","
-        [ $c1 = 1 ] || j=$((j+1))
+        [[ $c1 = 1 ]] || ((j++))
       done
     fi
     echo
-    if [ "${dtype[0]}" = "3d" ]; then
-      [ ${#a[@]} -gt $((dtype_arg[0]*dtype_arg2[0])) ] && {
+    if [[ "${dtype[0]}" = "3d" ]] || [[ "${dtype[0]}" = "map" ]]; then
+      [[ ${#a[@]} -gt $((dtype_arg[0]*dtype_arg2[0])) ]] && {
         a=( "${a[@]:dtype_arg[0]}" )
       }
       for ((j=1;j<=dtype_arg2[0];++j)); do
-        [ -n "${a[(dtype_arg2[0]-j)*${dtype_arg[0]}]}" ] || continue;
+        [[ -n "${a[(dtype_arg2[0]-j)*${dtype_arg[0]}]}" ]] || continue;
         for ((i=0;i<dtype_arg[0];++i)); do
           echo  "$i $j ${a[(dtype_arg2[0]-j)*${dtype_arg[0]}+i]}"
         done
       done
       echo e # gnuplot's end of dataset marker
-    elif [ "${dtype[0]}" = "3db" ]; then
+    elif [[ "${dtype[0]}" = "3db" ]]; then
       for ((i=0;i<dtype_arg[0];++i)); do
         echo  "$i $((blocks%dtype_arg2[0])) ${a[i]}"
       done
       unset a
-      [ $((blocks%dtype_arg2[0])) -eq $((dtype_arg2[0]-1)) ] && {
+      [[ $((blocks%dtype_arg2[0])) -eq $((dtype_arg2[0]-1)) ]] && {
         echo e # gnuplot's end of dataset marker
       }
-    elif [ "${dtype[0]}" = "xyz" ]; then
+    elif [[ "${dtype[0]}" = "xyz" ]]; then
       for i in "${a[@]}"; do echo  "$i"; done
       unset a
       echo e # gnuplot's end of dataset marker
@@ -117,13 +125,13 @@ blocks=0          # blocks counter
         tc=0 # temp counter
         for i in "${a[@]}"; do
           echo "$tc $i"
-          tc=$((tc+1))
+          ((tc++))
         done
         echo e # gnuplot's end of dataset marker
       done
       unset a
     fi
-    blocks=$((blocks+1))
+    ((blocks++))
   fi
 done) | gnuplot 2>/dev/null
 
