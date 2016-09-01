@@ -19,7 +19,7 @@ template5 ${if_up \1} ${exec ~/bin/apstatus.sh \1}${endif}
 template6 ${template5 \1}${template5 \2}
 template7 ${template5 \1}${template6 \2 \3}
 
-template0 ${if_existing /sys/class/power_supply/\1/online}${if_existing /sys/class/power_supply/\1/online 1} ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}US${endif}${endif}${endif}
+template0 ${if_existing /sys/class/power_supply/\1/online}${if_existing /sys/class/power_supply/\1/online 1} ${if_match ${exec xset -q | awk '/LED mask:/{print and(4096,strtonum("0x"$10))}'}>0}RU${else}EN${endif}${endif}${endif}
 template9 ${template0 \1}${template0 \2}
 
 template4 ${if_existing /sys/class/power_supply/\1/online}${if_existing /sys/class/power_supply/\1/online 1}${if_match ${exec xset -q | awk '/LED mask:/{print and(1,strtonum("0x"$10))}'}>0}ff0000${else}ffffff${endif}${endif}${endif}
