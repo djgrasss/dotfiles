@@ -197,8 +197,11 @@ hi Type          term=underline ctermfg=Blue guifg=Blue gui=none
 hi Question      term=standout ctermfg=Blue gui=bold guifg=Blue
 hi Special       ctermfg=DarkRed cterm=bold guifg=OrangeRed
 hi Statement     ctermfg=Brown cterm=bold
-hi Number        ctermfg=DarkRed guifg=DarkRed
-hi Constant      ctermfg=64
+"hi Number        ctermfg=DarkRed guifg=DarkRed
+"hi Constant      ctermfg=64
+"hi Constant      term=underline ctermfg=9 guifg=#ffa0a0
+hi Constant      term=underline ctermfg=15 guifg=#ffa0a0
+hi link          Number Constant
 hi StorageClass  ctermfg=Red guifg=Red gui=bold
 hi Search        term=reverse ctermbg=Yellow ctermfg=Black guibg=Yellow guifg=Black
 hi MoreThen80    ctermbg=236 guibg=lightcyan
