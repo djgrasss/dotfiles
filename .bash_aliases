@@ -104,7 +104,9 @@ function showbanner()
     esac
   done
   OPTIND=1 #reset index again
-  watch -tn${t} "$@|xargs banner"
+  bannercmd=banner
+  [[ -z $(which banner) ]] && bannercmd=echo
+  watch -tn${t} "$@|xargs $bannercmd"
 }
 alias showclock='showbanner "date +%T"'
 
