@@ -38,13 +38,14 @@ function generate_maze
     [[ $r -lt $((rows-1)) ]] && [[ ${M[$((r+1)),$c,4]} == 0 ]] && check=( "${check[@]}" "D" )
     if [[ ${#check[@]} -gt 0 ]]; then
       history=( "${history[@]}" "$r:$c" )
-      ri=$(dd if=/dev/urandom bs=1 count=1 2>/dev/null | hexdump -v -e '/1 "%u\n"' | awk -v len="${#check[@]}" '{print $1%len}')
+#      ri=$(dd if=/dev/urandom bs=1 count=1 2>/dev/null | hexdump -v -e '/1 "%u\n"' | awk -v len="${#check[@]}" '{print $1%len}')
+      ri=$((RANDOM % ${#check[@]}))
       move_dir=${check[$ri]}
       case $move_dir in
-        L) M[$r,$c,0]=1;c=$((c-1));M[$r,$c,2]=1 ;;
-        U) M[$r,$c,1]=1;r=$((r-1));M[$r,$c,3]=1 ;;
-        R) M[$r,$c,2]=1;c=$((c+1));M[$r,$c,0]=1 ;;
-        D) M[$r,$c,3]=1;r=$((r+1));M[$r,$c,1]=1 ;;
+        L) M[$r,$c,0]=1;((c--));M[$r,$c,2]=1 ;;
+        U) M[$r,$c,1]=1;((r--));M[$r,$c,3]=1 ;;
+        R) M[$r,$c,2]=1;((c++));M[$r,$c,0]=1 ;;
+        D) M[$r,$c,3]=1;((r++));M[$r,$c,1]=1 ;;
         *) echo "ERROR!!! $move_dir" >&2 ;;
       esac
     else
@@ -82,10 +83,10 @@ while true; do
 
   read -s -t1 -n1 c
   case $c in
-    a) [ "${M[$x,$y,1]}" = "1" ] && x=$((x-1)) ;;
-    s) [ "${M[$x,$y,0]}" = "1" ] && y=$((y-1)) ;;
-    d) [ "${M[$x,$y,3]}" = "1" ] && x=$((x+1)) ;;
-    w) [ "${M[$x,$y,2]}" = "1" ] && y=$((y+1)) ;;
+    a) [[ "${M[$x,$y,1]}" = "1" ]] && ((x--)) ;;
+    s) [[ "${M[$x,$y,0]}" = "1" ]] && ((y--)) ;;
+    d) [[ "${M[$x,$y,3]}" = "1" ]] && ((x++)) ;;
+    w) [[ "${M[$x,$y,2]}" = "1" ]] && ((y++)) ;;
   esac
 done
 
