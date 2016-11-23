@@ -71,6 +71,8 @@ set number
 set visualbell
 set t_vb=
 set list lcs=tab:→\ 
+" Use stronger encryption ( use :X or vim -x file)
+setlocal cm=blowfish2
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -229,6 +231,7 @@ let g:airline_symbols.paste = 'ρ'
 let g:airline_symbols.spell = 'Ꞩ'
 let g:airline_symbols.notexists = '∄'
 let g:airline_symbols.whitespace = 'Ξ'
+let g:airline_symbols.crypt= ''
 
 " Nerdtree settings
 map <C-n> :NERDTreeToggle<CR>
