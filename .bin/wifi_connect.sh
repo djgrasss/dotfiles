@@ -13,17 +13,17 @@ i=1
 ifacecon=$(nmcli dev status | awk '($2 ~ "wireless" || $2 ~ "wifi") && $3 == "connected" {printf("disconnect [%s]\n",$1)}')
 for n in $ifacecon; do
   apv[i]=$n
-  i=$((i+1))
+  ((i++))
 done
 for n in $aps; do
   apv[i]=$n
-  i=$((i+1))
+  ((i++))
 done
 ap=$(/usr/bin/yad --entry --title "Available AP" --text "Choose AP to join" --entry-text "${apv[@]}")
 [ -z "$ap" ] && exit 1
 # is that a disconnection request?
 for n in $ifacecon; do
-  [ "$n" = "$ap" ] && {
+  [[ "$n" = "$ap" ]] && {
     ap_bssid=$(echo "$ap"|sed -nr 's/[^[]*.([^]]*).*/\1/p')
     nmcli dev disconnect iface "${ap_bssid#* }"
     exit 0
@@ -39,22 +39,24 @@ ap_bssid=${ap_tuple#*$'\n'} # is not used any longer
 # make it compatible with the older nm versions
 cmdpar='list'
 nmcli con $cmdpar &>/dev/null || cmdpar='show'
-[ "$cmdpar" = "list" ] && {
+[[ "$cmdpar" = "list" ]] && {
 #  nm 0.9.x adds ' chars around ap_name 
 #  this is an ugly hack to remove them 
-  ap_name=$(awk -v ap="${ap_name}" 'BEGIN{print gensub(/.(.*?)./,"\\1","g",ap)}')
+  ap_name=$(echo "${ap_name}" | sed -nr 's/.(.*)./\1/p')
 }
 if nmcli con $cmdpar id "$ap_name" &>/dev/null; then
   nmcli con up id "$ap_name"
 else
-  secur=$(nmcli dev wifi | grep "$ap_bssid" | awk -F'MB/s' '{print $2}' | awk '{print $2}')
-  if [ "$secur" != "--" ]; then
-    pass=$(/usr/bin/yad --image='dialog-password' --image='dialog-password' --entry --title "AP password:" --text "Enter AP password:" --hide-text)
+  privatecmd="private yes"
+  [[ "$cmdpar" = "list" ]] && {privatecmd="--private"}
+  secur=$(nmcli -t -f bssid,security dev wifi | sed -e's/\\//g' | grep  "${ap_bssid}")
+  if [ "$secur" != "$ap_bssid:" ]; then
+    pass=$(/usr/bin/yad --image='dialog-password' --entry --title "AP password:" --text "Enter AP password:" --hide-text)
     [ -n "$pass" ] && {
-      nmcli dev wifi connect "$ap_bssid" password "$pass" --private
+      nmcli dev wifi connect "$ap_bssid" password "$pass" $privatecmd
     }
   else
-    nmcli dev wifi connect "$ap_bssid" --private
+    nmcli dev wifi connect "$ap_bssid" $privatecmd
   fi
 fi
 
