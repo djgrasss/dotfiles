@@ -1,6 +1,9 @@
 #!/bin/bash
 
-[[ -z "$(which yad)" ]] && { print "Error: yad is not installed" >&2; exit 1}
+[[ -z "$(which yad)" ]] && {
+  echo "Error: yad is not installed" >&2
+  exit 1
+}
 
 IFS=$'\n'
 nmout=$(nmcli -m multiline -t -f ssid,bssid,freq,signal,security dev wifi)
@@ -50,7 +53,7 @@ if nmcli con $cmdpar id "$ap_name" &>/dev/null; then
   nmcli con up id "$ap_name"
 else
   privatecmd="private yes"
-  [[ "$cmdpar" = "list" ]] && {privatecmd="--private"}
+  [[ "$cmdpar" = "list" ]] && privatecmd="--private"
   secur=$(nmcli -t -f bssid,security dev wifi | sed -e's/\\//g' | grep  "${ap_bssid}")
   if [ "$secur" != "$ap_bssid:" ]; then
     pass=$(/usr/bin/yad --image='dialog-password' --entry --title "AP password:" --text "Enter AP password:" --hide-text)
