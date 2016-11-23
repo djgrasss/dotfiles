@@ -14,7 +14,7 @@ export EDITOR=vi
 function grc() {
   if [[ -n "$(which grc)" ]]; then
     #grc --colour=auto
-    $(which grc) --colour=auto "$@"
+    $(which grc) --colour=on "$@"
   else
     "$@"
   fi
@@ -34,6 +34,7 @@ alias gr='grep -HEnri'                        #
 alias rm='gvfs-trash'                         # safe rm
 
 # my shortcuts
+alias ne='sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"'
 alias c='printf "\33[2J"'
 alias ss='bc64=( {a..z} {A..Z} {0..9} + / = );c;while true; do echo -ne "\033[$((1+RANDOM%LINES));$((1+RANDOM%COLUMNS))H\033[$((RANDOM%2));3$((RANDOM%8))m${bc64[$((RANDOM%${#bc64[@]}))]}"; sleep 0.1 ; done'
 alias p4='unset PWD; p4 '
@@ -67,8 +68,8 @@ alias df='grc df'
 alias netstat='grc netstat'
 alias gcc='grc gcc'
 alias nmap='grc nmap'
-alias cat='grc --colour=auto cat'
-alias diff='grc --colour=auto diff'
+alias cat='grc cat'
+alias diff='grc diff'
 alias ls='grc ls -X -hF --color=yes --group-directories-first'
 alias tail='grc tail'
 
