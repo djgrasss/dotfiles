@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z "$(which yad)" ]] && { print "Error: yad is not installed" >&2; exit 1}
+
 IFS=$'\n'
 nmout=$(nmcli -m multiline -t -f ssid,bssid,freq,signal,security dev wifi)
 aps=$(echo "$nmout" | awk 'BEGIN{cnt=0}\
