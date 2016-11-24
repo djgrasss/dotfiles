@@ -59,6 +59,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 # }}}
 # documents {{{1
 *README               38;5;220;1
+*README.rst           38;5;220;1
 *LICENSE              38;5;220;1
 *COPYING              38;5;220;1
 *INSTALL              38;5;220;1
@@ -276,6 +277,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
 .vbs                  38;5;81
 # 2}}}
 # Build stuff {{{2
+*Dockerfile           38;5;155
 *Makefile             38;5;155
 *MANIFEST             38;5;243
 *pm_to_blib           38;5;240
@@ -409,6 +411,7 @@ STICKY_OTHER_WRITABLE 48;5;235;38;5;139;3
   # packaged apps {{{2
 .apk                  38;5;215
 .deb                  38;5;215
+.rpm                  38;5;215
 .jad                  38;5;215
 .jar                  38;5;215
 .cab                  38;5;215
