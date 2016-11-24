@@ -162,3 +162,6 @@ if [ "$OSTYPE" = "cygwin" ]; then
   fi
 fi
 
+# generated prompt line
+source ${HOME}/bin/shellprompt.sh
+
