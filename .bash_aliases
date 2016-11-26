@@ -9,6 +9,7 @@ export HISTFILESIZE=-1 # unlimited
 export HISTFILE=~/.bash_eternal_history
 export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
+export PAGER=less
 
 # grc as a function
 function grc() {
