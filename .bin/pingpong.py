@@ -122,7 +122,7 @@ class MyWin (Gtk.Window):
       super(MyWin, self).__init__()
       self._overallGameTime = time.perf_counter()
       # seems like full screen app canno't be transparent
-      #self.transp_setup()
+      self.transp_setup()
       self.connect("draw", self.area_draw)
       self.connect("delete-event", Gtk.main_quit)
       self.connect("key-press-event", self.key_pressed)
@@ -130,10 +130,10 @@ class MyWin (Gtk.Window):
       self.connect("motion_notify_event", self.motion_notify_event)
       self.add_events(Gdk.EventMask.POINTER_MOTION_MASK) 
 
-      self.set_keep_above(True)
-      self.set_skip_taskbar_hint(True)
-      self.stick()
-      self.fullscreen()
+#      self.set_keep_above(True)
+#      self.set_skip_taskbar_hint(True)
+#      self.stick()
+#      self.fullscreen()
       self.show_all()
 
     def start_game(self):
@@ -183,7 +183,7 @@ class MyWin (Gtk.Window):
       return batpos
 
     def add_random_angle(self, angle):
-      rangle = (45 - random.randint(0,90))
+      rangle = (45 - random.randint(0,80))
       rangle*=math.pi/180.0
       return angle+rangle
 
@@ -207,12 +207,12 @@ class MyWin (Gtk.Window):
         bounce+=1
 
       if yp > self._winHeight:
-        if bounce>0:
+        if (bounce%2)>0:
           yp-= self._winHeight
         else:
           yp = 2*self._winHeight-yp
       elif yp < 0:
-        if bounce>0:
+        if (bounce%2)>0:
           yp+=self._winHeight
         else:
           yp = -yp
@@ -352,7 +352,8 @@ class MyWin (Gtk.Window):
       cr.fill()
 
     def draw_background(self, cr):
-      cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
+#      cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
+      cr.set_source_rgba(0.074, 0.098, 0.149, 0.9)
       cr.set_operator(cairo.OPERATOR_SOURCE)
       cr.paint()
       cr.set_operator(cairo.OPERATOR_OVER)
