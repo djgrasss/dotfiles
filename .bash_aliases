@@ -1,3 +1,8 @@
+# generated prompt line
+source ${HOME}/bin/shellprompt.sh
+# custom functions
+source ${HOME}/bin/shellfunctions.sh
+
 # Don't wait for job termination notification
 set -o notify
 shopt -s dotglob
@@ -10,16 +15,8 @@ export HISTFILE=~/.bash_eternal_history
 export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
 export PAGER=less
-
-# grc as a function
-function grc() {
-  if [[ -n "$(which grc)" ]]; then
-    #grc --colour=auto
-    $(which grc) --colour=on "$@"
-  else
-    "$@"
-  fi
-}
+[[ -n "$(which banner)" ]] && export BANNER="banner"
+[[ -n "$(which toilet)" ]] && export BANNER="toilet -f mono9.tlf"
 
 # aliases
 alias less='less -r'                          # raw control characters
@@ -35,6 +32,7 @@ alias gr='grep -HEnri'                        #
 alias rm='gvfs-trash'                         # safe rm
 
 # my shortcuts
+alias feh='feh -g 800x600 -d -.'
 alias ne='sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"'
 alias c='printf "\33[2J"'
 alias ss='bc64=( {a..z} {A..Z} {0..9} + / = );c;while true; do echo -ne "\033[$((1+RANDOM%LINES));$((1+RANDOM%COLUMNS))H\033[$((RANDOM%2));3$((RANDOM%8))m${bc64[$((RANDOM%${#bc64[@]}))]}"; sleep 0.1 ; done'
@@ -45,8 +43,6 @@ alias 2edit='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- mousepad $n -- s
 alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v'
 alias readpass='echo -n $(read -s passwd_;echo -n $passwd_)'
 alias cdh='cd ~'
-#alias timer='echo test;banr="banner";[ -z "which banner" ] && banr="cat";export banr;echo $banr;export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch -n 1 -t $banr $p;eval "echo $p"'
-alias timer='cmd=echo;[ -n "$(which banner)" ] && cmd=banner;export cmd;export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch -n 1 -t $cmd $p;eval "echo $p"'
 alias top10='ps aux --sort -rss | head'
 alias traf='netstat -np | grep -v ^unix'
 alias why='apt-cache rdepends --installed'
@@ -65,7 +61,7 @@ alias ps='grc ps -A'
 alias ping='grc ping'
 alias ifconfig='grc ifconfig'
 alias mount='grc mount'
-alias df='grc df'
+alias df='grc df -Th'
 alias netstat='grc netstat'
 alias gcc='grc gcc'
 alias nmap='grc nmap'
@@ -77,76 +73,11 @@ alias tail='grc tail'
 # setting the temp directory for vim
 [ -z $TEMP ] && export TEMP=/tmp
 
-function lso()
-{
-  if [ -t 0 ];then ls -alG "$@";else cat -;fi |
-    awk '{t=$0;gsub(/\x1B\[[0-9;]*[mK]/,"");k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print t}'
-}
-
-function showbanner()
-{
-  local opt
-  local t=1
-
-  OPTIND=1 #reset index
-  while getopts "t:" opt; do
-    case $opt in
-       t)
-          shift $((OPTIND-1))
-          shift $((OPTIND))
-          t=$OPTARG
-          ;;
-       \?)
-          echo "Invalid option: -$OPTARG" >&2
-          exit 1
-          ;;
-       :)
-          echo "Option -$OPTARG requires number of sec as an argument" >&2
-          exit 1
-    esac
-  done
-  OPTIND=1 #reset index again
-  bannercmd=banner
-  [[ -z $(which banner) ]] && bannercmd=echo
-  watch -tn${t} "$@|xargs $bannercmd"
-}
 alias showclock='showbanner "date +%T"'
+alias timer='export ts=$(date +%s);p='\''date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S"'\'';showbanner "$p";eval "$p"'
+#alias timer='cmd=echo;[[ -n "$BANNER" [] && cmd="$BANNER";export cmd;export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch --color -n 1 -t $cmd $p;eval "echo $p"'
 
-function ? {
-  awk "BEGIN{ pi = 4.0*atan2(1.0,1.0); deg = pi/180.0; print $@ }"
-}
-  
-# defining functions
-#A function to pipe any command to less:
-function so {
-eval "$@" |less -I~
-}
-
-# crypting functions
-function encrypt {
-  if [ -t 0 ]; then
-    # interactive
-    local fname="$1"
-    shift
-    openssl aes-256-cbc -salt -in "$fname" -out "${fname}.enc" $@
-  else
-    # piped
-    perl -e 'use IO::Select; $ready=IO::Select->new(STDIN)->can_read();'
-    openssl aes-256-cbc -salt $@
-  fi
-}
-function decrypt {
-  if [ -t 0 ]; then
-    # interactive
-    local fname="$1"
-    shift
-    openssl aes-256-cbc -d -in "$fname" -out "${fname%\.*}" $@
-  else
-    perl -e 'use IO::Select; $ready=IO::Select->new(STDIN)->can_read();'
-    openssl aes-256-cbc -d $@
-  fi
-}
-
+ 
 # some cygwin related patches
 # Terminal capabilities
 if [ "$OSTYPE" = "cygwin" ]; then
@@ -163,6 +94,4 @@ if [ "$OSTYPE" = "cygwin" ]; then
   fi
 fi
 
-# generated prompt line
-source ${HOME}/bin/shellprompt.sh
 
