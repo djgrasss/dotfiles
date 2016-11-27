@@ -116,6 +116,8 @@ map       H        :let &hlsearch = !&hlsearch<CR>
 " restores selection after shift
 vnoremap  <       <gv
 vnoremap  >       >gv
+" copy selection to the system clipboard
+vnoremap <C-C> :w !xclip -i -sel c<CR><CR>
 " insert mode mappings
 inoremap  <C-l>  <ESC>o
 "inoremap  {      {<CR>x<CR>}<ESC>k$xi<SPACE>
