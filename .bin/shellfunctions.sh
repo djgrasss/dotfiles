@@ -1,7 +1,13 @@
-#!/bin/env bash
+#┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+#░█▀▀░█░█░█▀▀░█░░░█░░░░░█▀▀░█░█░█▀█░█▀▀░▀█▀░▀█▀░█▀█░█▀█░█▀▀
+#░▀▀█░█▀█░█▀▀░█░░░█░░░░░█▀▀░█░█░█░█░█░░░░█░░░█░░█░█░█░█░▀▀█
+#░▀▀▀░▀░▀░▀▀▀░▀▀▀░▀▀▀░░░▀░░░▀▀▀░▀░▀░▀▀▀░░▀░░▀▀▀░▀▀▀░▀░▀░▀▀▀
+#┃           Maintained at https://is.gd/jfAQYX            ┃
+#┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-# grc as a function
-function grc() {
+
+# use grc if it's installed or execute the command direct
+grc() {
   if [[ -n "$(which grc)" ]]; then
     #grc --colour=auto
     $(which grc) --colour=on "$@"
@@ -10,15 +16,16 @@ function grc() {
   fi
 }
 
-# adds files permissons in binary mode to the ls command
-function lso()
+# adds files permissons in binary form to the ls command output
+lso()
 {
   if [ -t 0 ];then ls -alG "$@";else cat -;fi |
     awk '{t=$0;gsub(/\x1B\[[0-9;]*[mK]/,"");k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/)*2^(8-i));if(k)printf(" %0o ",k);print t}'
 }
 
 # watches input command output through a banner
-function showbanner()
+# Usage: showbanner "date +%T"
+showbanner()
 {
   local opt; local t=1; local cmd
 
@@ -45,13 +52,13 @@ function showbanner()
   watch --color -tn${t} "$@|xargs $cmd"
 }
 
-# cli calculator
+# cli calculator. Usage: ? "sqrt(3)/2 + 4"
 function ? {
   awk "BEGIN{ pi = 4.0*atan2(1.0,1.0); deg = pi/180.0; print $@ }"
 }
 
 # crypting functions
-function encrypt {
+encrypt() {
   if [ -t 0 ]; then
     # interactive
     local fname="$1"
@@ -63,7 +70,7 @@ function encrypt {
     openssl aes-256-cbc -salt $@
   fi
 }
-function decrypt {
+decrypt() {
   if [ -t 0 ]; then
     # interactive
     local fname="$1"
@@ -76,7 +83,7 @@ function decrypt {
 }
 
 # shows weather in a city
-function wttr {
+wttr() {
   wget -q -O - http://wttr.in/$1 | head -n 7
 }
 
@@ -102,14 +109,14 @@ transfer() {
 } 
 
 # sets random wallpaper image
-function randomwallpaper {
+randomwallpaper() {
   local wpath=${1:-~/wallpapers}
   [[ -d "$wpath" ]] || wpath=/usr/share/xfce4/backdrops/
   \feh --bg-scale "$(find "${wpath}" -iname '*'|shuf|head -n1)"
 }
 
 # select a wallpaper interactively and set it
-function wallpaper {
+wallpaper() {
   local wname;local warr
   local wdir=${1:-~/wallpapers}
   [[ -d "$wdir" ]] || wdir=/usr/share/xfce4/backdrops/
@@ -119,7 +126,7 @@ function wallpaper {
 }
 
 # copies a file and shows progress
-function copy {
+copy() {
   local size=$(stat -c%s $1)
   [[ -z "$1" || -z "$2" ]] && {
     echo "Usage: copy /source/file /destination/file"
@@ -131,28 +138,37 @@ function copy {
 }
 
 #pb pastebin || Usage: 'command | pb or  pb filename'
-function pb {
+pb() {
   curl -F "c=@${1:--}" https://ptpb.pw/
 }
-function pbs {
+pbs() {
   local sname=$(scrot "$1" '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
   [[ -s "$sname" ]] && pbx $sname
 }
-function pbsw {
+pbsw() {
   echo "Select window to upload"
   pbs -s
 }
-function pbx {
-  read -p "Upload screenshot $1? [yN]:" userinput
-  [[ "y" = "$userinput" ]] && {
+pbx() {
+  read -p "Upload screenshot $1? [yN]:"
+  [[ "y" = "$REPLY" ]] && {
     curl -sF "c=@${1:--}" -w "%{redirect_url}" 'https://ptpb.pw/?r=1' -o /dev/stderr | xclip -i -sel c
   }
 }
 
-# search command on commandlinefu.com
+# search command usage examples on commandlinefu.com
 cmdfu() {
-    curl "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
+  curl "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
         | sed 's/ /-/g')/$(echo -n $@ | base64)/plaintext" ;
 }
 
+# shorten / expand a URL
+shortenurl() {
+#    curl -F"shorten=$*" https://0x0.st
+#  wget -q -O - --post-data="shorten=$1" https://0x0.st
+  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$1"|tee >(xclip -i -sel c);echo
+}
+expandurl() {
+  wget -S $1 2>&1 | grep ^Location;
+}
 

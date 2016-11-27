@@ -15,8 +15,12 @@ export HISTFILE=~/.bash_eternal_history
 export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
 export PAGER=less
+export BANNER="echo"
 [[ -n "$(which banner)" ]] && export BANNER="banner"
 [[ -n "$(which toilet)" ]] && export BANNER="toilet -f mono9.tlf"
+# setting the temp directory for vim
+[ -z $TEMP ] && export TEMP=/tmp
+
 
 # aliases
 alias less='less -r'                          # raw control characters
@@ -46,6 +50,8 @@ alias cdh='cd ~'
 alias top10='ps aux --sort -rss | head'
 alias traf='netstat -np | grep -v ^unix'
 alias why='apt-cache rdepends --installed'
+
+# git shortcuts
 alias gc='git checkout'
 alias gcb='git checkout -branch'
 alias ga='git add'
@@ -69,9 +75,6 @@ alias cat='grc cat'
 alias diff='grc diff'
 alias ls='grc ls -X -hF --color=yes --group-directories-first'
 alias tail='grc tail'
-
-# setting the temp directory for vim
-[ -z $TEMP ] && export TEMP=/tmp
 
 alias showclock='showbanner "date +%T"'
 alias timer='export ts=$(date +%s);p='\''date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S"'\'';showbanner "$p";eval "$p"'
