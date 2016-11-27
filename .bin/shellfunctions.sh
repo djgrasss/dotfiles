@@ -120,11 +120,14 @@ function wallpaper {
 
 # copies a file and shows progress
 function copy {
+  local size=$(stat -c%s $1)
   [[ -z "$1" || -z "$2" ]] && {
     echo "Usage: copy /source/file /destination/file"
     return 1
   }
-  dd if=$1 2> /dev/null | pv -petrb -s $size | dd of=$2
+  local dest=$2
+  [[ -d "$dest" ]] && dest="$2/$(basename $1)"
+  dd if=$1 2> /dev/null | pv -petrb -s $size | dd of=$dest
 }
 
 #pb pastebin || Usage: 'command | pb or  pb filename'
@@ -144,6 +147,12 @@ function pbx {
   [[ "y" = "$userinput" ]] && {
     curl -sF "c=@${1:--}" -w "%{redirect_url}" 'https://ptpb.pw/?r=1' -o /dev/stderr | xclip -i -sel c
   }
+}
+
+# search command on commandlinefu.com
+cmdfu() {
+    curl "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
+        | sed 's/ /-/g')/$(echo -n $@ | base64)/plaintext" ;
 }
 
 
