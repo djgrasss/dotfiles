@@ -193,5 +193,6 @@ sinfo () {
   echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime | cut -f4-7 -d' ' | rev | cut -c2- |rev
   echo -ne "${LIGHTRED}USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
   echo -ne "${LIGHTRED}TEMPR:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
+  echo -ne "${LIGHTRED}DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
 
 }
