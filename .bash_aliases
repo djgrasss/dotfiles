@@ -2,6 +2,8 @@
 source ${HOME}/bin/shellprompt.sh
 # custom functions
 source ${HOME}/bin/shellfunctions.sh
+# colors
+source ${HOME}/bin/shellcolors.sh
 
 # Don't wait for job termination notification
 set -o notify
@@ -76,6 +78,7 @@ alias diff='grc diff'
 alias ls='grc ls -X -hF --color=yes --group-directories-first'
 alias tail='grc tail'
 
+alias showtemp='showbanner -t 20 '\''echo "temp: "$(ssh root@buffalo.lan /mnt/sd/bin/readavrstick)°'\'''
 alias showclock='showbanner "date +%T"'
 alias timer='export ts=$(date +%s);p='\''date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S"'\'';showbanner "$p";eval "$p"'
 #alias timer='cmd=echo;[[ -n "$BANNER" [] && cmd="$BANNER";export cmd;export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch --color -n 1 -t $cmd $p;eval "echo $p"'

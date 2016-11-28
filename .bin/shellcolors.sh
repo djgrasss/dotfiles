@@ -1,0 +1,17 @@
+BLACK='\e[0;30m'        # ${black}
+BLUE='\e[0;34m'         # ${blue}
+GREEN='\e[0;32m'        # ${green}
+CYAN='\e[0;36m'         # ${cyan}
+RED='\e[0;31m'          # ${red}
+PURPLE='\e[0;35m'       # ${purple}
+BROWN='\e[0;33m'        # ${brown}
+LIGHTGRAY='\e[0;37m'    # ${lightgray}
+DARKGRAY='\e[1;30m'     # ${darkgray}
+LIGHTBLUE='\e[1;34m'    # ${lightblue}
+LIGHTGREEN='\e[1;32m'   # ${lightgreen}
+LIGHTCYAN='\e[1;36m'    # ${lightcyan}
+LIGHTRED='\e[1;31m'     # ${lightred}
+LIGHTPURPLE='\e[1;35m'  # ${lightpurple}
+YELLOW='\e[1;33m'       # ${yellow}
+WHITE='\e[1;37m'        # ${white}
+NC='\e[0m'              # ${nc} (no color - disables previous color selection)

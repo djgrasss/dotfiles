@@ -172,3 +172,26 @@ expandurl() {
   wget -S $1 2>&1 | grep ^Location;
 }
 
+# kernel graph
+kernelgraph() {
+  lsmod | perl -e 'print "digraph \"lsmod\" {";
+                   <>;
+                   while(<>){
+                     @_=split/\s+/;
+                     print "\"$_[0]\" -> \"$_\"\n" for split/,/,$_[3]
+                   }
+                   print "}"' | dot -Tsvg | rsvg-view-3 /dev/stdin
+}
+
+# system info
+sinfo () {
+  echo -ne "${LIGHTRED}CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
+  echo -ne "${LIGHTRED}MEMORY:$NC\t";cat /proc/meminfo | awk '/MemTotal/{mt=$2};/MemFree/{mf=$2};/MemAvail/{ma=$2}END{print "Total: "mt" Free: "mf" Available: "ma" (kB)"}'
+  echo -ne "${LIGHTRED}OS:$NC\t";cat /etc/issue | awk '{ if (NF>=2) {printf "%s %s\n" , $1, $2} }'
+  echo -ne "${LIGHTRED}KERNEL:$NC\t";uname -a | awk '{ print $3 }'
+  echo -ne "${LIGHTRED}ARCH:$NC\t";uname -m
+  echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime | cut -f4-7 -d' ' | rev | cut -c2- |rev
+  echo -ne "${LIGHTRED}USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
+  echo -ne "${LIGHTRED}TEMPR:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
+
+}
