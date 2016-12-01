@@ -1,6 +1,7 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
-import os, sys, socket
+import os, sys, socket, gi
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository.GdkPixbuf import Pixbuf
 from gi.repository import GObject
