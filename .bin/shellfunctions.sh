@@ -84,7 +84,10 @@ decrypt() {
 
 # shows weather in a city
 wttr() {
-  wget -q -O - http://wttr.in/$1 | head -n 7
+  wttrfull $@ | head -n 7
+}
+wttrfull() {
+  wget -q -O - http://wttr.in/$1
 }
 
 # transfer a file or pipe to the server
