@@ -19,13 +19,9 @@
 # 2.  gistit -p bin/gistit # gists itself and make it public
 #
 
-
-#GITOKEN=
 [[ -z "$GITOKENCMD" ]] && {
   GITOKENCMD='python3 -c "import keyring; print(keyring.get_password(\"gist\",\"'"$USER"'\"))"'
 }
-
-#local CONTENT FNAME DESCR
 
 [[ -z "$GITOKEN" ]] && GITOKEN=$(eval "$GITOKENCMD")
 PUBLIC=false
@@ -48,7 +44,7 @@ FNAME=$1
 CONTENT=$(sed -e 's/\\/\\\\/g' -e 's/\r//' -e's/\t/\\t/g' -e 's/"/\\"/g' "${FNAME}" | awk '{ printf($0 "\\n") }')
 result=$(curl -H "Authorization: token $GITOKEN" -H "Accept: application/json" -H "Content-type: application/json" \
           -X POST -d '{"public":'"$PUBLIC"',"files":{"'"$DESCR"'":{"content":"'"$CONTENT"'"}}}' https://api.github.com/gists)
-url=$(echo "$result"|awk '/html_url/{print gensub(/.(.*)../,"\\1","g",$2)}'|head -n1)
+url=$(echo "$result"|awk '/html_url/{print substr($2, 2, length($2)-3)}'|head -n1)
 [[ -z "$url" ]] && url="$result"
 echo "$url"|tee >(xclip -i -sel c)
 
