@@ -32,21 +32,12 @@ showbanner()
   OPTIND=1 #reset index
   while getopts "t:" opt; do
     case $opt in
-       t)
-          shift $((OPTIND-1))
-          shift $((OPTIND))
-          t=$OPTARG
-          ;;
-       \?)
-          echo "Invalid option: -$OPTARG" >&2
-          return 1
-          ;;
-       :)
-          echo "Option -$OPTARG requires number of sec as an argument" >&2
-          return 1
+      t)  t=$OPTARG ;;
+      \?) return 1 ;;
+      :)  echo "Option -$OPTARG requires number of sec as an argument" >&2;return 1 ;;
     esac
   done
-  OPTIND=1 #reset index again
+  shift $((OPTIND-1));
   cmd=echo
   [ -n "$BANNER" ] && cmd="$BANNER"
   watch --color -tn${t} "$@|xargs $cmd"
