@@ -1,10 +1,3 @@
-# generated prompt line
-source ${HOME}/bin/shellprompt.sh
-# custom functions
-source ${HOME}/bin/shellfunctions.sh
-# colors
-source ${HOME}/bin/shellcolors.sh
-
 # Don't wait for job termination notification
 set -o notify
 shopt -s dotglob
@@ -45,8 +38,8 @@ alias ss='bc64=( {a..z} {A..Z} {0..9} + / = );c;while true; do echo -ne "\033[$(
 alias p4='unset PWD; p4 '
 alias ff='wget randomfunfacts.com -O - 2>/dev/null | grep \<strong\> | sed "s;^.*<i>\(.*\)</i>.*$;\1;"'
 alias genpass='read -s tmppass; echo -n "$tmppass->"; echo $tmppass | md5sum | base64 | cut -c -16; unset tmppass'
-alias 2edit='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- mousepad $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v'
-alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v'
+alias 2edit='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- mousepad $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v ctrl+Home'
+alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v ctrl+Home'
 alias readpass='echo -n $(read -s passwd_;echo -n $passwd_)'
 alias cdh='cd ~'
 alias top10='ps aux --sort -rss | head'
@@ -100,4 +93,10 @@ if [ "$OSTYPE" = "cygwin" ]; then
   fi
 fi
 
+# generated prompt line
+source ${HOME}/bin/shellprompt.sh
+# custom functions
+source ${HOME}/bin/shellfunctions.sh
+# colors
+source ${HOME}/bin/shellcolors.sh
 
