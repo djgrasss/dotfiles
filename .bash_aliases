@@ -31,6 +31,7 @@ alias gr='grep -HEnri'                        #
 alias rm='gvfs-trash'                         # safe rm
 
 # my shortcuts
+alias abspath='readlink -f'
 alias feh='feh -g 800x600 -d -.'
 alias ne='sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"'
 alias c='printf "\33[2J"'
