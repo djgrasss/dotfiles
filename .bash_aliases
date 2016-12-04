@@ -55,6 +55,7 @@ alias gs='git status'
 alias gl='git log'
 alias gb='git branch'
 alias gd='git diff'
+alias gcm='git commit -m'
 
 #coloring some programs using grc (check /usr/share/grc)
 alias hexdump='grc hexdump'
@@ -70,6 +71,8 @@ alias cat='grc cat'
 alias diff='grc diff'
 alias ls='grc ls -X -hF --color=yes --group-directories-first'
 alias tail='grc tail'
+
+alias hl='highlight --style olive -O xterm256'
 
 alias showtemp='showbanner -t 20 '\''echo "temp: "$(ssh root@buffalo.lan /mnt/sd/bin/readavrstick)°'\'''
 alias showclock='showbanner "date +%T"'
