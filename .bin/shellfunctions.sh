@@ -156,6 +156,27 @@ cmdfu() {
         | sed 's/ /-/g')/$(echo -n $@ | base64)/plaintext" ;
 }
 
+# url escape / unescape
+urlencode() {
+  local i c url
+  url="$1"
+  [[ -z "$url" ]] && url=$(cat -)
+  for (( i=0 ; i<${#url} ; i++ )); do
+    c=${url:$i:1}
+    case "$c" in
+      [-_.~a-zA-Z0-9] ) printf "$c" ;;
+      * )               printf '%%%02x' "'$c" ;;
+    esac
+  done
+}
+
+urldecode() {
+  local url
+  url="$1"
+  [[ -z "$url" ]] && url=$(cat -)
+  printf '%b' "${url//%/\\x}"
+}
+
 # shorten / expand a URL
 shortenurl() {
 #    curl -F"shorten=$*" https://0x0.st
@@ -163,7 +184,7 @@ shortenurl() {
   local url=$1
   [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
   [[ -z "$url" ]] && echo "Nothing to shorten" && return 1
-  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$url"|tee >(xclip -i -sel c);echo
+  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$(urlencode "$url")"|tee >(xclip -i -sel c);echo
 }
 expandurl() {
   local url=$1
@@ -195,4 +216,17 @@ sinfo () {
   echo -ne "${LIGHTRED}TEMPER:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
   echo -ne "${LIGHTRED}DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
 
+}
+
+# remove last n records from history
+delhistory() {
+  local n=1
+  while getopts "n:" opt; do
+    case $opt in
+      n)  n=$OPTARG ;;
+      \?) return 1 ;;
+      :)  echo "Option -$OPTARG requires number of history last entries to remove as an argument" >&2;return 1 ;;
+    esac
+  done
+  history | tail -n $n | tac  
 }
