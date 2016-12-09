@@ -160,10 +160,16 @@ cmdfu() {
 shortenurl() {
 #    curl -F"shorten=$*" https://0x0.st
 #  wget -q -O - --post-data="shorten=$1" https://0x0.st
-  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$1"|tee >(xclip -i -sel c);echo
+  local url=$1
+  [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
+  [[ -z "$url" ]] && echo "Nothing to shorten" && return 1
+  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$url"|tee >(xclip -i -sel c);echo
 }
 expandurl() {
-  wget -S $1 2>&1 | grep ^Location;
+  local url=$1
+  [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
+  [[ -z "$url" ]] && echo "Nothing to expand" && return 1
+  wget -S "$url" 2>&1 | grep ^Location | awk '{print $2}'|tee >(xclip -i -sel c)
 }
 
 # kernel graph
