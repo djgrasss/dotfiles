@@ -15,6 +15,7 @@ export BANNER="echo"
 [[ -n "$(which toilet)" ]] && export BANNER="toilet -f mono9.tlf"
 # setting the temp directory for vim
 [ -z $TEMP ] && export TEMP=/tmp
+export MPDSERVER=buffalo.lan
 
 
 # aliases

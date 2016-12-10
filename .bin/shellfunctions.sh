@@ -234,3 +234,28 @@ delhistory() {
   ((++n));id=$(history | tail -n $n | head -n1 | awk '{print $1}')
   while ((n-- > 0)); do history -d $id; done
 }
+
+# poor man's mpd client
+mpc() {
+  echo "$@" | nc $MPDSERVER 6600
+}
+
+# mpd status display in the upper right terminal corner
+mpdd() {
+  local _r _l _p
+  while sleep 1; do
+    _r=$(awk 'BEGIN{FS=": "}
+                /^Artist:/{r=r""$2};
+                /^Title:/{r=r" - "$2};
+                /^time:/{r=$2" "r};
+                /^state: play/{f=1}
+              END{if(f==1){print r}}' <(mpc status;mpc currentsong));
+
+    _l=${#_r};
+    [[ $_l -eq 0 ]] && continue;
+    [[ -z "$_p" ]] && _p=$_l;
+    echo -ne "\e[s\e[0;${_p}H\e[K\e[u";
+    _p=$((COLUMNS - _l));
+    echo -ne "\e[s\e[0;${_p}H\e[K\e[0;44m\e[1;33m${_r}\e[0m\e[u";
+  done
+}
