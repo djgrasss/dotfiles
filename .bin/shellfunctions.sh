@@ -49,6 +49,7 @@ function ? {
 }
 
 # crypting functions
+# perl oneliner is to enable encrypt|decrypt combos
 encrypt() {
   if [ -t 0 ]; then
     # interactive
@@ -152,8 +153,8 @@ pbx() {
 
 # search command usage examples on commandlinefu.com
 cmdfu() {
-  curl "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
-        | sed 's/ /-/g')/$(echo -n $@ | base64)/plaintext" ;
+  wget -qO - "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
+        | sed 's/ /-/g')/$(echo -n $@ | base64)/sort-by-votes/plaintext" ;
 }
 
 # url escape / unescape
@@ -220,7 +221,8 @@ sinfo () {
 
 # remove last n records from history
 delhistory() {
-  local n=1
+  local opt id n=1
+  OPTIND=1 #reset index
   while getopts "n:" opt; do
     case $opt in
       n)  n=$OPTARG ;;
@@ -228,5 +230,7 @@ delhistory() {
       :)  echo "Option -$OPTARG requires number of history last entries to remove as an argument" >&2;return 1 ;;
     esac
   done
-  history | tail -n $n | tac  
+
+  ((++n));id=$(history | tail -n $n | head -n1 | awk '{print $1}')
+  while ((n-- > 0)); do history -d $id; done
 }
