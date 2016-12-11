@@ -205,8 +205,8 @@ showbatt() {
 # system info
 sinfo () {
   echo -ne "${LIGHTRED}CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
-  echo -ne "${LIGHTRED}MEMORY:$NC\t";cat /proc/meminfo | awk '/MemTotal/{mt=$2};/MemFree/{mf=$2};/MemAvail/{ma=$2}END{print "Total: "mt" | Free: "mf" | Available: "ma" (kB)"}'
-  echo -ne "${LIGHTRED}OS:$NC\t";cat /etc/issue | awk '{ if (NF>=2){$NF="";$(NF-1)="";print $0;} }'
+  echo -ne "${LIGHTRED}MEMORY:$NC\t";awk '/MemTotal/{mt=$2};/MemFree/{mf=$2};/MemAvail/{ma=$2}END{print "Total: "mt" | Free: "mf" | Available: "ma" (kB)"}' /proc/meminfo
+  echo -ne "${LIGHTRED}OS:$NC\t";awk '{ if (NF>=2){$NF="";$(NF-1)="";print $0;} }' /etc/issue
   echo -ne "${LIGHTRED}KERNEL:$NC\t";uname -a | awk '{ print $3 }'
   echo -ne "${LIGHTRED}ARCH:$NC\t";uname -m
   echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime -p
