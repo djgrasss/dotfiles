@@ -85,7 +85,7 @@ wttrfull() {
 # transfer a file or pipe to the server
 # 10G maximum for 14 days
 transfer() {
-  local basefile;local tmpfile
+  local basefile tmpfile
   if [ $# -eq 0 ]; then
     echo "No arguments specified. Usage:"
     echo "  transfer /tmp/test.md"
@@ -112,7 +112,7 @@ randomwallpaper() {
 
 # select a wallpaper interactively and set it
 wallpaper() {
-  local wname;local warr
+  local wname warr
   local wdir=${1:-~/wallpapers}
   [[ -d "$wdir" ]] || wdir=/usr/share/xfce4/backdrops/
   local TIFS=$IFS;IFS=$'\n';warr=( $(\ls "$wdir") );IFS=$TIFS
@@ -122,12 +122,12 @@ wallpaper() {
 
 # copies a file and shows progress
 copy() {
-  local size=$(stat -c%s $1)
   [[ -z "$1" || -z "$2" ]] && {
     echo "Usage: copy /source/file /destination/file"
     return 1
   }
   local dest=$2
+  local size=$(stat -c%s $1)
   [[ -d "$dest" ]] && dest="$2/$(basename $1)"
   dd if=$1 2> /dev/null | pv -petrb -s $size | dd of=$dest
 }
@@ -159,23 +159,14 @@ cmdfu() {
 
 # url escape / unescape
 urlencode() {
-  local i c url
-  url="$1"
+  local url="$1"
   [[ -z "$url" ]] && url=$(cat -)
-  for (( i=0 ; i<${#url} ; i++ )); do
-    c=${url:$i:1}
-    case "$c" in
-      [-_.~a-zA-Z0-9] ) printf "$c" ;;
-      * )               printf '%%%02x' "'$c" ;;
-    esac
-  done
+  perl -MURI::Escape -e 'print uri_escape($ARGV[0]);' "$url"
 }
-
 urldecode() {
-  local url
-  url="$1"
+  local url="$1"
   [[ -z "$url" ]] && url=$(cat -)
-  printf '%b' "${url//%/\\x}"
+  perl -MURI::Escape -e 'print uri_unescape($ARGV[0]);' "$url"
 }
 
 # shorten / expand a URL
@@ -205,6 +196,12 @@ kernelgraph() {
                    print "}"' | dot -Tsvg | rsvg-view-3 /dev/stdin
 }
 
+# shows battery status
+showbatt() {
+  local dir=/sys/class/power_supply/BAT0/
+  echo "$(<"$dir"/status) $(( $(<"$dir"/charge_now) * 100 / $(<"$dir"/charge_full) ))%"
+}
+
 # system info
 sinfo () {
   echo -ne "${LIGHTRED}CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
@@ -215,8 +212,8 @@ sinfo () {
   echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime -p
   echo -ne "${LIGHTRED}USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
   echo -ne "${LIGHTRED}TEMPER:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
+  echo -ne "${LIGHTRED}BATTRY:$NC";echo " $(showbatt)"
   echo -ne "${LIGHTRED}DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
-
 }
 
 # remove last n records from history
@@ -259,3 +256,58 @@ mpdd() {
     echo -ne "\e[s\e[0;${_p}H\e[K\e[0;44m\e[1;33m${_r}\e[0m\e[u";
   done
 }
+
+# returns album art for the "artist - album" input string
+# todo: do we need only [,] to be removed or some other chars too? 
+getart() {
+  [[ -z "$ARTDIR" ]] && local ARTDIR="$HOME/.cache/albumart"
+  [[ -d "$ARTDIR" ]] || mkdir -p "$ARTDIR"
+
+  local mpccurrent="$(echo "$@"|sed -r 's/(\[|\]|\,)//g')"
+  local artfile=$(find $ARTDIR -iname "${mpccurrent}*")
+  [[ -z "$artfile" ]] && {
+    # customize useragent at http://whatsmyuseragent.com/
+    local useragent='Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0' local link="www.google.com/search?q=$(urlencode "$mpccurrent")\&tbm=isch"
+    local imagelink ext imagepath
+    local imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep '<a href.*\(png\|jpg\|jpeg\)' | sed 's/.*imgurl=\([^&]*\)\&.*/\1/')
+    for imagelink in $imagelinks; do
+      imagelink=$(echo $imagelink | sed -nr 's/(.*\.(jpg|jpeg|png)).*/\1/p')
+      ext=$(echo $imagelink | sed -nr 's/.*(\.(jpg|jpeg|png)).*/\1/p')
+      imagepath="${ARTDIR}/${mpccurrent}${ext}"
+      wget --max-redirect 0 -qO "$imagepath" "${imagelink}"
+      [[ -s "$imagepath" ]] && break
+      rm "$imagepath" # remove zero length file
+    done
+    artfile=$(find $ARTDIR -iname "${mpccurrent}*")
+  }
+  echo "$artfile"
+}
+
+# sends notifications for the new title
+notifyart() {
+  local artist album title oldartist oldtitle
+  while true; do
+    artist=$(mpc currentsong | awk -F": " '/^Artist:/{print $2}')
+    title=$(mpc currentsong | awk -F": " '/^Title:/{print $2}')
+    album=$(mpc currentsong | awk -F": " '/^Album:/{print $2}')
+    [[ -z "$album" ]] && album="$title"
+    [[ "$artist" != "$oldartist" ]] || [[ "$title" != "$oldtitle" ]] && {
+      notify-send "$title" "$artist" -i "$(getart "$artist - $album")" -t 5000
+      oldartist="$artist"
+      oldtitle="$title"
+    } 
+    sleep 2
+  done 
+}
+
+# toggle touchpad
+toggletouchpad() {
+  local state=$(awk '/TouchpadOff/ { print $3 }' <(synclient -l))
+
+  case "$state" in
+    0) synclient touchpadoff=1;notify-send "Touchpad Alert" "Touchpad is toggled off" -i dialog-information ;; 
+    1) synclient touchpadoff=0;notify-send "Touchpad Alert" "Touchpad is toggled on" -i dialog-information ;;
+    *) return 1 ;;
+  esac
+}
+
