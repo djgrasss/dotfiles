@@ -103,23 +103,6 @@ transfer() {
   rm -f $tmpfile;
 } 
 
-# sets random wallpaper image
-randomwallpaper() {
-  local wpath=${1:-~/wallpapers}
-  [[ -d "$wpath" ]] || wpath=/usr/share/xfce4/backdrops/
-  \feh --bg-scale "$(find "${wpath}" -iname '*'|shuf|head -n1)"
-}
-
-# select a wallpaper interactively and set it
-wallpaper() {
-  local wname warr
-  local wdir=${1:-~/wallpapers}
-  [[ -d "$wdir" ]] || wdir=/usr/share/xfce4/backdrops/
-  local TIFS=$IFS;IFS=$'\n';warr=( $(\ls "$wdir") );IFS=$TIFS
-  wname=$(/usr/bin/yad --entry --title "Available wallpapers" --text "Choose wallpaper image" --entry-text "${warr[@]}" 2>/dev/null)
-  [[ -n "$wname" ]] && feh --bg-scale "$(find "${wdir}" -iname "$wname"|shuf|head -n1)"
-}
-
 # copies a file and shows progress
 copy() {
   [[ -z "$1" || -z "$2" ]] && {
@@ -183,17 +166,6 @@ expandurl() {
   [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
   [[ -z "$url" ]] && echo "Nothing to expand" && return 1
   wget -S "$url" 2>&1 | grep ^Location | awk '{print $2}'|tee >(xclip -i -sel c)
-}
-
-# kernel graph
-kernelgraph() {
-  lsmod | perl -e 'print "digraph \"lsmod\" {";
-                   <>;
-                   while(<>){
-                     @_=split/\s+/;
-                     print "\"$_[0]\" -> \"$_\"\n" for split/,/,$_[3]
-                   }
-                   print "}"' | dot -Tsvg | rsvg-view-3 /dev/stdin
 }
 
 # shows battery status
@@ -300,14 +272,4 @@ notifyart() {
   done 
 }
 
-# toggle touchpad
-toggletouchpad() {
-  local state=$(awk '/TouchpadOff/ { print $3 }' <(synclient -l))
-
-  case "$state" in
-    0) synclient touchpadoff=1;notify-send "Touchpad Alert" "Touchpad is toggled off" -i dialog-information ;; 
-    1) synclient touchpadoff=0;notify-send "Touchpad Alert" "Touchpad is toggled on" -i dialog-information ;;
-    *) return 1 ;;
-  esac
-}
 
