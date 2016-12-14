@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-local state=$(awk '/TouchpadOff/ { print $3 }' <(synclient -l))
+state=$(awk '/TouchpadOff/ { print $3 }' <(synclient -l))
 
 case "$state" in
   0) synclient touchpadoff=1;notify-send "Touchpad Alert" "Touchpad is toggled off" -i dialog-information ;; 
