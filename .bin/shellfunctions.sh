@@ -272,4 +272,7 @@ notifyart() {
   done 
 }
 
-
+# purge all packages marked as rc with the dpkg
+purgerc() {
+  dpkg -l |grep "^rc" | cut -d " " -f 3 | xargs sudo dpkg --purge
+}
