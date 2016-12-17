@@ -276,3 +276,8 @@ notifyart() {
 purgerc() {
   dpkg -l |grep "^rc" | cut -d " " -f 3 | xargs sudo dpkg --purge
 }
+
+# foce file system recheck at new boot
+forcefsck() {
+  sudo touch /forcefsck
+}
