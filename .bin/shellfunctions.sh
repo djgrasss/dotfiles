@@ -171,7 +171,11 @@ expandurl() {
 # shows battery status
 showbatt() {
   local dir=/sys/class/power_supply/BAT0/
-  echo "$(<"$dir"/status) $(( $(<"$dir"/charge_now) * 100 / $(<"$dir"/charge_full) ))%"
+  if [[ -e "$dir"/charge_now ]]; then
+    echo "$(<"$dir"/status) $(( $(<"$dir"/charge_now) * 100 / $(<"$dir"/charge_full) ))%"
+  elif [[ -e "$dir"/energy_now ]]; then
+    echo "$(<"$dir"/status) $(( $(<"$dir"/energy_now) * 100 / $(<"$dir"/energy_full) ))%"
+  fi
 }
 
 # system info
@@ -272,4 +276,7 @@ notifyart() {
   done 
 }
 
-
+# purge all packages marked as rc with the dpkg
+purgerc() {
+  dpkg -l |grep "^rc" | cut -d " " -f 3 | xargs sudo dpkg --purge
+}
