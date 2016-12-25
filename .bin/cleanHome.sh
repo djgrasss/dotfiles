@@ -45,6 +45,7 @@ xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';eval '/bin/rm -rf $HOME/{}'
 .mozilla/firefox/*/crashes
 .mozilla/firefox/*/storage/*
 .mozilla/firefox/*/adblockplus/patterns-backup*
+.mozilla/firefox/*/weave/logs/
 .davfs2/cache/*
 .config/sublime-text-3/Cache/*
 EOLIST
