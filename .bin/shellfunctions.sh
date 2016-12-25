@@ -261,19 +261,26 @@ getart() {
 
 # sends notifications for the new title
 notifyart() {
+  local artist="$1"
+  local title="$2"
+  local album="$3"
+  [[ -z "$album" ]] && album="$title"
+  notify-send "$title" "$artist" -i "$(getart "$artist - $album")" -t 5000
+}
+
+notifympd() {
   local artist album title oldartist oldtitle
   while true; do
     artist=$(mpc currentsong | awk -F": " '/^Artist:/{print $2}')
     title=$(mpc currentsong | awk -F": " '/^Title:/{print $2}')
     album=$(mpc currentsong | awk -F": " '/^Album:/{print $2}')
-    [[ -z "$album" ]] && album="$title"
     [[ "$artist" != "$oldartist" ]] || [[ "$title" != "$oldtitle" ]] && {
-      notify-send "$title" "$artist" -i "$(getart "$artist - $album")" -t 5000
+      notifyart "$artist" "$title" "$album"
       oldartist="$artist"
       oldtitle="$title"
     } 
     sleep 2
-  done 
+  done
 }
 
 # purge all packages marked as rc with the dpkg
