@@ -196,6 +196,7 @@ for_window [class="^cameraclient$"] floating enable
 for_window [class="^blueman-manager$"] floating enable
 for_window [class="^galculator$"] floating enable
 for_window [class="^vlc$"] floating enable
+for_window [class="^ffplay$"] floating enable
 for_window [class="^Yad$"] floating enable border normal
 for_window [class="^gnuplot"] floating enable
 for_window [class="^xpad"] floating enable
