@@ -7,7 +7,7 @@
 #echo "From: $2"
 
 cmd='cat -'
-[ -n "which lynx" ] && cmd='lynx -stdin'
+[[ -n "$(which lynx)" ]] && cmd='lynx -stdin'
 awk '
 {
   if(f==1) {
