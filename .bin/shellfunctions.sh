@@ -178,7 +178,7 @@ expandurl() {
 }
 
 # shows battery status
-showbatt() {
+showbattery() {
   local dir=/sys/class/power_supply/BAT0/
   if [[ -e "$dir"/charge_now ]]; then
     echo "$(<"$dir"/status) $(( $(<"$dir"/charge_now) * 100 / $(<"$dir"/charge_full) ))%"

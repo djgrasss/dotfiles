@@ -218,6 +218,6 @@ exec --no-startup-id blueman-applet &
 exec --no-startup-id ~/bin/nticon.py &
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
 exec --no-startup-id bash -c 'source ~/bin/shellfunctions.sh;randomwallpaper' &
-exec --no-startup-id volumeicon &
+exec --no-startup-id pnmixer &
 exec --no-startup-id xpad &
 exec --no-startup-id xxkb &
