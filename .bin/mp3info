@@ -4,23 +4,23 @@
 # mp3info "%a %l %t" file_name
 # %a for an artist, %l for an album, %t for a title
 
-import sys
-sys.tracebacklimit=0
-import re
-from mutagen.id3 import ID3
+def show_usage(prog_name):
+  print 'Usage: ' + prog_name + ' "%a %l %t" file_name.mp3'
 
-def show_usage():
-  print 'Usage: ' + sys.argv[0] + ' "%a %l %t" file_name.mp3'
-
-def main(argv):
+def main():
   try:
+    import sys
+    sys.tracebacklimit=0
+    import re,os.path
+    from mutagen.id3 import ID3
+
     if len(sys.argv) < 3:
-      show_usage() 
+      show_usage(sys.argv[0])
       sys.exit(2)
+    if not sys.argv[1] or not sys.argv[2]:
+      sys.exit(1)
     t=sys.argv[1]
     a=ID3(sys.argv[2])
-    if not t or not a:
-      sys.exit(1)
     t=re.sub('%a',a['TPE1'].text[0],t)
     t=re.sub('%l',a['TALB'].text[0],t)
     t=re.sub('%t',a['TIT2'].text[0],t)
@@ -29,5 +29,5 @@ def main(argv):
     sys.exit(0)
 
 if __name__ == "__main__":
-  main(sys.argv)
+  main()
 

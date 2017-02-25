@@ -74,6 +74,15 @@ decrypt() {
   fi
 }
 
+# prints/puts content of/to the clipboard
+printclip() {
+  xclip -o -sel c 2>/dev/null
+}
+putclip() {
+  xclip -i -sel c
+}
+
+
 # shows weather in a city
 wttr() {
   wttrfull $@ | head -n 7
@@ -99,7 +108,7 @@ transfer() {
   else
     curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile;
   fi;
-  cat $tmpfile|tee >(xclip -i -sel c)
+  cat $tmpfile|tee >(putclip)
   rm -f $tmpfile;
 } 
 
@@ -117,10 +126,10 @@ copy() {
 
 #pb pastebin || Usage: 'command | pb or  pb filename'
 pb() {
-  curl -F "c=@${1:--}" https://ptpb.pw/
+  curl -F "c=@${1:--}" https://ptpb.pw/?u=1 | putclip
 }
 pbs() {
-  local sname=$(scrot "$1" '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
+  local sname=$(scrot '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
   [[ -s "$sname" ]] && pbx $sname
 }
 pbsw() {
@@ -130,7 +139,7 @@ pbsw() {
 pbx() {
   read -p "Upload screenshot $1? [yN]:"
   [[ "y" = "$REPLY" ]] && {
-    curl -sF "c=@${1:--}" -w "%{redirect_url}" 'https://ptpb.pw/?r=1' -o /dev/stderr | xclip -i -sel c
+    curl -sF "c=@${1:--}" -w "%{redirect_url}" 'https://ptpb.pw/?r=1' -o /dev/stderr | putclip
   }
 }
 
@@ -157,15 +166,15 @@ shortenurl() {
 #    curl -F"shorten=$*" https://0x0.st
 #  wget -q -O - --post-data="shorten=$1" https://0x0.st
   local url=$1
-  [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
+  [[ -z "$url" ]] && url=$(printclip)
   [[ -z "$url" ]] && echo "Nothing to shorten" && return 1
-  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$(urlencode "$url")"|tee >(xclip -i -sel c);echo
+  wget -q -O - 'http://is.gd/create.php?format=simple&url='"$(urlencode "$url")"|tee >(putclip);echo
 }
 expandurl() {
   local url=$1
-  [[ -z "$url" ]] && url=$(xclip -o -sel c 2>/dev/null)
+  [[ -z "$url" ]] && url=$(printclip)
   [[ -z "$url" ]] && echo "Nothing to expand" && return 1
-  wget -S "$url" 2>&1 | grep ^Location | awk '{print $2}'|tee >(xclip -i -sel c)
+  wget -S "$url" 2>&1 | grep ^Location | awk '{print $2}'|tee >(putclip)
 }
 
 # shows battery status
