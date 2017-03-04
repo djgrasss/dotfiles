@@ -1,6 +1,8 @@
 #!/bin/bash
 
-terminal="qt"     # terminal type (x11,wxt,qt)
+terminal="qt"     # terminal type (x11,wxt,qt,pdfcairo,pngcairo,..)
+output=
+output_ext=
 winsize=${1:-60}   # number of samples to show
 yrange=${2:-0:100} # min:max values of displayed y range.
                    # ":" for +/- infinity. Default "0:100"
@@ -38,6 +40,9 @@ samples=0          # samples counter
       samples=$((samples + 1))
     }
     echo "set term $terminal noraise"
+    [[ -n "$output" ]] && {
+      echo "set output ${output}.$samples.${output_ext}"
+    }
     echo "set yrange [$yrange]"
     echo "set xrange [${samples}:$((samples+${#a[@]}-1))]"
     echo "set style fill transparent solid 0.5"
