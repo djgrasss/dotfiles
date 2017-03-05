@@ -161,13 +161,13 @@ def main():
     scr.refresh()
     while True:
         height, width = scr.getmaxyx()
+        for line in lines:
+            line.tick(scr, steps)
         for i in range(RANDOM_CLEANUP):
             x = randint(0, width-1)
             y = randint(0, height)
-            scr.addstr(y, x, ' ')
-        for line in lines:
-            line.tick(scr, steps)
-
+            if 0 == (scr.inch(y,x) & curses.A_BOLD):
+              scr.addstr(y, x, ' ')
         scr.refresh()
         time.sleep(SLEEP_MILLIS)
         if SCREENSAVER_MODE:
