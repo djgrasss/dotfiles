@@ -40,10 +40,10 @@ encoding = locale.getpreferredencoding()
 ########################################################################
 # TUNABLES
 
-DROPPING_CHARS = 50
+DROPPING_CHARS = 70
 MIN_SPEED = 1
 MAX_SPEED = 7
-RANDOM_CLEANUP = 100
+RANDOM_CLEANUP = 150
 FPS = 25
 SLEEP_MILLIS = 1.0/FPS
 #USE_COLORS = False
