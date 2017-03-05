@@ -29,6 +29,7 @@ class Bat:
     Right = 1
 
 class MyWin (Gtk.Window):
+    _surface = None
     _sr = 0; _sl = 0        # score left and right
     _batvelocdef = 10       # default bat velocity
     _batveloc = 0           # current bat velocity
@@ -98,6 +99,7 @@ class MyWin (Gtk.Window):
 
     def configure(self, widget, event):
       if self._winHeight!=event.width and self._winWidth!=event.width:
+        self._surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, event.width, event.height)
         self._winHeight = event.height
         self._winWidth = event.width
         self._digRowHeight = int(self._winHeight/38)
@@ -352,8 +354,8 @@ class MyWin (Gtk.Window):
       cr.fill()
 
     def draw_background(self, cr):
-#      cr.set_source_rgba(0.0, 0.0, 0.0, 1.0)
-      cr.set_source_rgba(0.074, 0.098, 0.149, 0.9)
+      cr.set_source_rgba(0.0, 0.0, 0.0, 0.0)
+#      cr.set_source_rgba(0.074, 0.098, 0.149, 0.9)
       cr.set_operator(cairo.OPERATOR_SOURCE)
       cr.paint()
       cr.set_operator(cairo.OPERATOR_OVER)
@@ -417,7 +419,8 @@ class MyWin (Gtk.Window):
       cr.move_to(xpos,ypos)
       cr.show_text("         h : Switch on/off this help")
 
-    def area_draw(self, widget, cr):
+    def area_draw(self, widget, context):
+      cr = cairo.Context(self._surface)
       cTime = time.perf_counter()
       self._fps = 1/(cTime - self._prevFrameTime)
       self._prevFrameTime = cTime
@@ -430,6 +433,8 @@ class MyWin (Gtk.Window):
       self.draw_bat(cr,Bat.Right)
       self.draw_debug(cr)
       self.draw_help(cr)
+      context.set_source_surface(self._surface, 0,0)
+      context.paint()
       self.timer_tick()
       self.queue_draw()
       return True
