@@ -45,7 +45,7 @@ alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search
 alias readpass='echo -n $(read -s passwd_;echo -n $passwd_)'
 alias cdh='cd ~'
 alias top10='ps aux --sort -rss | head'
-alias traf='netstat -np | grep -v ^unix'
+alias traf='netstat -np | grep -v unix'
 alias why='apt-cache rdepends --installed'
 
 # git shortcuts
@@ -77,8 +77,7 @@ alias hl='highlight --style olive -O xterm256'
 
 alias showtemp='showbanner -t 20 '\''echo "temp: "$(ssh root@buffalo.lan /mnt/sd/bin/readavrstick)°'\'''
 alias showclock='showbanner "date +%T"'
-alias timer='export ts=$(date +%s);p='\''date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S"'\'';showbanner "$p";eval "$p"'
-#alias timer='cmd=echo;[[ -n "$BANNER" [] && cmd="$BANNER";export cmd;export ts=$(date +%s);p='\''$(date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S")'\'';watch --color -n 1 -t $cmd $p;eval "echo $p"'
+#alias timer='export ts=$(date +%s);p='\''date -u -d @"$(($(date +%s)-$ts))" +"%H.%M.%S"'\'';showbanner "$p";eval "$p"'
 
  
 # some cygwin related patches
