@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 avs=${1:-10}     # average over so many last samples, default is 10 
 column=${2:-1}   # read new value from this column

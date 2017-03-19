@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 profile_id=nat_forwarder
 #profile_id=static

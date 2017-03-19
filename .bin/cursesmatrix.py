@@ -31,7 +31,6 @@ import locale
 import time
 import curses
 import random
-from collections import namedtuple
 import sys
 PYTHON2 = sys.version_info.major < 3
 locale.setlocale(locale.LC_ALL, '')
@@ -43,7 +42,7 @@ encoding = locale.getpreferredencoding()
 DROPPING_CHARS = 70
 MIN_SPEED = 1
 MAX_SPEED = 7
-RANDOM_CLEANUP = 150
+RANDOM_CLEANUP = 100
 FPS = 25
 SLEEP_MILLIS = 1.0/FPS
 #USE_COLORS = False
@@ -62,26 +61,29 @@ COLOR_CHAR_NORMAL = 1
 COLOR_CHAR_HIGHLIGHT = 2
 
 class FallingChar(object):
+    """ Here goes the docstring - pylint is happy """
     matrixchr = list(MATRIX_CODE_CHARS)
     normal_attr = curses.A_NORMAL
-    highlight_attr = curses.A_REVERSE        
-    
-    def __init__(self, width, MIN_SPEED, MAX_SPEED):
+    highlight_attr = curses.A_REVERSE
+
+    def __init__(self, width, min_speed, max_speed):
         self.x = 0
         self.y = 0
         self.speed = 1
         self.char = ' '
-        self.reset(width, MIN_SPEED, MAX_SPEED)
-    
-    def reset(self, width, MIN_SPEED, MAX_SPEED):
+        self.reset(width, min_speed, max_speed)
+
+    def reset(self, width, min_speed, max_speed):
+        """ Here goes the docstring - pylint is happy """
         self.char = random.choice(FallingChar.matrixchr).encode(encoding)
         self.x = randint(1, width - 1)
         self.y = 0
-        self.speed = randint(MIN_SPEED, MAX_SPEED)
+        self.speed = randint(min_speed, max_speed)
         # offset makes sure that chars with same speed don't move all in same frame
         self.offset = randint(0, self.speed)
-    
+
     def tick(self, scr, steps):
+        """ Here goes the docstring - pylint is happy """
         height, width = scr.getmaxyx()
         if self.advances(steps):
             # if window was resized and char is out of bounds, reset
@@ -91,7 +93,7 @@ class FallingChar(object):
                 scr.addstr(self.y, self.x, self.char, curses.color_pair(COLOR_CHAR_NORMAL))
             else:
                 scr.addstr(self.y, self.x, self.char, curses.A_NORMAL)
-                
+
             # choose new char and draw it A_REVERSE if not out of bounds
             self.char = random.choice(FallingChar.matrixchr).encode(encoding)
             self.y += 1
@@ -100,8 +102,9 @@ class FallingChar(object):
                     scr.addstr(self.y, self.x, self.char, curses.color_pair(COLOR_CHAR_HIGHLIGHT)|curses.A_BOLD)
                 else:
                     scr.addstr(self.y, self.x, self.char, curses.A_REVERSE)
-    
+
     def out_of_bounds_reset(self, width, height):
+        """ Here goes the docstring - pylint is happy """
         if self.x > width-2:
             self.reset(width, MIN_SPEED, MAX_SPEED)
             return True
@@ -109,28 +112,28 @@ class FallingChar(object):
             self.reset(width, MIN_SPEED, MAX_SPEED)
             return True
         return False
-    
+
     def advances(self, steps):
+        """ Here goes the docstring - pylint is happy """
         if steps % (self.speed + self.offset) == 0:
             return True
         return False
-    
-    def step(self, steps, scr):
-        return -1, -1, None
 
 
 # we don't need a good PRNG, just something that looks a bit random.
 def rand():
+    """ Here goes the docstring - pylint is happy """
     # ~ 2 x as fast as random.randint
     a = 9328475634
     while True:
-        a ^= (a << 21) & 0xffffffffffffffff;
-        a ^= (a >> 35);
-        a ^= (a << 4) & 0xffffffffffffffff;
+        a ^= (a << 21) & 0xffffffffffffffff
+        a ^= (a >> 35)
+        a ^= (a << 4) & 0xffffffffffffffff
         yield a
 
 r = rand()
 def randint(_min, _max):
+    """ Here goes the docstring - pylint is happy """
     if PYTHON2:
         n = r.next()
     else:
@@ -138,26 +141,26 @@ def randint(_min, _max):
     return (n % (_max - _min)) + _min
 
 def main():
+    """ Here goes the docstring - pylint is happy """
     steps = 0
     scr = curses.initscr()
     scr.nodelay(1)
     curses.curs_set(0)
     curses.noecho()
-    
+
     if USE_COLORS:
         curses.start_color()
         curses.use_default_colors()
         curses.init_pair(COLOR_CHAR_NORMAL, COLOR_NORMAL, -1)
         curses.init_pair(COLOR_CHAR_HIGHLIGHT, COLOR_HIGHLIGHTED, -1)
-    
-    height, width = scr.getmaxyx()    
-    window_animation = None
+
+    height, width = scr.getmaxyx()
     lines = []
     for i in range(DROPPING_CHARS):
         l = FallingChar(width, MIN_SPEED, MAX_SPEED)
         l.y = randint(0, height-2)
         lines.append(l)
-        
+
     scr.refresh()
     while True:
         height, width = scr.getmaxyx()
@@ -166,8 +169,8 @@ def main():
         for i in range(RANDOM_CLEANUP):
             x = randint(0, width-1)
             y = randint(0, height)
-            if 0 == (scr.inch(y,x) & curses.A_BOLD):
-              scr.addstr(y, x, ' ')
+            if (scr.inch(y, x) & curses.A_BOLD) == 0:
+                scr.addstr(y, x, ' ')
         scr.refresh()
         time.sleep(SLEEP_MILLIS)
         if SCREENSAVER_MODE:

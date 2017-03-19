@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # $1 - icon_name, $2 - volume, $3 - id
 print_cmd()

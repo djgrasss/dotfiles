@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Example: Show white noise and the noise filtered
 # dd if=/dev/urandom | hexdump -v -e '/1 "%u\n"'| \

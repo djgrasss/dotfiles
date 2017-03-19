@@ -44,7 +44,7 @@ alias 2edit='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- mousepad $n -- s
 alias 2win='xsel -b;n=pipe$RANDOM;xdotool exec --terminator -- subl $n -- search --sync --onlyvisible --name $n key --window %1 ctrl+v ctrl+Home'
 alias readpass='echo -n $(read -s passwd_;echo -n $passwd_)'
 alias cdh='cd ~'
-alias top10='ps aux --sort -rss | head'
+alias top10='ps aux --sort -rss | head -n11'
 alias traf='netstat -np | grep -v unix'
 alias why='apt-cache rdepends --installed'
 

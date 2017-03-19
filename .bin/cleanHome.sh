@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # vacuum firefox's sqlite files
 vacuumFirefox()

@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import sys,os,tempfile
+import sys, os, tempfile
 import cairo
 from gi.repository import Gtk, Gdk, GLib
 import math, threading, time, random
@@ -16,19 +16,19 @@ class SingleInstance:
     """
     def __init__(self):
         self.lockfile = os.path.normpath(tempfile.gettempdir() + '/' +
-          os.path.splitext(os.path.abspath(__file__))[0].replace("/","-").replace(":","").replace("\\","-")  + '.lock')
+            os.path.splitext(os.path.abspath(__file__))[0].replace("/","-").replace(":","").replace("\\","-")  + '.lock')
         import fcntl, sys
         self.fp = open(self.lockfile, 'w')
         try:
-          fcntl.lockf(self.fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            fcntl.lockf(self.fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except IOError:
-          sys.exit(-1)
+            sys.exit(-1)
 
 class Bat:
     Left = 0
     Right = 1
 
-class MyWin (Gtk.Window):
+class MyWin(Gtk.Window):
     _surface = None
     _sr = 0; _sl = 0        # score left and right
     _batvelocdef = 10       # default bat velocity
@@ -44,7 +44,7 @@ class MyWin (Gtk.Window):
     _ballside = 0           # ball side size
     _ballvec = 0.0          # ball vector
     _ballveloc = 0.0        # ball current velocity
-    _ballvelocdef = 10.0    # ball default velocity 
+    _ballvelocdef = 10.0    # ball default velocity
     _startGame = False      # start new game flag
     _overallGameTime = 0.0  # time of the program start
     _maxGameTime = 0.0      # longest game time
@@ -63,8 +63,8 @@ class MyWin (Gtk.Window):
     _showHelp = False        # shows short help
     _dopredict = True       # predict ball position and adjust bats accordingly
     _ypredict = 0           # predicted y ball position
-    _digits = [ [0xf9,0x99,0xf0],[0x11,0x11,0x10],[0xf1,0xf8,0xf0],[0xf1,0xf1,0xf0],[0x99,0xf1,0x10],
-                [0xf8,0xf1,0xf0],[0xf8,0xf9,0xf0],[0xf1,0x11,0x10],[0xf9,0xf9,0xf0],[0xf9,0xf1,0xf0] ]
+    _digits = [[0xf9,0x99,0xf0],[0x11,0x11,0x10],[0xf1,0xf8,0xf0],[0xf1,0xf1,0xf0],[0x99,0xf1,0x10],
+               [0xf8,0xf1,0xf0],[0xf8,0xf9,0xf0],[0xf1,0x11,0x10],[0xf9,0xf9,0xf0],[0xf9,0xf1,0xf0]]
 
     def key_pressed(self, widget, event):
       #print("key: ", event.keyval, "; state: ", int(event.state))

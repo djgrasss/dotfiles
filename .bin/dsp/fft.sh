@@ -1,4 +1,4 @@
-#/bin/bash
+#!/usr/bin/env bash
 
 # Usage example:
 # PLot the chirp signal and its frequency domain presentation:

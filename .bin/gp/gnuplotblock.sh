@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 terminal="qt"      # terminal type (x11,wxt,qt)
 range=${1:-:;:;:}  # min:max values of displayed ranges.

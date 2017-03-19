@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Usage example: 
 # ./clock2.sh|bin/gp/gnuplotblock.sh ":;0:12" ";points pointtype 7 pointsize 5;blue;xy"

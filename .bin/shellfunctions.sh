@@ -40,12 +40,12 @@ showbanner()
   shift $((OPTIND-1));
   cmd=echo
   [ -n "$BANNER" ] && cmd="$BANNER"
-  echo y|watch --color -etn${t} "$@|xargs $cmd"
+  echo y|watch --color -etn"$t" "$*|xargs $cmd"
 }
 
 # cli calculator. Usage: ? "sqrt(3)/2 + 4"
 function ? {
-  awk "BEGIN{ pi = 4.0*atan2(1.0,1.0); deg = pi/180.0; print $@ }"
+  awk "BEGIN{ pi = 4.0*atan2(1.0,1.0); deg = pi/180.0; print $* }"
 }
 
 # crypting functions
@@ -55,11 +55,11 @@ encrypt() {
     # interactive
     local fname="$1"
     shift
-    openssl aes-256-cbc -salt -in "$fname" -out "${fname}.enc" $@
+    openssl aes-256-cbc -salt -in "$fname" -out "${fname}.enc" "$@"
   else
     # piped
     perl -e 'use IO::Select; $ready=IO::Select->new(STDIN)->can_read();'
-    openssl aes-256-cbc -salt $@
+    openssl aes-256-cbc -salt "$@"
   fi
 }
 decrypt() {
@@ -67,10 +67,10 @@ decrypt() {
     # interactive
     local fname="$1"
     shift
-    openssl aes-256-cbc -d -in "$fname" -out "${fname%\.*}" $@
+    openssl aes-256-cbc -d -in "$fname" -out "${fname%\.*}" "$@"
   else
     perl -e 'use IO::Select; $ready=IO::Select->new(STDIN)->can_read();'
-    openssl aes-256-cbc -d $@
+    openssl aes-256-cbc -d "$@"
   fi
 }
 
@@ -85,7 +85,7 @@ putclip() {
 
 # shows weather in a city
 wttr() {
-  wttrfull $@ | head -n 7
+  wttrfull "$@" | head -n 7
 }
 wttrfull() {
   wget -q -O - http://wttr.in/$1
@@ -104,12 +104,12 @@ transfer() {
   tmpfile=$(mktemp -t transferXXX);
   if tty -s; then
     basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g');
-    curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile;
+    curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> "$tmpfile";
   else
-    curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile;
+    curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> "$tmpfile";
   fi;
-  cat $tmpfile|tee >(putclip)
-  rm -f $tmpfile;
+  tee >(putclip) <"$tmpfile"
+  rm -f "$tmpfile";
 } 
 
 # copies a file and shows progress
@@ -119,9 +119,9 @@ copy() {
     return 1
   }
   local dest=$2
-  local size=$(stat -c%s $1)
-  [[ -d "$dest" ]] && dest="$2/$(basename $1)"
-  dd if=$1 2> /dev/null | pv -petrb -s $size | dd of=$dest
+  local size=$(stat -c%s "$1")
+  [[ -d "$dest" ]] && dest="$2/$(basename "$1")"
+  dd if="$1" 2> /dev/null | pv -petrb -s "$size" | dd of="$dest"
 }
 
 #pb pastebin || Usage: 'command | pb or  pb filename'
@@ -130,14 +130,14 @@ pb() {
 }
 pbs() {
   local sname=$(scrot '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
-  [[ -s "$sname" ]] && pbx $sname
+  [[ -s "$sname" ]] && pbx "$sname"
 }
 pbsw() {
   echo "Select window to upload"
   pbs -s
 }
 pbx() {
-  read -p "Upload screenshot $1? [yN]:"
+  read -rp "Upload screenshot $1? [yN]:"
   [[ "y" = "$REPLY" ]] && {
     curl -sF "c=@${1:--}" -w "%{redirect_url}" 'https://ptpb.pw/?r=1' -o /dev/stderr | putclip
   }
@@ -146,7 +146,7 @@ pbx() {
 # search command usage examples on commandlinefu.com
 cmdfu() {
   wget -qO - "http://www.commandlinefu.com/commands/matching/$(echo "$@" \
-        | sed 's/ /-/g')/$(echo -n $@ | base64)/sort-by-votes/plaintext" ;
+        | sed 's/ /-/g')/$(echo -n "$@" | base64)/sort-by-votes/plaintext" ;
 }
 
 # url escape / unescape
@@ -214,12 +214,12 @@ delhistory() {
   done
 
   ((++n));id=$(history | tail -n $n | head -n1 | awk '{print $1}')
-  while ((n-- > 0)); do history -d $id; done
+  while ((n-- > 0)); do history -d "$id"; done
 }
 
 # poor man's mpd client
 mpc() {
-  echo "$@" | nc $MPDSERVER 6600
+  echo "$@" | nc "$MPDSERVER" 6600
 }
 
 # mpd status display in the upper right terminal corner
@@ -248,22 +248,24 @@ getart() {
   [[ -z "$ARTDIR" ]] && local ARTDIR="$HOME/.cache/albumart"
   [[ -d "$ARTDIR" ]] || mkdir -p "$ARTDIR"
 
-  local mpccurrent="$(echo "$@"|sed -r 's/(\[|\]|\,)//g')"
-  local artfile=$(find $ARTDIR -iname "${mpccurrent}*")
+  local mpccurrent artfile
+  mpccurrent="$(echo "$@"|sed -r 's/(\[|\]|\,)//g')"
+  artfile=$(find "$ARTDIR" -iname "${mpccurrent}*")
   [[ -z "$artfile" ]] && {
     # customize useragent at http://whatsmyuseragent.com/
-    local useragent='Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0' local link="www.google.com/search?q=$(urlencode "$mpccurrent")\&tbm=isch"
-    local imagelink ext imagepath
-    local imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep '<a href.*\(png\|jpg\|jpeg\)' | sed 's/.*imgurl=\([^&]*\)\&.*/\1/')
+    local useragent='Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0'
+    local link imagelink ext imagepath
+    link="www.google.com/search?q=$(urlencode "$mpccurrent")\&tbm=isch"
+    imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep '<a href.*\(png\|jpg\|jpeg\)' | sed 's/.*imgurl=\([^&]*\)\&.*/\1/')
     for imagelink in $imagelinks; do
-      imagelink=$(echo $imagelink | sed -nr 's/(.*\.(jpg|jpeg|png)).*/\1/p')
-      ext=$(echo $imagelink | sed -nr 's/.*(\.(jpg|jpeg|png)).*/\1/p')
+      imagelink=$(echo "$imagelink" | sed -nr 's/(.*\.(jpg|jpeg|png)).*/\1/p')
+      ext=$(echo "$imagelink" | sed -nr 's/.*(\.(jpg|jpeg|png)).*/\1/p')
       imagepath="${ARTDIR}/${mpccurrent}${ext}"
       wget --max-redirect 0 -qO "$imagepath" "${imagelink}"
       [[ -s "$imagepath" ]] && break
       rm "$imagepath" # remove zero length file
     done
-    artfile=$(find $ARTDIR -iname "${mpccurrent}*")
+    artfile=$(find "$ARTDIR" -iname "${mpccurrent}*")
   }
   echo "$artfile"
 }

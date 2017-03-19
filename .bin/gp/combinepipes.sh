@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Usage example: 
 # ((cpustat.sh 0 | bin/gp/markpipe.sh 0) & \

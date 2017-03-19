@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 #mCount=$(/usr/bin/ssh -o ConnectTimeout=1 root@192.168.1.1 'cat /tmp/newMail' 2>/dev/null)
 mCount=$(cat /tmp/newMail 2>/dev/null)

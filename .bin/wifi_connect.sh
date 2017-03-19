@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 [[ -z "$(which yad)" ]] && {
   echo "Error: yad is not installed" >&2
@@ -64,4 +64,3 @@ else
     nmcli dev wifi connect "$ap_bssid" $privatecmd
   fi
 fi
-

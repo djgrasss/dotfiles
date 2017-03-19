@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 N=${1:-64}
 

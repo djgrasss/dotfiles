@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 configFile=~/.config/xfce4/terminal/terminalrc
 keyword=BackgroundDarkness

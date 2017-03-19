@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 N=${1:-50}      # number of columns
 M=${2:-50}      # number of rows

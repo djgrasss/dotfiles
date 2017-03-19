@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 [ -n "$(pidof firefox)" ] && {
   echo "ERROR: firefox is still running, close it first!"
