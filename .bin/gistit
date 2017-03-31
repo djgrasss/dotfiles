@@ -6,7 +6,7 @@
 # the token will be read from the keyring using the following command:
 #   python3 -c 'import keyring; print(keyring.get_password("gist","'"$USER"'"))'
 # One could put the Git token into the keyring using the following command:
-#   python3 -c 'import keyring; keyring.set_password("gist2","'"$USER"'", "MYTOKEN")'
+#   python3 -c 'import keyring; keyring.set_password("gist","'"$USER"'", "MYTOKEN")'
 # where MYTOKEN is the token string obtained from https://github.com/settings/tokens
 #
 # One could specify a gist description using -d option. If no description
@@ -32,7 +32,7 @@ while getopts "pd:" opt; do
      p)  PUBLIC=true; ;;
      d)  DESCR="$OPTARG" ;;
      \?) exit 1 ;;
-     :)  echo "Option -$OPTARG requires number of sec as an argument" >&2;exit 1 ;;
+     :)  echo "Option -$OPTARG requires gist descripiton text as an argument" >&2;exit 1 ;;
   esac
 done
 shift $((OPTIND-1)) 
