@@ -201,6 +201,12 @@ showsysteminfo () {
   echo -ne "${LIGHTRED}DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
 }
 
+# monitors the network activity
+shownetwork()
+{
+  sudo watch --color -tn1 grc 'netstat -tuapn|tail -n+3'
+}
+
 # remove last n records from history
 delhistory() {
   local opt id n=1
