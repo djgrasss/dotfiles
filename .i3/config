@@ -202,6 +202,7 @@ for_window [class="^gnuplot$"] floating enable
 for_window [class="^xpad$"] floating enable
 for_window [class="^Rsvg-view-3$"] floating enable
 for_window [class="^Volumeicon$"] floating enable
+for_window [class="^Pavucontrol$"] floating enable
 
 # dpmsoff
 exec --no-startup-id ~/bin/dpmsoff &
