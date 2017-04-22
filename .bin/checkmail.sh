@@ -3,7 +3,7 @@
 for iface in /sys/class/net/*; do
   [ "$(basename "$iface")" = "lo" ] && continue
   [ "$(basename "$iface")" = "tap0" ] && unset online && break
-  [ "$(cat "$iface/carrier")" = "1" ] && online=yes
+  [ -e "$iface/carrier" ] && [ "$(cat "$iface/carrier")" = "1" ] && online=yes && break
 done
 [ -z "$online" ] && exit 1
 
