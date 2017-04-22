@@ -65,7 +65,7 @@ blocks=0          # blocks counter
   if [[ -n "$newLine" ]]; then
     a+=("$newLine") # add to the end
   else
-    #nf=$(echo "$newLine"|awk '{print NF}')
+#    nf=$(echo "${a[1]}"|awk '{print NF}')
     nf=0;TMPIFS=$IFS;IFS=$' 	\n'
       for j in ${a[0]};do ((nf++));done
     IFS=$TMPIFS
@@ -79,7 +79,7 @@ blocks=0          # blocks counter
         fi
         echo -n "'-' u 1:2:3 t '${titles[0]}'"
         echo -n " w ${styles[0]-${styles_def[0]}}"
-        [[ -n "${colors[0]}" ]] && echo -n " fc rgb '${colors[0]}'"
+        [[ -n "${colors[0]}" ]] && echo -n " lc rgb '${colors[0]}'"
         echo -n ","
       fi
     else
@@ -91,7 +91,7 @@ blocks=0          # blocks counter
         }
         echo -n " '-' u $c1:$c2 t '${titles[$j]}' "
         echo -n "w ${styles[$j]-${styles_def[0]}} "
-        [[ -n "${colors[$j]}" ]] && echo -n "fc rgb '${colors[$j]}'"
+        [[ -n "${colors[$j]}" ]] && echo -n "lc rgb '${colors[$j]}'"
         echo -n ","
         [[ $c1 = 1 ]] || ((j++))
       done

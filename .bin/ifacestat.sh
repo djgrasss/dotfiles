@@ -6,8 +6,9 @@ ec='echo -e';[ -n "$($ec)" ] && ec='echo'
 f="/sys/class/net/${1:-wlan0}/statistics"
 otx=$(cat "$f/tx_bytes")
 orx=$(cat "$f/rx_bytes")
+oe=0
 
-while [ -w /proc/self/fd/1 ]; do
+while [ $oe -eq 0 ]; do
   tx=$(cat "$f/tx_bytes")
   rx=$(cat "$f/rx_bytes")
   txd=$((tx-otx))
@@ -19,6 +20,7 @@ while [ -w /proc/self/fd/1 ]; do
   else
     echo "$((txd+rxd)) ${2+$txd} ${2+$rxd}"
   fi
+  oe=$?
   otx=$tx
   orx=$rx
   sleep 1

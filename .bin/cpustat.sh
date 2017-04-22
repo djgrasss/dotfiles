@@ -2,8 +2,9 @@
 
 ec='echo -e';[ -n "$($ec)" ] && ec='echo'
 cpu="cpu$1 "
+oe=0
 
-while [ -w /proc/self/fd/1 ]; do
+while [ $oe -eq 0 ]; do
   res=$(awk -v cpu="$cpu" '{if(match($0,cpu)) {
                              for(i=2;i<=NF;++i){s+=$i}
                              printf "%.0f;%.0f\n",s,$5+$6;
@@ -19,6 +20,7 @@ while [ -w /proc/self/fd/1 ]; do
     else
       echo "$s"
     fi
+    oe=$?
   }
 
   prevtotal=$total
