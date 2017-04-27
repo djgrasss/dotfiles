@@ -204,7 +204,7 @@ showsysteminfo () {
 # monitors the network activity
 shownetstat()
 {
-  sudo watch --color -tn1 grc 'netstat -tuapn|tail -n+3|grep -v "\(systemd-resolve\|cupsd\|FIN_WAIT1\|FIN_WAIT2\|TIME_WAIT\\)"'
+  sudo watch --color -tn1 grc 'netstat -tuapn|tail -n+3|grep -v "\(systemd-resolv\|cupsd\|FIN_WAIT1\|FIN_WAIT2\|TIME_WAIT\\)"'
 }
 
 # remove last n records from history
