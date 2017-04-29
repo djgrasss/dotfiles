@@ -41,7 +41,7 @@ encoding = locale.getpreferredencoding()
 
 DROPPING_CHARS = 70
 MIN_SPEED = 1
-MAX_SPEED = 7
+MAX_SPEED = 5
 RANDOM_CLEANUP = 100
 FPS = 25
 SLEEP_MILLIS = 1.0/FPS
@@ -49,10 +49,9 @@ SLEEP_MILLIS = 1.0/FPS
 USE_COLORS = True
 SCREENSAVER_MODE = True
 #MATRIX_CODE_CHARS = "ɀɁɂŧϢϣϤϥϦϧϨϫϬϭϮϯϰϱϢϣϤϥϦϧϨϩϪϫϬϭϮϯϰ߃߄༣༤༥༦༧༩༪༫༬༭༮༯༰༱༲༳༶"
-#MATRIX_CODE_CHARS = "абвгдеёжзийклмнопрстуфхцчшщъьэюя"
 MATRIX_CODE_CHARS = "𐌰𐌱𐌲𐌳𐌴𐌵𐌶𐌷𐌸𐌹𐌺𐌻𐌼𐌽𐌾𐌿𐍀𐍁𐍂𐍃𐍄𐍅𐍆𐍇𐍈𐍉𐍊"
 COLOR_NORMAL = curses.COLOR_GREEN
-COLOR_HIGHLIGHTED = curses.COLOR_GREEN
+COLOR_HIGHLIGHTED = curses.COLOR_CYAN
 
 ########################################################################
 # CODE
