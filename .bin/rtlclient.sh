@@ -16,7 +16,7 @@ SET_FREQUENCY=1
 SET_SAMPLE_RATE=2
 SET_GAIN_MODE=3
 SET_GAIN=4
-SET_FREQENCY_CORRECTION=5
+SET_FREQUENCY_CORRECTION=5
 SET_AGC_MODE=8
 
 show_error_exit()
@@ -34,8 +34,8 @@ Usage: $1 [options]
 Options:
   -h,             show this help message and exit
   -f FREQUENCY,   Frequency in Hz to tune to
-  -a ADDRESS,     Address of the servet to connect to (default: localhost)
-  -p PORT,        Port of the servet to connect to (default:1234)
+  -a ADDRESS,     Address of the server to connect to (default: localhost)
+  -p PORT,        Port of the server to connect to (default:1234)
   -s SAMPLERATE,  Sample rate to use (default: 2400000)
   -g GAIN,        Gain to use (default: 0 for auto)
   -P PPM,         PPM error (default: 0)
@@ -86,7 +86,7 @@ set_gain()
 
 set_ppm()
 {
-  byte $SET_FREQENCY_CORRECTION
+  byte $SET_FREQUENCY_CORRECTION
   int2bytes $1
 }
 
@@ -108,7 +108,7 @@ while getopts "ha:p:f:s:g:P:" opt; do
      g)  gain="$OPTARG" ;;
      P)  ppm="$OPTARG" ;;
      \?) exit 1 ;;
-     :)  echo "Option -$OPTARG requires gist descripiton text as an argument" >&2;exit 1 ;;
+     :)  echo "Option -$OPTARG requires an argument" >&2;exit 1 ;;
   esac
 done
 shift $((OPTIND-1)) 
