@@ -11,7 +11,7 @@ export HISTTIMEFORMAT='%F %T '
 export EDITOR=vi
 export PAGER=less
 export BANNER="echo"
-[[ -n "$(which banner)" ]] && export BANNER="banner"
+[[ -n "$(which figlet)" ]] && export BANNER="figlet -f banner"
 [[ -n "$(which toilet)" ]] && export BANNER="toilet -f mono9.tlf"
 # setting the temp directory for vim
 [ -z $TEMP ] && export TEMP=/tmp
