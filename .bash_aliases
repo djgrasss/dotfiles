@@ -48,6 +48,7 @@ alias cdh='cd ~'
 alias top10='ps aux --sort -rss | head -n11'
 alias traf='netstat -np | grep -v unix'
 alias why='apt-cache rdepends --installed'
+alias exit='history -a;exit'
 
 # git shortcuts
 alias gc='git checkout'
