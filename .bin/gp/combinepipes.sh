@@ -12,7 +12,8 @@ pipes=${1:-2}
 
 awk -F: -v pipes="$pipes" '
 {
-  a[$1]=$2;
+  s="";for(n=2;n<NF;++n){s=s$n":"};s=s""$n
+  a[$1]=s;
   cnt=0;
   for (i in a) cnt++;
   if(cnt==pipes) {
