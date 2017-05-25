@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-import os, sys, socket, gi
+import os, sys, socket
+import configparser
+from os.path import expanduser
+import gi
 gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 from gi.repository.GdkPixbuf import Pixbuf
@@ -20,12 +23,12 @@ class SingleInstance:
 
 
 class MyStatusIcon:
-    def __init__(self):
-        self.iface = 'wlan0'
-        self.refresh_time = 1000 # ms
-        self.max_tput = 100 * 1024 # 100k
-        self.rx_fill_color = 0xff0000ff
-        self.tx_fill_color = 0x0000ffff
+    def __init__(self, name, rx_color, tx_color, max_throughput, refresh_time):
+        self.iface = name
+        self.refresh_time = refresh_time # ms
+        self.max_tput =  max_throughput
+        self.rx_fill_color = rx_color
+        self.tx_fill_color = tx_color
         self.statusicon = Gtk.StatusIcon()
         has_alpha = True
         bits_per_sample = 8
@@ -35,12 +38,13 @@ class MyStatusIcon:
         self.statusicon.set_from_pixbuf(self.pixBuf)
         self.statusicon.connect("popup-menu", self.right_click_event)
         #self.statusicon.connect("query-tooltip", self.query_tooltip)
-        self.statusicon.set_has_tooltip(True)
-        res = self.get_net_bytes(self.iface)
-        self.rx = res['rx']
-        self.tx = res['tx']
+        #self.statusicon.set_has_tooltip(True)
+        self.rx = 0
+        self.tx = 0
         self.tooltip = None
         GObject.timeout_add(self.refresh_time, self.update_icon)
+        self.firstUpdate = True
+        self.update_icon()
         #window = Gtk.Window()
         #window.connect("destroy", lambda w: Gtk.main_quit())
         #window.show_all()
@@ -55,19 +59,33 @@ class MyStatusIcon:
     """
 
     def update_icon(self):
-        result = self.get_net_bytes(self.iface)
-        rxdiff = result['rx'] - self.rx
-        txdiff = result['tx'] - self.tx
-        self.statusicon.set_tooltip_markup("RX: %d\nTX: %d"% (rxdiff,txdiff))
-        #print "%d %d"% (rxdiff,txdiff)
+        try:
+            result = self.get_net_bytes(self.iface)
+            self.statusicon.set_visible(True)
+        except:
+            self.statusicon.set_visible(False)
+            return False
+
+        rxdiff = ((result['rx'] - self.rx)*1000)/self.refresh_time
+        txdiff = ((result['tx'] - self.tx)*1000)/self.refresh_time
+
+        if True == self.firstUpdate:
+            rxdiff = txdiff = 0
+            self.firstUpdate = False
+
+        self.statusicon.set_tooltip_markup("<b>%s</b>\n"
+                                           "<span foreground='%s'><b>RX: </b></span>%d\n"
+                                           "<span foreground='%s'><b>TX: </b></span>%d"
+                                            % (self.iface, "#%08X" % self.rx_fill_color, rxdiff, "#%08X" % self.tx_fill_color, txdiff))
+#        print ("%d %d %d" % (rxdiff,txdiff, self.refresh_time))
         self.pixBuf.fill(0x00000000)
-        self.fill_left (rxdiff/self.max_tput)#*self.refresh_time/1000)
-        self.fill_right(txdiff/self.max_tput)#*self.refresh_time/1000)
+        self.fill_left (rxdiff/self.max_tput)
+        self.fill_right(txdiff/self.max_tput)
         self.rx = result['rx']
         self.tx = result['tx']
         self.statusicon.set_from_pixbuf(self.pixBuf)
-        if self.tooltip:
-          self.tooltip.trigger_tooltip_query(self.statusicon.get_screen().get_display()) 
+#        if self.tooltip:
+#          self.tooltip.trigger_tooltip_query(self.statusicon.get_screen().get_display())
         return True
 
     def fill_left(self, percent):
@@ -128,13 +146,44 @@ class MyStatusIcon:
         about_dialog.run()
         about_dialog.destroy()
 
+def human2bytes(s):
+    """ convert human readable size string to int """
+    symbols = ('B', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y')
+    letter = s[-1:].strip().upper()
+    num = s[:-1]
+    assert num.isdigit() and letter in symbols
+    num = float(num)
+    prefix = {symbols[0]:1}
+    for i, s in enumerate(symbols[1:]):
+        prefix[s] = 1 << (i+1)*10
+    return int(num * prefix[letter])
+
+def color2rgba(colorstring):
+    """ convert #RRGGBB[AA] to an (R, G, B, [A]) tuple """
+    colorstring = colorstring.strip()
+    if colorstring[0] == '#': colorstring = colorstring[1:]
+    if len(colorstring) != 8:
+        raise ValueError( "input #%s is not in #RRGGBBAA format" % colorstring)
+    r, g, b, a = colorstring[:2], colorstring[2:4], colorstring[4:6], colorstring[6:]
+    r, g, b, a = [int(n, 16) for n in (r, g, b, a)]
+    return ( (r << 24) + (g << 16) + (b << 8) + a)
+
 def main(argv):
   me = SingleInstance()
   newpid = os.fork()
   if newpid != 0:
     sys.exit()
 
-  MyStatusIcon()
+  icons = []
+  config = configparser.ConfigParser()
+  config.read([expanduser('~/.nticon.conf')]) # add more places separated by comma
+  for section in config.sections():
+      icons.append(MyStatusIcon(config[section].get('name'),
+                                color2rgba(config[section].get('color_rx', '#ff0000ff')),
+                                color2rgba(config[section].get('color_tx', '#0000ffff')),
+                                human2bytes(config[section].get('max_throughput', '100k')),
+                                int(config[section].get('refresh_time', '1000'))
+                                ))
   Gtk.main()
 
 if __name__ == "__main__":
