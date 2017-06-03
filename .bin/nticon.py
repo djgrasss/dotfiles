@@ -135,7 +135,7 @@ class MyStatusIcon:
         def pos(menu, icon):
             return (Gtk.StatusIcon.position_menu(menu, icon))
 
-        self.menu.popup(None, None, pos, self.statusicon, button, time)
+        self.menu.popup(None, None, None, self.statusicon, button, time)
 
     def show_about_dialog(self, widget):
         about_dialog = Gtk.AboutDialog()
