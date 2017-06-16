@@ -13,7 +13,7 @@ aps=$(echo "$nmout" | awk 'BEGIN{cnt=0}\
                             if(/^FREQ/){freq=gensub(/^FREQ:(.*)/,"\\1","g")};\
                             if(/^SIGNAL/){signal=gensub(/^SIGNAL:(.*)/,"\\1","g")};\
                             if(/^SECURITY/){sec=gensub(/^SECURITY:(.*)/,"\\1","g");if(length(sec)==0){sec="--"}};\
-                            cnt++;if(cnt>4){cnt=0;print ssid" ["bssid"] ["freq"] ["sec"] ["signal"]"}}'|sort -nr -t[ -k5|uniq)
+                            cnt++;if(cnt>4){cnt=0;print ssid" ["bssid"] ["freq"] ["sec"] ["signal"]"}}'|sort -nr -t\[ -k5|uniq)
 i=1
 ifacecon=$(nmcli dev status | awk '($2 ~ "wireless" || $2 ~ "wifi") && $3 == "connected" {printf("disconnect [%s]\n",$1)}')
 for n in $ifacecon; do
