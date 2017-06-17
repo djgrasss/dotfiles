@@ -225,7 +225,7 @@ delhistory() {
 
 # poor man's mpd client
 mpc() {
-  echo "$@" | nc "$MPDSERVER" 6600
+  echo "$@" | nc -q0 "$MPDSERVER" 6600
 }
 
 # mpd status display in the upper right terminal corner
@@ -262,7 +262,8 @@ getart() {
     local useragent='Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:31.0) Gecko/20100101 Firefox/31.0'
     local link imagelink ext imagepath
     link="www.google.com/search?q=$(urlencode "$mpccurrent")\&tbm=isch"
-    imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep '<a href.*\(png\|jpg\|jpeg\)' | sed 's/.*imgurl=\([^&]*\)\&.*/\1/')
+#    imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep '<a href.*\(png\|jpg\|jpeg\)' | sed 's/.*imgurl=\([^&]*\)\&.*/\1/')
+    imagelinks=$(wget -e robots=off --user-agent "$useragent" -qO - "$link" | sed 's/</\n</g' | grep "ou\":\"http" | sed -nr 's/.*ou\":\"([^"]+).*/\1/p')
     for imagelink in $imagelinks; do
       imagelink=$(echo "$imagelink" | sed -nr 's/(.*\.(jpg|jpeg|png)).*/\1/p')
       ext=$(echo "$imagelink" | sed -nr 's/.*(\.(jpg|jpeg|png)).*/\1/p')
