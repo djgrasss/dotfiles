@@ -15,6 +15,7 @@ HEREDOC
 }
 
 step=5
+card=1
 id_file="/tmp/notify_volume.id"
 
 icon_high="/usr/share/icons/elementary-xfce/notifications/48/audio-volume-high.png"
@@ -25,9 +26,9 @@ icon_off="/usr/share/icons/elementary-xfce/notifications/48/audio-volume-off.png
 
 case $1 in 
   up)
-      amixer -q set Master $step+ ;;
+      amixer -q -c $card set Master $step+ ;;
   down)
-      amixer -q set Master $step- ;;
+      amixer -q -c $card set Master $step- ;;
   toggle)
       #pactl list sinks|grep -q Mute:.yes;pactl set-sink-mute 0 ${PIPESTATUS[1]} ;;
       # amixer needs -D pulse switch as a workaround for the pulseaudio
@@ -41,7 +42,7 @@ esac
 
 #muted=$(amixer get Master | tail -n1 | sed -nr 's/.*\[([a-z]+)\].*/\1/p')
 #volume=$(amixer get Master | tail -n1 | sed -nr 's/[^\[]*.([^%]*).*/\1/p')
-val=$(amixer get Master | tail -n1 | sed -nr 'h;s/[^\[]*.([^%]*).*/\1/p;g;s/.*\[([a-z]+)\].*/\1/p')
+val=$(amixer -c $card get Master | tail -n1 | sed -nr 'h;s/[^\[]*.([^%]*).*/\1/p;g;s/.*\[([a-z]+)\].*/\1/p')
 muted=${val#*$'\n'}
 volume=${val%$'\n'*}
 if ((volume==0)); then
