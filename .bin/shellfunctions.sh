@@ -126,7 +126,7 @@ copy() {
 
 #pb pastebin || Usage: 'command | pb or  pb filename'
 pb() {
-  curl -F "c=@${1:--}" https://ptpb.pw/?u=1 | putclip
+  curl -F "c=@${1:--}" https://ptpb.pw/?u=1 | tee >(putclip)
 }
 pbs() {
   local sname=$(scrot '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
@@ -189,16 +189,16 @@ showbattery() {
 
 # system info
 showsysteminfo () {
-  echo -ne "${LIGHTRED}CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
+  echo -ne "${LIGHTRED}   CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
   echo -ne "${LIGHTRED}MEMORY:$NC\t";awk '/MemTotal/{mt=$2};/MemFree/{mf=$2};/MemAvail/{ma=$2}END{print "Total: "mt" | Free: "mf" | Available: "ma" (kB)"}' /proc/meminfo
-  echo -ne "${LIGHTRED}OS:$NC\t";lsb_release -cds|awk '{printf("%s ", $0)}';echo
+  echo -ne "${LIGHTRED}    OS:$NC\t";lsb_release -cds|awk '{printf("%s ", $0)}';echo
   echo -ne "${LIGHTRED}KERNEL:$NC\t";uname -a | awk '{ print $3 }'
-  echo -ne "${LIGHTRED}ARCH:$NC\t";uname -m
+  echo -ne "${LIGHTRED}  ARCH:$NC\t";uname -m
   echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime -p
-  echo -ne "${LIGHTRED}USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
+  echo -ne "${LIGHTRED} USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
   echo -ne "${LIGHTRED}TEMPER:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
   echo -ne "${LIGHTRED}BATTRY:$NC";echo " $(showbattery)"
-  echo -ne "${LIGHTRED}DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
+  echo -ne "${LIGHTRED}  DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
 }
 
 # monitors the network activity
