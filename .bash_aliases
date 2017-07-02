@@ -2,6 +2,10 @@
 set -o notify
 shopt -s dotglob
 
+# fix for the Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown
+# or put in into the /etc/environment
+export NO_AT_BRIDGE=1
+
 # Ignore some controlling instructions
 export HISTIGNORE="[   ]*:&:bg:fg:exit:ls:la:ll:l:ps:df:vim:vi:man*:info*:exit:dmesg:ifconfig:route:"
 export HISTSIZE=-1     # unlimited
