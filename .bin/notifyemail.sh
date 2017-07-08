@@ -15,7 +15,7 @@ printUsage()
 #default values
 sendto="flux242@gmail.com"
 subject="Notification"
-from="thinkpad"
+from="$(hostname)"
 errorsfile=/tmp/ssmtp.error
 
 while getopts 'ae:s:' option
