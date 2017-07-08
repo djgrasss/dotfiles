@@ -6,14 +6,15 @@
 #
 # <file system> <mount point>   <type>  <options>       <dump>  <pass>
 # / was on /dev/sdb1 during installation
-UUID=75b93787-86d3-448e-887f-1cd6c18d4be7 /               ext4    noatime,errors=remount-ro 0       1
+UUID=75b93787-86d3-448e-887f-1cd6c18d4be7 /               ext4    commit=60,noatime,errors=remount-ro 0       1
 # /home was on /dev/sdb2 during installation
-UUID=b111540e-8fc7-44f7-825f-b8ad61a75a87 /home           ext4    noatime         0       2
+UUID=b111540e-8fc7-44f7-825f-b8ad61a75a87 /home           ext4    commit=15,noatime         0       2
 
 # binding
 /home/opt /opt  none bind 0 0
 # swap file
-/swapfile1 none swap sw 0 0
+/home/swapfile1 none swap sw 0 0
+/home/swapfile2 none swap sw 0 0
 # temp on tmpfs
 tmpfs  /tmp   tmpfs  size=256m,noexec,nodev,nosuid   0 0
 # external resources
