@@ -32,7 +32,7 @@ homeSizeBefore=$(du -sb "$HOME" 2>/dev/null|awk '{ print $1 }')
 # cleaning phase
 vacuumFirefox || exit 1
 cd "$HOME"
-xargs -d \\n -I {} bash -c "echo 'Cleaning $HOME/{}';eval '/bin/rm -rf $HOME/{}'" <<EOLIST
+xargs -d \\n -I {} bash -c "shopt -s dotglob;echo 'Cleaning $HOME/{}';eval '/bin/rm -rf $HOME/{}'" <<EOLIST
 .thumbnails/*
 .cache/*
 .adobe/Flash_Player/AssetCache/*
