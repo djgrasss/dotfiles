@@ -324,3 +324,8 @@ timer() {
   [[ $status -eq 8 ]] && speaker-test -t sine -f 1500 -S 70 -p 10000 -l 1 &>/dev/null
 }
 
+# shows a deb package direct dependenies graph
+showdebtree() {
+  debtree $1 -I --condense --no-alternatives --no-provides --no-recommends --no-conflicts | tred | dot -Tsvg | rsvg-view-3 /dev/stdin
+}
+
