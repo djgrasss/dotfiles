@@ -64,7 +64,7 @@ class MyStatusIcon:
             self.statusicon.set_visible(True)
         except:
             self.statusicon.set_visible(False)
-            return False
+            return True
 
         rxdiff = ((result['rx'] - self.rx)*1000)/self.refresh_time
         txdiff = ((result['tx'] - self.tx)*1000)/self.refresh_time
@@ -112,9 +112,12 @@ class MyStatusIcon:
     
     def get_net_bytes(self, dev='eth0'):
         """Read network interface traffic counters"""
-        return {
-            'rx': float(open('/sys/class/net/%s/statistics/rx_bytes' % dev,'r').read().strip()),
-            'tx': float(open('/sys/class/net/%s/statistics/tx_bytes' % dev,'r').read().strip())
+        if 'up' != open('/sys/class/net/%s/operstate' % dev,'r').read().strip():
+            raise Exception('Interface is not up')
+        else:
+            return {
+                'rx': float(open('/sys/class/net/%s/statistics/rx_bytes' % dev,'r').read().strip()),
+                'tx': float(open('/sys/class/net/%s/statistics/tx_bytes' % dev,'r').read().strip())
         }
 
     def right_click_event(self, icon, button, time):
