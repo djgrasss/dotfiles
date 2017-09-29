@@ -73,7 +73,7 @@ class MyStatusIcon:
             rxdiff = txdiff = 0
             self.firstUpdate = False
 
-        self.statusicon.set_tooltip_markup("<b>%s</b>\n"
+        self.statusicon.set_tooltip_markup("<b><i><u>%s</u></i></b>\n"
                                            "<span foreground='%s'><b>RX: </b></span>%d\n"
                                            "<span foreground='%s'><b>TX: </b></span>%d"
                                             % (self.iface, "#%08X" % self.rx_fill_color, rxdiff, "#%08X" % self.tx_fill_color, txdiff))
