@@ -109,7 +109,7 @@ transfer() {
     curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> "$tmpfile";
   fi;
   tee >(putclip) <"$tmpfile"
-  rm -f "$tmpfile";
+  \rm -f "$tmpfile";
 } 
 
 # copies a file and shows progress
