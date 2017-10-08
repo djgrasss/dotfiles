@@ -329,3 +329,12 @@ showdebtree() {
   debtree $1 -I --condense --no-alternatives --no-provides --no-recommends --no-conflicts | tred | dot -Tsvg | rsvg-view-3 /dev/stdin
 }
 
+# converts text into a qr code
+qrcode() {
+  local text=$1
+  [[ -e "$text" ]] && text=$(cat "$text")
+  [[ -z "$text" ]] && [[ ! -t 0 ]] && text=$(cat -)
+  [[ -z "$text" ]] && text=$(printclip)
+  echo "$text" | curl -F-=\<- qrenco.de
+}
+
