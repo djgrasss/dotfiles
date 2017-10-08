@@ -329,6 +329,17 @@ showdebtree() {
   debtree $1 -I --condense --no-alternatives --no-provides --no-recommends --no-conflicts | tred | dot -Tsvg | rsvg-view-3 /dev/stdin
 }
 
+# shows kernel graph
+showkernelgraph() {
+lsmod | perl -e 'print "digraph \"lsmod\" {";
+                 <>;
+                 while(<>){
+                   @_=split/\s+/;
+                   print "\"$_[0]\" -> \"$_\"\n" for split/,/,$_[3]
+                 }
+                 print "}"' | dot -Tsvg | rsvg-view-3 /dev/stdin
+}
+
 # converts text into a qr code
 qrcode() {
   local text=$1
