@@ -187,6 +187,11 @@ showbattery() {
   fi
 }
 
+# shows cpu temperature
+showcputemp() {
+  awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
+}
+
 # system info
 showsysteminfo () {
   echo -ne "${LIGHTRED}   CPU:$NC";sed -nr  's/model name[^:*]: (.*)/\t\1/p' /proc/cpuinfo
@@ -196,8 +201,8 @@ showsysteminfo () {
   echo -ne "${LIGHTRED}  ARCH:$NC\t";uname -m
   echo -ne "${LIGHTRED}UPTIME:$NC\t";uptime -p
   echo -ne "${LIGHTRED} USERS:$NC\t";w -h | awk '{print $1}'|uniq|awk '{users=users$1" "}END{print users}'
-  echo -ne "${LIGHTRED}TEMPER:$NC\t";awk -v t="$(cat /sys/class/thermal/thermal_zone0/temp)" 'BEGIN{print t/1000}'
-  echo -ne "${LIGHTRED}BATTRY:$NC";echo " $(showbattery)"
+  echo -ne "${LIGHTRED}TEMPER:$NC\t";echo "$(showcputemp)"
+  echo -ne "${LIGHTRED}BATTRY:$NC\t";echo "$(showbattery)"
   echo -ne "${LIGHTRED}  DISK:$NC";df -h | grep -e"/dev/sd" -e"/mnt/" | awk '{print "\t"$0}'
 }
 
