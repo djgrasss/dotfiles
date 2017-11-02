@@ -2,6 +2,8 @@
 
 import sys, os, tempfile
 import cairo
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk, GLib
 import math, threading, time, random
 
