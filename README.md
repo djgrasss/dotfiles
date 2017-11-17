@@ -16,7 +16,7 @@ Dotfiles management tool I'm using can be cloned from the jbernard's github:
     $ ./dotfiles --help
 ```
 
-**Resetting dotfiles management tool revision to 83c8d55**
+**Resetting dotfiles management tool git revision to 83c8d55**
 
 The tinfoil hatter who has developed the tool has added more python lib dependencies which I don't want. So I just hard reset the HEAD of his git repo:
 
@@ -24,5 +24,12 @@ The tinfoil hatter who has developed the tool has added more python lib dependen
 $ git clone https://github.com/jbernard/dotfiles
 $ git checkout 83c8d55
 $ git reset --hard
+```
+
+**Installing Vim plugins**
+
+To install all needed vim plugins:
+```
+$ bin/vim_install_plugins.sh
 ```
 
