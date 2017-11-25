@@ -8,6 +8,6 @@
 PROJDIR=$(realpath "$1")
 export PROJDIR
 cd "$PROJDIR" || exit 1
-ctags -aR ./
+#ctags -aR ./
 vim -c ":NERDTree $PROJDIR" 
 

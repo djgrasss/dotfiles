@@ -3,3 +3,7 @@ git clone https://github.com/vim-airline/vim-airline-themes ~/.vim/bundle/vim-ai
 git clone git://github.com/airblade/vim-gitgutter.git ~/.vim/bundle/vim-gitgutter
 git clone git://github.com/tpope/vim-fugitive.git ~/.vim/bundle/vim-figutive
 git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree
+git clone https://github.com/plasticboy/vim-markdown.git ~/.vim/bundle/vim-markdown.git
+git clone https://github.com/edkolev/promptline.vim ~/.vim/bundle/promptline.vim
+git clone https://github.com/skywind3000/asyncrun.vim.git ~/.vim/bundle/asyncrun.vim
+git clone https://github.com/ludovicchabant/vim-gutentags.git ~/.vim/bundle/vim-gutentags.git
