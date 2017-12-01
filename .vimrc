@@ -244,7 +244,9 @@ let g:airline_symbols.crypt= ''
 map <C-n> :NERDTreeToggle<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
-
+" AsyncRun aliases
+"command! -bang -nargs=* -complete=file Make call asyncrun#run('<bang>', '', 'make <f-args>') | cwindow 10
+command! -bang -nargs=* -complete=file Make call asyncrun#run('<bang>', '', 'make <f-args>')
 
 " Functions
 "
