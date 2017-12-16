@@ -134,6 +134,7 @@ bindsym $mod+Ctrl+space exec ~/.i3/toggle_border.sh
 # adjust xfce4 terminal transpacency
 bindsym Ctrl+F6 exec ~/bin/setterminaltransparency.sh down
 bindsym Ctrl+F7 exec ~/bin/setterminaltransparency.sh up
+bindsym $mod+g exec ~/.i3/load_layout.sh
 
 # volume control
 #bindsym XF86AudioLowerVolume exec /home/alex/bin/volume_notify.sh down
