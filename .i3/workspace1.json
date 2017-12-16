@@ -26,8 +26,8 @@
                     "percent": 0.5,
                     "swallows": [
                        {
-                        "class": "^Xfce4\\-terminal$",
-                        "title": "^TerminalTailSyslog$"
+                          "class": "^Xfce4\\-terminal$",
+                          "title": "^TerminalTailSyslog$"
                        }
                     ],
                     "type": "con"
@@ -46,8 +46,8 @@
                     "percent": 0.5,
                     "swallows": [
                        {
-                        "class": "^Xfce4\\-terminal$",
-                        "title": "^TerminalShownetstat$"
+                          "class": "^Xfce4\\-terminal$",
+                          "title": "^TerminalShownetstat$"
                        }
                     ],
                     "type": "con"
@@ -56,23 +56,32 @@
         },
         {
             "border": "pixel",
-            "current_border_width": 2,
             "floating": "auto_off",
-            "geometry": {
-               "height": 410,
-               "width": 657,
-               "x": 0,
-               "y": 0
-            },
-            "name": "TerminalWork",
+            "layout": "tabbed",
             "percent": 0.5,
-            "swallows": [
-               {
-                "class": "^Xfce4\\-terminal$",
-                "title": "^TerminalWork$"
-               }
-            ],
-            "type": "con"
+            "type": "con",
+            "nodes": [
+                {
+                    "border": "pixel",
+                    "current_border_width": 2,
+                    "floating": "auto_off",
+                    "geometry": {
+                       "height": 410,
+                       "width": 657,
+                       "x": 0,
+                       "y": 0
+                    },
+                    "name": "TerminalWork",
+                    "percent": 1,
+                    "swallows": [
+                       {
+                          "class": "^Xfce4\\-terminal$",
+                          "title": "^TerminalWork$"
+                       }
+                    ],
+                    "type": "con"
+                }
+            ]
         }
     ]
 }
