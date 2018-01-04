@@ -1,10 +1,6 @@
 #!/bin/bash
 
-#. $HOME/bin/shellcolors.sh
-
-LIGHTRED='\e[1;31m'       # ${lightred}
-LIGHTGREEN='\e[1;32m'     # ${lightgreen}
-NC='\e[0m'                # ${nc} (no color - resets previous color)
+. $HOME/bin/shellcolors.sh
 
 IFS=$'\n'
 
