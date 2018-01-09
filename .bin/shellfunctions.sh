@@ -129,7 +129,7 @@ pb() {
   curl -F "c=@${1:--}" https://ptpb.pw/?u=1 | tee >(putclip)
 }
 pbs() {
-  local sname=$(scrot '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
+  local sname=$(scrot "$@" '/tmp/screenshot_$w_$h_%F_%H-%M-%S.png' -e 'echo $f')
   [[ -s "$sname" ]] && pbx "$sname"
 }
 pbsw() {
